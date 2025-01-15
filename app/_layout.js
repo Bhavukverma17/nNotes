@@ -18,7 +18,8 @@ import { useNavigation } from '@react-navigation/native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { FontContext } from './FontContext';
 import ThemeContext from './ThemeContext'; 
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialIcons } from '@expo/vector-icons';
 
 function Layouts() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
@@ -165,8 +166,8 @@ function Layouts() {
   };
   const { isCustomFont } = useContext(FontContext);
   return (
-    <SafeAreaProvider>
-          <SafeAreaView edges={['top']} style={styles.container}>
+  
+    <SafeAreaView style={styles.container}>
     <View
       style={[
         styles.scontainer,
@@ -195,6 +196,12 @@ function Layouts() {
               },
             ]}
           >Notes</Text>
+          <TouchableOpacity
+            style={styles.darklightButton}
+            onPress={(toggleTheme)}
+          >
+            <MaterialIcons name={isDarkMode ? 'light-mode' : 'dark-mode'} size={29} color={isDarkMode ? 'white' : 'black'} />
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.settingsButton}
             onPress={() => navigation.navigate('Settings')}
@@ -384,8 +391,7 @@ function Layouts() {
         </TouchableOpacity>
       </Modal>
     </View>
-    </SafeAreaView>
-        </SafeAreaProvider>
+    </SafeAreaView>     
   );
 }
 
@@ -616,6 +622,11 @@ const styles = StyleSheet.create({
     color: '#888',
     fontSize: 18,
     textAlign: 'center',
+  },
+  darklightButton: {
+    padding: 5,
+    marginBottom: 18,
+    marginLeft: '45%',
   },
   
 });

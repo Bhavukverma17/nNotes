@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Switch, TouchableOpacity, Linking } from 'react
 import { AntDesign } from '@expo/vector-icons';
 import { FontContext } from './FontContext';
 import ThemeContext from './ThemeContext';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Settings = ({ navigation }) => {
   const { isCustomFont, toggleFont } = useContext(FontContext);
@@ -11,16 +11,20 @@ const Settings = ({ navigation }) => {
 
   // GitHub URL
   const openGitHub = () => {
-    Linking.openURL('https://github.com/Bhavukverma17');
+    Linking.openURL('https://github.com/Bhavukverma17/sNotes');
   };
   const openX = () => {
     Linking.openURL('https://x.com/bhavukverma17');
   };
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView edges={['top']} style={styles.container}>
-        <View style={styles.scontainer}>
+      <SafeAreaView style={styles.container}>
+        <View
+              style={[
+                styles.scontainer,
+                { backgroundColor: isDarkMode ? 'black' : 'white' },
+              ]}
+            >
           <View style={styles.headingBar}>
             <TouchableOpacity
               style={styles.backButton}
@@ -82,26 +86,6 @@ const Settings = ({ navigation }) => {
               styles.settingText,
               { color: isDarkMode ? 'white' : 'black' },
             ]}
-          >Toggle Dark Mode</Text>
-          <Switch
-            value={isDarkMode} onValueChange={toggleTheme}
-            trackColor={{ false: '#767577', true: '#d17575' }}
-            thumbColor={isCustomFont ? '#EF5656' : '#f4f3f4'}
-          />
-        </View>
-
-        {/* 3 ITEM */}
-        <View
-          style={[
-            styles.sitem,
-            { backgroundColor: isDarkMode ? '#1c1c1c' : '#f0f0f0' },
-          ]}
-        >
-          <Text
-            style={[
-              styles.settingText,
-              { color: isDarkMode ? 'white' : 'black' },
-            ]}
           >
             GitHub Repo
           </Text>
@@ -114,7 +98,7 @@ const Settings = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {/* 4 ITEM */}
+        {/* 3 ITEM */}
         <View
           style={[
             styles.sitem,
@@ -138,7 +122,7 @@ const Settings = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {/* 5 ITEM */}
+        {/* 4 ITEM */}
         <View
           style={[
             styles.sitem,
@@ -164,7 +148,6 @@ const Settings = ({ navigation }) => {
       </View>
     </View>
     </SafeAreaView>
-    </SafeAreaProvider>
   );
 };
 
