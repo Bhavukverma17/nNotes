@@ -1,0 +1,624 @@
+import React, { useState, useEffect, useContext} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+  Modal,
+  Alert,
+  Image,
+  StatusBar,
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ImagePicker from 'expo-image-picker';
+import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { Swipeable } from 'react-native-gesture-handler';
+import { FontContext } from './FontContext';
+import ThemeContext from './ThemeContext'; 
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+
+function Layouts() {
+  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const navigation = useNavigation();
+  const [notes, setNotes] = useState([]);
+  const [expandedNoteId, setExpandedNoteId] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentNote, setCurrentNote] = useState(null);
+  const [newTitle, setNewTitle] = useState('');
+  const [newContent, setNewContent] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content');
+    StatusBar.setBackgroundColor(isDarkMode ? 'black' : 'white');
+    loadNotes();
+
+  }, [isDarkMode]);
+
+  const saveNotes = async (updatedNotes) => {
+    try {
+      await AsyncStorage.setItem('notes', JSON.stringify(updatedNotes));
+    } catch (error) {
+      Alert.alert('Error', 'Failed to save notes');
+    }
+  };
+
+  const loadNotes = async () => {
+    try {
+      const savedNotes = await AsyncStorage.getItem('notes');
+      if (savedNotes) {
+        setNotes(JSON.parse(savedNotes));
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to load notes');
+    }
+  };
+
+  const handleAddNote = () => {
+    setCurrentNote(null);
+    setNewTitle('');
+    setNewContent('');
+    setSelectedImage(null);
+    setModalVisible(true);
+  };
+
+  const handleDeleteNote = (noteId) => {
+    if (!noteId) {
+      if (navigation.canGoBack()) {
+        navigation.goBack();
+      }
+      return;
+    }
+
+    Alert.alert(
+      'Confirm Deletion',
+      'Are you sure you want to delete this note?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            const updatedNotes = notes.filter((note) => note.id !== noteId);
+            setNotes(updatedNotes); // Update the notes state
+            saveNotes(updatedNotes); // Save updated notes to AsyncStorage
+            Alert.alert('Note Deleted', 'The note has been deleted successfully.');
+          },
+        },
+      ]
+    );
+  };
+
+
+  const handleSaveNote = () => {
+    if (!newTitle.trim()) {
+      Alert.alert('You Can Not Save an Empty Note ! Write Something in Title and Notes');
+      return;
+    }
+
+    if (currentNote) {
+      const updatedNotes = notes.map((note) => note.id === currentNote.id
+        ? { ...note, title: newTitle, content: newContent, image: selectedImage }
+        : note
+      );
+      setNotes(updatedNotes);
+      saveNotes(updatedNotes);
+    } else {
+      const newNote = {
+        id: Date.now(),
+        title: newTitle,
+        content: newContent,
+        image: selectedImage,
+      };
+      const updatedNotes = [newNote, ...notes];
+      setNotes(updatedNotes);
+      saveNotes(updatedNotes);
+    }
+    setModalVisible(false);
+  };
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+    }
+  };
+
+  const filteredNotes = notes.filter((note) => note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    note.content.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleSearchToggle = () => {
+    setIsSearching((prev) => !prev);
+    setSearchQuery('');
+  };
+
+  // Open full image on pressing img preview jgadment
+  const [isFullImageModalVisible, setIsFullImageModalVisible] = useState(false);
+  const handleImagePress = () => {
+    setIsFullImageModalVisible(true); // Show the full image modal
+  };
+  const handleSortNotes = () => {
+    const reversedNotes = [...notes].reverse(); // Reverse the notes
+    setNotes(reversedNotes); // Update the state with reversed notes
+    saveNotes(reversedNotes); // Save the reversed notes to AsyncStorage
+  };
+  const handleModalClose = () => {
+    if (newTitle || newContent || selectedImage) {
+      Alert.alert('Unsaved Changes', 'Do you want to discard your changes?', [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Discard', style: 'destructive', onPress: () => setModalVisible(false) },
+      ]);
+    } else {
+      setModalVisible(false);
+    }
+  };
+  const { isCustomFont } = useContext(FontContext);
+  return (
+    <SafeAreaProvider>
+          <SafeAreaView edges={['top']} style={styles.container}>
+    <View
+      style={[
+        styles.scontainer,
+        { backgroundColor: isDarkMode ? 'black' : 'white' },
+      ]}
+    >
+      {isSearching ? (
+        <TextInput
+        style={[
+          styles.searchInput,
+          { backgroundColor: isDarkMode ? '#333' : '#f0f0f0', color: isDarkMode ? 'white' : 'black' },
+        ]}
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        placeholder="Search notes..."
+        placeholderTextColor={isDarkMode ? '#aaa' : '#555'}
+      />
+      ) : (
+        <View style={styles.headerContent}>
+          <Text
+            style={[
+              styles.headerText,
+              {
+                fontFamily: isCustomFont ? 'ndot' : 'sans-serif',
+                color: isDarkMode ? 'white' : 'black',
+              },
+            ]}
+          >Notes</Text>
+          <TouchableOpacity
+            style={styles.settingsButton}
+            onPress={() => navigation.navigate('Settings')}
+          >
+            <AntDesign name="setting" size={24} color={isDarkMode ? 'white' : 'black'} />
+          </TouchableOpacity>
+        </View>
+      )}
+
+<ScrollView contentContainerStyle={[styles.notesContainer,{ backgroundColor: isDarkMode ? '#000' : '#fff' }, { paddingBottom: 100 }]}>
+  {filteredNotes.length === 0 ? (
+    <View style={styles.emptyState}>
+      <Text style={[styles.emptyStateText, { color: isDarkMode ? '#888' : '#888' }]}>
+        There are No Notes, tap on + icon to start
+      </Text>
+    </View>
+  ) : (
+    filteredNotes.map((note) => (
+      <Swipeable
+        key={note.id}
+        renderRightActions={() => (
+          <TouchableOpacity
+                  style={[
+                    styles.deleteSwipeAction,
+                    { backgroundColor: isDarkMode ? '#444' : '#ddd' },
+                  ]}
+                  onPress={() => handleDeleteNote(note.id)}
+                >
+            <Text style={styles.deleteSwipeText}>Delete</Text>
+          </TouchableOpacity>
+        )}
+      >
+        <TouchableOpacity
+          style={[
+            styles.noteSmall,
+            { backgroundColor: isDarkMode ? '#1c1c1c' : '#f0f0f0' },
+          ]}
+          onPress={() => {
+            setCurrentNote(note);
+            setNewTitle(note.title);
+            setNewContent(note.content);
+            setSelectedImage(note.image || null);
+            setModalVisible(true);
+          }}
+        >
+          <Text style={[styles.noteTitle, { color: isDarkMode ? 'white' : 'black' }]}>{note.title}</Text>
+          {note.image && <Image source={{ uri: note.image }} style={styles.noteImage} />}
+          <Text
+                  style={[styles.noteContent, { color: isDarkMode ? 'white' : 'black' }]}
+                  numberOfLines={expandedNoteId === note.id ? null : 4}
+                >
+            {note.content}
+          </Text>
+        </TouchableOpacity>
+      </Swipeable>
+    ))
+  )}
+</ScrollView>
+
+      <View
+        style={[
+          styles.bottomNav,
+          { backgroundColor: isDarkMode ? '#262626' : '#fff' },
+        ]}
+      >
+        <TouchableOpacity style={styles.navButton} onPress={handleSortNotes}>
+          <AntDesign name="bars" size={24} color={isDarkMode ? 'white' : 'black'} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navButton} onPress={handleAddNote}>
+          <AntDesign name="plus" size={24} color={isDarkMode ? 'white' : 'black'} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.navButton, isSearching && styles.navButtonActive]}
+          onPress={handleSearchToggle}
+        >
+          <AntDesign
+  name="search1"
+  size={24}
+  color={isSearching ? 'red' : isDarkMode ? 'white' : 'black'} 
+/>
+        </TouchableOpacity>
+      </View>
+
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={handleModalClose}
+      >
+       <View
+        style={[
+       styles.modalContainer,
+       { backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)' },
+      ]}
+       >
+          <View
+         style={[
+           styles.modalContent,
+           { backgroundColor: isDarkMode ? '#1c1c1c' : '#ffffff' },
+         ]}
+         >
+            <View style={styles.modalTopRow}>
+              <TouchableOpacity style={styles.notesBack} onPress={handleModalClose}>
+              <AntDesign name="arrowleft" size={24} color={isDarkMode ? 'white' : 'black'} />
+              </TouchableOpacity>
+              <View style={styles.addNoteView}>
+              <Text
+            style={[
+              styles.addNoteTxt,
+              { color: isDarkMode ? 'white' : 'black', fontFamily: isCustomFont ? 'ndot' : 'sans-serif' },
+            ]}
+          >Add Note</Text>
+              </View>
+
+              {/* SAVE ICON IN NOTE MAKING */}
+              <TouchableOpacity onPress={handleSaveNote} style={styles.notesSave}>
+              <AntDesign name="save" size={24} color={isDarkMode ? 'white' : 'black'} />
+              </TouchableOpacity>
+            </View>
+            <TextInput
+        style={[
+          styles.inputTitle,
+          { backgroundColor: isDarkMode ? '#333' : '#f0f0f0', color: isDarkMode ? 'white' : 'black' },
+        ]}
+        value={newTitle}
+        onChangeText={setNewTitle}
+        placeholder="Write the title here..."
+        placeholderTextColor={isDarkMode ? '#bbb' : '#888'}
+      />
+
+<TextInput
+        style={[
+          styles.input,
+          { backgroundColor: isDarkMode ? '#333' : '#f0f0f0', color: isDarkMode ? 'white' : 'black' },
+        ]}
+        multiline
+        value={newContent}
+        onChangeText={setNewContent}
+        placeholder="Write your note here and Don't Forget to Tap the Save button (in Top Right Corner) to Save the note"
+        placeholderTextColor={isDarkMode ? '#bbb' : '#888'}
+      />
+            {/* Image Preview with TouchableOpacity */}
+            {selectedImage && (
+              <TouchableOpacity onPress={handleImagePress}>
+                <Image source={{ uri: selectedImage }} style={styles.imagePreview} />
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+        onPress={pickImage}
+        style={[
+          styles.imageButton,
+          { backgroundColor: isDarkMode ? '#444' : '#EF5656' },
+        ]}
+      >
+              <AntDesign name="picture" size={30} color="white" style={styles.addimage} />
+            </TouchableOpacity>
+
+            {selectedImage && (
+             <TouchableOpacity
+             onPress={() => setSelectedImage(null)}
+             style={[
+               styles.removeImageButton,
+               { backgroundColor: isDarkMode ? '#555' : '#e74c3c' },
+             ]}
+           >
+                <Text style={styles.removeImageButtonText}>Remove Image</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      </Modal>
+      {/* Full Image Modal */}
+      <Modal
+        visible={isFullImageModalVisible}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setIsFullImageModalVisible(false)}
+      >
+        <TouchableOpacity
+    style={[
+      styles.fullImageModalContainer,
+      { backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.9)' : 'rgba(255, 255, 255, 0.9)' },
+    ]}
+    onPress={() => setIsFullImageModalVisible(false)} // Close modal when tapping outside image
+  >
+          <Image source={{ uri: selectedImage }} style={styles.fullImage} />
+        </TouchableOpacity>
+      </Modal>
+    </View>
+    </SafeAreaView>
+        </SafeAreaProvider>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
+  scontainer: {
+    flex: 1,
+    backgroundColor: 'black',
+    paddingHorizontal: 18,
+    paddingTop: 20,
+  },
+  deleteSwipeAction: {
+    height: '88%',
+    width: 80,
+    marginLeft: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+  },
+  darkMode: {
+    backgroundColor: 'black',
+    color: 'white',
+  },
+  lightMode: {
+    backgroundColor: 'white',
+    color: 'black',
+  },
+  headerText: {
+    fontSize: 34,
+    fontWeight: 'bold',
+    fontFamily: 'ndot',
+    color: 'black',
+    marginBottom: 23,
+  },
+  searchInput: {
+    backgroundColor: '#f0f0f0',
+    color: 'black',
+    fontSize: 16,
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 10,
+  },
+  noteSmall: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+  },
+  noteTitle: {
+    color:'black',
+    fontWeight: 'bold',
+    marginBottom: 5,
+    fontSize: 17,
+  },
+  noteContent: {
+    color: 'black',
+    fontSize: 15,
+  },
+  bottomNav: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor:'#ffffff',
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    borderRadius: 35,
+    position: 'absolute',
+    bottom: 16,
+    left: 25,
+    right: 25,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 8,
+    zIndex: 10,
+  },
+  navButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 90,
+    height: 50,
+    borderRadius: 15,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    marginHorizontal: -10,
+  },
+  modalContent: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'black',
+    borderRadius: 16,
+    padding: 20,
+  },
+  inputTitle: {
+    backgroundColor: '#1c1c1c',
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    borderRadius: 16,
+    padding: 10,
+    marginBottom: 10,
+    marginTop: 15,
+    paddingLeft: 15,
+  },
+  input: {
+    backgroundColor: '#1c1c1c',
+    color: 'white',
+    fontSize: 16,
+    borderRadius: 20,
+    padding: 10,
+    marginBottom: 20,
+    height: '88%',
+    textAlignVertical: 'top',
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
+  searchInput: {
+    backgroundColor: '#333',
+    color: 'white',
+    fontSize: 16,
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 18,
+  },
+  addimage: {
+    color: 'white',
+    fontWeight: 'bold',
+     paddingVertical: 15,
+    textAlign: "center"
+  },
+  imagePreviewContainer: {
+    marginBottom: 10,
+  },
+  imagePreview: {
+    width: 65,
+    height: 100,
+    borderRadius: 8,
+    bottom: 127,
+    left: 10,
+  },
+  removeImageButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    paddingVertical: 14,
+    textAlign: "center",
+    fontSize: 12,
+  },
+  imageButton: {
+    position: 'absolute',
+    bottom: 15,
+    right: 28,
+    backgroundColor: '#EF5656',
+    height: 60,
+    borderRadius: 12,
+    alignItems: 'center',
+    width: 60,
+  },
+  removeImageButton: {
+    position: 'absolute',
+    bottom: 15,
+    right: 28,
+    backgroundColor: '#e74c3c',
+    height: 60,
+    borderRadius: 12,
+    alignItems: 'center',
+    width: 60,
+  },
+   // Styles for the full image modal
+   fullImageModalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  },
+  fullImage: {
+    width: '100%',
+    height: '80%',
+    resizeMode: 'contain', // Ehe Haiga - To Ensure the image is properly scaled
+    borderRadius: 8,
+  },
+  addNoteView: {
+    width: '30%',
+    height: 40,
+  },
+  addNoteTxt: {
+    fontSize: 25,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  modalTopRow: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 23,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+  },
+  settingsButton: {
+    padding: 5,
+    marginBottom: 18,
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  emptyStateText: {
+    color: '#888',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  
+});
+
+export default Layouts;
+
