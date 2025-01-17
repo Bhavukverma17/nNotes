@@ -1,4 +1,4 @@
-# sNotes App
+# nNotes App
 by Bhavuk Verma
 
 Features

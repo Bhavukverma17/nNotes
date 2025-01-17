@@ -13,15 +13,14 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Swipeable } from 'react-native-gesture-handler';
-import { FontContext } from './FontContext';
-import ThemeContext from './ThemeContext'; 
+import { FontContext } from '../FontContext';
+import ThemeContext from '../ThemeContext'; 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialIcons } from '@expo/vector-icons';
 
-function Layouts() {
+function Home() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const navigation = useNavigation();
   const [notes, setNotes] = useState([]);
@@ -182,7 +181,7 @@ function Layouts() {
         ]}
         value={searchQuery}
         onChangeText={setSearchQuery}
-        placeholder="Search notes..."
+        placeholder="Search your notes here..."
         placeholderTextColor={isDarkMode ? '#aaa' : '#555'}
       />
       ) : (
@@ -211,11 +210,11 @@ function Layouts() {
         </View>
       )}
 
-<ScrollView contentContainerStyle={[styles.notesContainer,{ backgroundColor: isDarkMode ? '#000' : '#fff' }, { paddingBottom: 100 }]}>
+<ScrollView contentContainerStyle={[styles.scontainer,{ backgroundColor: isDarkMode ? '#000' : '#fff' }, { paddingBottom: 100 }]}>
   {filteredNotes.length === 0 ? (
     <View style={styles.emptyState}>
       <Text style={[styles.emptyStateText, { color: isDarkMode ? '#888' : '#888' }]}>
-        There are No Notes, tap on + icon to start
+       No Notes, tap on + icon to start
       </Text>
     </View>
   ) : (
@@ -280,7 +279,7 @@ function Layouts() {
           <AntDesign
   name="search1"
   size={24}
-  color={isSearching ? 'red' : isDarkMode ? 'white' : 'black'} 
+  color={isSearching ? '#EF5656' : isDarkMode ? 'white' : 'black'} 
 />
         </TouchableOpacity>
       </View>
@@ -358,7 +357,6 @@ function Layouts() {
       >
               <AntDesign name="picture" size={30} color="white" style={styles.addimage} />
             </TouchableOpacity>
-
             {selectedImage && (
              <TouchableOpacity
              onPress={() => setSelectedImage(null)}
@@ -616,7 +614,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
   },
   emptyStateText: {
     color: '#888',
@@ -631,5 +628,5 @@ const styles = StyleSheet.create({
   
 });
 
-export default Layouts;
+export default Home;
 

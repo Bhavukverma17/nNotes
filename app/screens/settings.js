@@ -1,20 +1,23 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity, Linking } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { FontContext } from './FontContext';
-import ThemeContext from './ThemeContext';
+import { FontContext } from '../FontContext';
+import ThemeContext from '../ThemeContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Settings = ({ navigation }) => {
   const { isCustomFont, toggleFont } = useContext(FontContext);
-  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const { isDarkMode } = useContext(ThemeContext);
 
   // GitHub URL
   const openGitHub = () => {
-    Linking.openURL('https://github.com/Bhavukverma17/sNotes');
+    Linking.openURL('https://github.com/Bhavukverma17/nNotes');
   };
   const openX = () => {
     Linking.openURL('https://x.com/bhavukverma17');
+  };
+  const openGithubReleases = () => {
+    Linking.openURL('https://github.com/Bhavukverma17/nNotes/releases');
   };
 
   return (
@@ -137,7 +140,7 @@ const Settings = ({ navigation }) => {
           >
             App Updates
           </Text>
-          <TouchableOpacity style={styles.fwdarrow}>
+          <TouchableOpacity style={styles.fwdarrow} onPress={openGithubReleases} >
             <AntDesign
               name="arrowright"
               size={24}
@@ -145,6 +148,32 @@ const Settings = ({ navigation }) => {
             />
           </TouchableOpacity>
         </View>
+
+         {/* 5 ITEM */}
+         <View
+          style={[
+            styles.sitem,
+            { backgroundColor: isDarkMode ? '#1c1c1c' : '#f0f0f0' },
+          ]}
+        >
+          <Text
+            style={[
+              styles.settingText,
+              { color: isDarkMode ? 'white' : 'black' },
+            ]}
+          >
+            Version
+          </Text>
+          <Text
+            style={[
+              styles.versionText,
+              { color: isDarkMode ? 'white' : 'black' },
+            ]}
+          >
+            V1.0.1
+          </Text>
+        </View>
+
       </View>
     </View>
     </SafeAreaView>
@@ -181,6 +210,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'ndot',
     fontSize: 20,
+  },
+  versionText: {
+      color: 'white',
+      fontFamily: 'ndot',
+      fontSize: 20,
+      marginRight: 10,
   },
   settingsOptions: {
     flexDirection: 'column',

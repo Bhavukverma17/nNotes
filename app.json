@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "sNotes",
-    "slug": "sNotes",
+    "name": "nNotes",
+    "slug": "nNotes",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,7 +20,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.bhavukverma.snotes"
+      "package": "com.bhavukverma.nNotes"
     },
     "web": {
       "favicon": "./assets/favicon.png"
