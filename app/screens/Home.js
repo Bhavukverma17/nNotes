@@ -349,7 +349,7 @@ function Home() {
         onPress={pickImage}
         style={[
           styles.imageButton,
-          { backgroundColor: isDarkMode ? '#444' : '#EF5656' },
+          { backgroundColor: isDarkMode ? '#EF5656' : '#EF5656' },
         ]}
       >
               <AntDesign name="picture" size={30} color="white" style={styles.addimage} />
@@ -401,12 +401,11 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   deleteSwipeAction: {
-    height: '88%',
+    height: '85%',
     width: 80,
-    marginLeft: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
+    borderRadius: 15,
   },
   headerText: {
     fontSize: 34,
@@ -486,7 +485,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     borderRadius: 16,
     padding: 10,
-    marginBottom: 10,
     marginTop: 15,
     paddingLeft: 15,
   },
@@ -604,6 +602,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 250,
   },
   emptyStateText: {
     color: '#888',
