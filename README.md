@@ -1,4 +1,4 @@
-# nNotes App
+# nNotes App (Nothing OS Inspired Notes App)
 by Bhavuk Verma
 
 Features
