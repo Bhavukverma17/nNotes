@@ -24,7 +24,7 @@ function Home() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const navigation = useNavigation();
   const [notes, setNotes] = useState([]);
-  const [expandedNoteId, setExpandedNoteId] = useState(null);
+  const [expandedNoteId] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentNote, setCurrentNote] = useState(null);
   const [newTitle, setNewTitle] = useState('');
@@ -155,10 +155,7 @@ function Home() {
   };
   const handleModalClose = () => {
     if (newTitle || newContent || selectedImage) {
-      Alert.alert('Unsaved Changes', 'Do you want to discard your changes?', [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Discard', style: 'destructive', onPress: () => setModalVisible(false) },
-      ]);
+      handleSaveNote();
     } else {
       setModalVisible(false);
     }
@@ -181,7 +178,7 @@ function Home() {
         ]}
         value={searchQuery}
         onChangeText={setSearchQuery}
-        placeholder="Search your notes here..."
+        placeholder="Search here..."
         placeholderTextColor={isDarkMode ? '#aaa' : '#555'}
       />
       ) : (
@@ -210,7 +207,7 @@ function Home() {
         </View>
       )}
 
-<ScrollView contentContainerStyle={[styles.scontainer,{ backgroundColor: isDarkMode ? '#000' : '#fff' }, { paddingBottom: 100 }]}>
+<ScrollView contentContainerStyle={[styles.notescontain,{ backgroundColor: isDarkMode ? '#000' : '#fff' }, { paddingBottom: 100 }]}>
   {filteredNotes.length === 0 ? (
     <View style={styles.emptyState}>
       <Text style={[styles.emptyStateText, { color: isDarkMode ? '#888' : '#888' }]}>
@@ -225,7 +222,7 @@ function Home() {
           <TouchableOpacity
                   style={[
                     styles.deleteSwipeAction,
-                    { backgroundColor: isDarkMode ? '#444' : '#ddd' },
+                    { backgroundColor: isDarkMode ? '#ef5656' : '#ef5656' },
                   ]}
                   onPress={() => handleDeleteNote(note.id)}
                 >
@@ -267,7 +264,7 @@ function Home() {
         ]}
       >
         <TouchableOpacity style={styles.navButton} onPress={handleSortNotes}>
-          <AntDesign name="bars" size={24} color={isDarkMode ? 'white' : 'black'} />
+          <AntDesign name="swap" size={24} color={isDarkMode ? 'white' : 'black'} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.navButton} onPress={handleAddNote}>
           <AntDesign name="plus" size={24} color={isDarkMode ? 'white' : 'black'} />
@@ -277,10 +274,10 @@ function Home() {
           onPress={handleSearchToggle}
         >
           <AntDesign
-  name="search1"
-  size={24}
-  color={isSearching ? '#EF5656' : isDarkMode ? 'white' : 'black'} 
-/>
+              name="search1"
+              size={24}
+              color={isSearching ? '#EF5656' : isDarkMode ? 'white' : 'black'} 
+          />
         </TouchableOpacity>
       </View>
 
@@ -299,7 +296,7 @@ function Home() {
           <View
          style={[
            styles.modalContent,
-           { backgroundColor: isDarkMode ? '#1c1c1c' : '#ffffff' },
+           { backgroundColor: isDarkMode ? '#000000' : '#ffffff' },
          ]}
          >
             <View style={styles.modalTopRow}>
@@ -323,23 +320,23 @@ function Home() {
             <TextInput
         style={[
           styles.inputTitle,
-          { backgroundColor: isDarkMode ? '#333' : '#f0f0f0', color: isDarkMode ? 'white' : 'black' },
+          { backgroundColor: isDarkMode ? '#000' : '#fff', color: isDarkMode ? 'white' : 'black' },
         ]}
         value={newTitle}
         onChangeText={setNewTitle}
-        placeholder="Write the title here..."
+        placeholder="Title"
         placeholderTextColor={isDarkMode ? '#bbb' : '#888'}
       />
 
-<TextInput
+     <TextInput
         style={[
           styles.input,
-          { backgroundColor: isDarkMode ? '#333' : '#f0f0f0', color: isDarkMode ? 'white' : 'black' },
+          { backgroundColor: isDarkMode ? '#000' : '#fff', color: isDarkMode ? 'white' : 'black' },
         ]}
         multiline
         value={newContent}
         onChangeText={setNewContent}
-        placeholder="Write your note here and Don't Forget to Tap the Save button (in Top Right Corner) to Save the note"
+        placeholder="Note"
         placeholderTextColor={isDarkMode ? '#bbb' : '#888'}
       />
             {/* Image Preview with TouchableOpacity */}
@@ -401,7 +398,6 @@ const styles = StyleSheet.create({
   scontainer: {
     flex: 1,
     backgroundColor: 'black',
-    paddingHorizontal: 18,
     paddingTop: 20,
   },
   deleteSwipeAction: {
@@ -411,14 +407,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
-  },
-  darkMode: {
-    backgroundColor: 'black',
-    color: 'white',
-  },
-  lightMode: {
-    backgroundColor: 'white',
-    color: 'black',
   },
   headerText: {
     fontSize: 34,
@@ -432,14 +420,14 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 16,
     borderRadius: 8,
-    padding: 10,
+    padding: 15,
     marginBottom: 10,
   },
   noteSmall: {
-    backgroundColor: '#f0f0f0',
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
+    marginHorizontal: 18,
   },
   noteTitle: {
     color:'black',
@@ -458,11 +446,11 @@ const styles = StyleSheet.create({
     backgroundColor:'#ffffff',
     paddingVertical: 15,
     paddingHorizontal: 10,
-    borderRadius: 35,
+    borderRadius: 45,
     position: 'absolute',
     bottom: 16,
-    left: 25,
-    right: 25,
+    left: 35,
+    right: 35,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -515,13 +503,14 @@ const styles = StyleSheet.create({
     paddingRight: 15,
   },
   searchInput: {
-    backgroundColor: '#333',
-    color: 'white',
-    fontSize: 16,
-    borderRadius: 8,
-    padding: 10,
+    fontSize: 20,
+    paddingHorizontal: 15,
+    textAlign: 'center',
     marginBottom: 10,
-    borderRadius: 18,
+    borderRadius: 30,
+    width: '92%',
+    alignSelf: 'center',
+    height: 50,
   },
   addimage: {
     color: 'white',
@@ -605,6 +594,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
+    paddingHorizontal: 18,
   },
   settingsButton: {
     padding: 5,
@@ -625,7 +615,9 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     marginLeft: '45%',
   },
-  
+  deleteSwipeText: {
+    color: 'white',
+  },
 });
 
 export default Home;

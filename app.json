@@ -2,7 +2,7 @@
   "expo": {
     "name": "nNotes",
     "slug": "nNotes",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -30,7 +30,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "7ab06b8a-84c6-4767-a932-5c1903027164"
+        "projectId": "88f2edca-4153-43aa-a99a-fc102f2abc9f"
       }
     }
   }
