@@ -238,7 +238,7 @@ function Home() {
                   <TouchableOpacity
                     style={[
                       styles.deleteSwipeAction,
-                      { backgroundColor: isDarkMode ? "#ef5656" : "#ef5656" },
+                      { backgroundColor: isDarkMode ? "#d71921" : "#d71921" },
                     ]}
                     onPress={() => handleDeletePress(note.id)}
                   >
@@ -315,7 +315,7 @@ function Home() {
             <AntDesign
               name="search1"
               size={24}
-              color={isSearching ? "#EF5656" : isDarkMode ? "white" : "black"}
+              color={isSearching ? "#d71921" : isDarkMode ? "white" : "black"}
             />
           </TouchableOpacity>
         </View>
@@ -412,7 +412,7 @@ function Home() {
                   style={styles.notesSave}
                 >
                   <AntDesign
-                    name="save"
+                    name="staro"
                     size={24}
                     color={isDarkMode ? "white" : "black"}
                   />
@@ -459,7 +459,7 @@ function Home() {
                 onPress={pickImage}
                 style={[
                   styles.imageButton,
-                  { backgroundColor: isDarkMode ? "#EF5656" : "#EF5656" },
+                  { backgroundColor: isDarkMode ? "#d71921" : "#d71921" },
                 ]}
               >
                 <AntDesign
@@ -656,7 +656,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 15,
     right: 28,
-    backgroundColor: "#EF5656",
+    backgroundColor: "#d71921",
     height: 60,
     borderRadius: 12,
     alignItems: "center",
@@ -754,7 +754,7 @@ dmodalTitle: {
   fontSize: 20,
   fontWeight: 'bold',
   marginBottom: 10,
-  color: '#EF5656',
+  color: '#d71921',
 },
 dmodalMessage: {
   fontSize: 16,
@@ -779,7 +779,7 @@ dcancelButton: {
   backgroundColor: '#3c3c3c',
 },
 ddeleteButton: {
-  backgroundColor: '#EF5656',
+  backgroundColor: '#d71921',
 },
 dbuttonText: {
   color: '#fff',

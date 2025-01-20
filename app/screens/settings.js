@@ -73,7 +73,7 @@ const Settings = ({ navigation }) => {
                 value={isCustomFont}
                 onValueChange={toggleFont}
                 trackColor={{ false: '#767577', true: '#d17575' }}
-                thumbColor={isCustomFont ? '#EF5656' : '#f4f3f4'}
+                thumbColor={isCustomFont ? '#d71921' : '#f4f3f4'}
               />
             </View>
 
@@ -208,12 +208,12 @@ const styles = StyleSheet.create({
   },
   settingText: {
     color: 'white',
-    fontFamily: 'ndot',
-    fontSize: 20,
+    fontFamily: 'courier',
+    fontSize: 25,
   },
   versionText: {
       color: 'white',
-      fontFamily: 'ndot',
+      fontFamily: 'Lettera-light',
       fontSize: 20,
       marginRight: 10,
   },
