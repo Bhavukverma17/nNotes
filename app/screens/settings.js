@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Switch,
   TouchableOpacity,
   Linking,
   ScrollView,
@@ -368,10 +367,5 @@ const styles = StyleSheet.create({
     top: 27,
     width: 30,
     height: 40,
-  },
-  fontswitch: {
-    position: "absolute",
-    right: 10,
-    top: 30,
   },
 });
