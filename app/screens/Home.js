@@ -89,12 +89,12 @@ export default function Home() {
   };
 
   const handleSaveNote = () => {
-    if (!newTitle.trim()) {
-      Alert.alert(
-        "You Can Not Save an Empty Note ! Write Something in Title and Notes"
-      );
-      return;
-    }
+    // if (!newTitle.trim()) {
+    //   Alert.alert(
+    //     "You Can Not Save an Empty Note ! Write Something in Title and Notes"
+    //   );
+    //   return;
+    // }
 
     if (currentNote) {
       const updatedNotes = notes.map((note) =>
