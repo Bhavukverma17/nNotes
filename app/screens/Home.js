@@ -200,16 +200,6 @@ export default function Home() {
               Notes
             </Text>
             <TouchableOpacity
-              style={styles.darklightButton}
-              onPress={toggleTheme}
-            >
-              <MaterialIcons
-                name={isDarkMode ? "light-mode" : "dark-mode"}
-                size={29}
-                color={isDarkMode ? "white" : "black"}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
               style={styles.settingsButton}
               onPress={() => navigation.navigate("Settings")}
             >
@@ -540,6 +530,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "black",
     marginBottom: 10,
+    width: "50%",
   },
   searchInput: {
     backgroundColor: "#f0f0f0",
@@ -737,11 +728,6 @@ const styles = StyleSheet.create({
     color: "#888",
     fontSize: 18,
     textAlign: "center",
-  },
-  darklightButton: {
-    padding: 5,
-    marginBottom: 5,
-    marginLeft: "45%",
   },
   deleteSwipeText: {
     color: "white",

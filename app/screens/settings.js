@@ -26,7 +26,7 @@ export default function Settings() {
     interMedium,
   });
   const { isCustomFont, toggleFont } = useContext(FontContext);
-  const { isDarkMode } = useContext(ThemeContext);
+  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const navigation = useNavigation();
 
   // GitHub URL
@@ -86,10 +86,10 @@ export default function Settings() {
             Theme
           </Text>
         </View>
-        <View
+        <TouchableOpacity onPress={toggleFont}
           style={[
-            styles.itemWrapper,
-            { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+            styles.itemWrapperndot,
+            { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0", },
           ]}
         >
           <Text
@@ -111,13 +111,42 @@ export default function Settings() {
             Change font Family of Headers to NDot Font
             Default is Inter Font. 
           </Text>
-          <Switch style={styles.fontswitch}
-              value={isCustomFont}
-              onValueChange={toggleFont}
-              trackColor={{ false: "#767577", true: "#d17575" }}
-              thumbColor={isCustomFont ? "#d71921" : "#f4f3f4"}
-            />
-        </View>
+          <View style={styles.ndotarrow}>
+              <Text style={{color: isDarkMode ? "white" : "black", fontSize: 25, fontFamily: "ndot", paddingLeft: 20,}}>
+                {">"}
+              </Text>
+            </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={toggleTheme}
+          style={[
+            styles.itemWrapperThin,
+            { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+          ]}
+        >
+          <Text
+            style={[
+              styles.itemHeadText,
+              { color: isDarkMode ? "white" : "black", fontSize: 18,
+               },
+            ]}
+          >
+            Color Theme
+          </Text>
+          <Text
+            style={[
+              styles.itemContentText,
+              { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16,
+               },
+            ]}
+          >
+            Change the Dark/light theme..
+          </Text>
+          <View style={styles.ndotarrowThin}>
+              <Text style={{color: isDarkMode ? "white" : "black", fontSize: 25, fontFamily: "ndot", paddingLeft: 20,}}>
+                {">"}
+              </Text>
+            </View>
+        </TouchableOpacity>
 
         {/* ITEM 1 Style 3.0 - END */}
 
@@ -291,6 +320,16 @@ const styles = StyleSheet.create({
     paddingRight: 50,
     marginHorizontal: 20,
     borderRadius: 20,
+  },
+  itemWrapperndot: {
+    backgroundColor: "red",
+    height: 104,
+    paddingLeft: 22,
+    paddingRight: 50,
+    marginHorizontal: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginBottom: 3,
   },
   itemWrapperThin1: {
     backgroundColor: "red",
