@@ -112,10 +112,7 @@ export default function Settings() {
             Change font Family of Headers to NDot Font
             Default is Inter Font. 
           </Text>
-          <Switch
-              position="absolute"
-              right="10"
-              top="25"
+          <Switch style={styles.fontswitch}
               value={isCustomFont}
               onValueChange={toggleFont}
               trackColor={{ false: "#767577", true: "#d17575" }}
@@ -332,5 +329,10 @@ const styles = StyleSheet.create({
     top: 27,
     width: 30,
     height: 40,
+  },
+  fontswitch: {
+    position: "absolute",
+    right: 10,
+    top: 30,
   },
 });
