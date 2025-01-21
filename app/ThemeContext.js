@@ -4,7 +4,7 @@ import { Appearance } from 'react-native';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-    const [isDarkMode, setIsDarkMode] = useState(true);
+    const [isDarkMode, setIsDarkMode] = useState();
 
   useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
