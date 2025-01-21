@@ -4,6 +4,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontContext } from '../FontContext';
 import ThemeContext from '../ThemeContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from "@react-navigation/native";
 import {
   useFonts,
   Inter_400Regular as inter,
@@ -11,13 +12,14 @@ import {
 } from '@expo-google-fonts/inter';
 import { Cutive_400Regular as cutive } from "@expo-google-fonts/cutive";
 
-export default function Settings(navigation) {
+export default function Settings() {
    let [fontsLoaded] = useFonts({
       inter,
       cutive,
     });
   const { isCustomFont, toggleFont } = useContext(FontContext);
   const { isDarkMode } = useContext(ThemeContext);
+  const navigation = useNavigation();
 
   // GitHub URL
   const openGitHub = () => {
@@ -41,7 +43,7 @@ export default function Settings(navigation) {
           <View style={styles.headingBar}>
             <TouchableOpacity
               style={styles.backButton}
-              onPress={() => navigation.goBack()}
+              onPress={() => navigation.navigate("Home")}
             >
               <AntDesign
                 name="arrowleft"
