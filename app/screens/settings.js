@@ -4,8 +4,18 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontContext } from '../FontContext';
 import ThemeContext from '../ThemeContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  useFonts,
+  Inter_400Regular as inter,
+  
+} from '@expo-google-fonts/inter';
+import { Cutive_400Regular as cutive } from "@expo-google-fonts/cutive";
 
-const Settings = ({ navigation }) => {
+export default function Settings(navigation) {
+   let [fontsLoaded] = useFonts({
+      inter,
+      cutive,
+    });
   const { isCustomFont, toggleFont } = useContext(FontContext);
   const { isDarkMode } = useContext(ThemeContext);
 
@@ -45,11 +55,12 @@ const Settings = ({ navigation }) => {
                 styles.title,
                 {
                   color: isDarkMode ? 'white' : 'black',
-                  fontFamily: isCustomFont ? 'ndot' : 'sans-serif',
+                  fontFamily: isCustomFont ? 'ndot' : 'cutive',
+                  fontSize: 22,
                 },
               ]}
             >
-              Settings
+              App Settings
             </Text>
           </View>
 
@@ -198,9 +209,8 @@ const styles = StyleSheet.create({
   },
   backButton: {},
   title: {
-    fontSize: 24,
+    fontSize: 20,
     color: 'white',
-    fontWeight: 'bold',
     paddingLeft: 10,
   },
   arrowleft: {
@@ -208,8 +218,8 @@ const styles = StyleSheet.create({
   },
   settingText: {
     color: 'white',
-    fontFamily: 'courier',
-    fontSize: 25,
+    fontFamily: 'ndot',
+    fontSize: 20,
   },
   versionText: {
       color: 'white',
@@ -244,5 +254,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-export default Settings;

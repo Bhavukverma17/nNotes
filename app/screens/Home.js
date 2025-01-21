@@ -19,8 +19,18 @@ import { Swipeable } from "react-native-gesture-handler";
 import { FontContext } from "../FontContext";
 import ThemeContext from "../ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  useFonts,
+  Inter_400Regular as inter,
+  
+} from '@expo-google-fonts/inter';
+import { Cutive_400Regular as cutive } from "@expo-google-fonts/cutive";
 
-function Home() {
+export default function Home() {
+  let [fontsLoaded] = useFonts({
+    inter,
+    cutive,
+  });
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const navigation = useNavigation();
   const [notes, setNotes] = useState([]);
@@ -182,7 +192,7 @@ function Home() {
               style={[
                 styles.headerText,
                 {
-                  fontFamily: isCustomFont ? "ndot" : "sans-serif",
+                  fontFamily: isCustomFont ? "ndot" : "cutive",
                   color: isDarkMode ? "white" : "black",
                 },
               ]}
@@ -398,7 +408,7 @@ function Home() {
                       styles.addNoteTxt,
                       {
                         color: isDarkMode ? "white" : "black",
-                        fontFamily: isCustomFont ? "ndot" : "sans-serif",
+                        fontFamily: isCustomFont ? "ndot" : "cutive",
                       },
                     ]}
                   >
@@ -528,8 +538,6 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 34,
-    fontWeight: "bold",
-    fontFamily: "ndot",
     color: "black",
     marginBottom: 23,
   },
@@ -552,6 +560,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
     fontSize: 17,
+    fontFamily: 'inter',
   },
   noteContent: {
     color: "black",
@@ -686,13 +695,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   addNoteView: {
-    width: "30%",
+    width: "50%",
     height: 40,
   },
   addNoteTxt: {
-    fontSize: 25,
+    fontSize: 24,
     color: "white",
-    fontWeight: "bold",
+    alignSelf: 'center',
   },
   modalTopRow: {
     flexDirection: "row",
@@ -789,4 +798,3 @@ dbuttonText: {
 
 });
 
-export default Home;
