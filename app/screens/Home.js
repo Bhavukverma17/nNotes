@@ -537,9 +537,9 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   headerText: {
-    fontSize: 34,
+    fontSize: 30,
     color: "black",
-    marginBottom: 23,
+    marginBottom: 10,
   },
   searchInput: {
     backgroundColor: "#f0f0f0",
@@ -724,7 +724,7 @@ const styles = StyleSheet.create({
   },
   settingsButton: {
     padding: 5,
-    marginBottom: 18,
+    marginBottom: 5,
   },
   emptyState: {
     flex: 1,
@@ -740,7 +740,7 @@ const styles = StyleSheet.create({
   },
   darklightButton: {
     padding: 5,
-    marginBottom: 18,
+    marginBottom: 5,
     marginLeft: "45%",
   },
   deleteSwipeText: {
