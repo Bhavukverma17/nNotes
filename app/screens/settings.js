@@ -139,7 +139,7 @@ export default function Settings() {
                },
             ]}
           >
-            Change the Dark/light theme..
+            Change the Dark/light theme.
           </Text>
           <View style={styles.ndotarrowThin}>
               <Text style={{color: isDarkMode ? "white" : "black", fontSize: 25, fontFamily: "ndot", paddingLeft: 20,}}>
