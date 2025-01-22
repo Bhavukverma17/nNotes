@@ -13,14 +13,18 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Swipeable } from "react-native-gesture-handler";
 import { FontContext } from "../FontContext";
 import ThemeContext from "../ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFonts, Cutive_400Regular as cutive } from "@expo-google-fonts/cutive";
 
 function Home() {
+  let [fontsLoaded] = useFonts({
+      cutive
+    });
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const navigation = useNavigation();
   const [notes, setNotes] = useState([]);
@@ -182,23 +186,13 @@ function Home() {
               style={[
                 styles.headerText,
                 {
-                  fontFamily: isCustomFont ? "ndot" : "sans-serif",
+                  fontFamily: isCustomFont ? "ndot" : "cutive",
                   color: isDarkMode ? "white" : "black",
                 },
               ]}
             >
               Notes
             </Text>
-            <TouchableOpacity
-              style={styles.darklightButton}
-              onPress={toggleTheme}
-            >
-              <MaterialIcons
-                name={isDarkMode ? "light-mode" : "dark-mode"}
-                size={29}
-                color={isDarkMode ? "white" : "black"}
-              />
-            </TouchableOpacity>
             <TouchableOpacity
               style={styles.settingsButton}
               onPress={() => navigation.navigate("Settings")}
@@ -528,7 +522,6 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 34,
-    fontWeight: "bold",
     fontFamily: "ndot",
     color: "black",
     marginBottom: 23,
