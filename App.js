@@ -5,6 +5,7 @@ import Home from './app/screens/Home.js'; // Ehe hegi Main file, jithe code aa
 import Settings from './app/screens/settings.js'; 
 import { FontProvider } from './app/FontContext.js'; // FONT da switch bnon lyi
 import { ThemeProvider } from './app/ThemeContext.js'
+import { TransitionPresets } from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
 
@@ -14,11 +15,12 @@ export default function App() {
     <FontProvider>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ 
-        headerShown: false,
-        animation: 'fade'
+        headerShown: false, 
+        navigationBarColor: "white",
         }}>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Settings" component={Settings}  />
+        <Stack.Screen name="Settings" component={Settings} options={{
+      ...TransitionPresets.SlideFromRightIOS, }} />
       </Stack.Navigator>
     </NavigationContainer>
     </FontProvider>

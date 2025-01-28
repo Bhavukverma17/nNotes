@@ -19,12 +19,24 @@ import { Swipeable } from "react-native-gesture-handler";
 import { FontContext } from "../FontContext";
 import ThemeContext from "../ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useFonts, Cutive_400Regular as cutive } from "@expo-google-fonts/cutive";
+import { useFonts } from "expo-font";
+import { Ionicons } from "@expo/vector-icons";
+import * as SplashScreen from 'expo-splash-screen';
+import * as NavigationBar from 'expo-navigation-bar';
+
+SplashScreen.preventAutoHideAsync();
 
 function Home() {
   let [fontsLoaded] = useFonts({
-      cutive
+      'ntype' : require('../../assets/fonts/NType82-Regular.otf'),
+      'ndot' : require('../../assets/fonts/ndot.ttf'),
     });
+    useEffect(() => {
+      if (fontsLoaded) {
+        SplashScreen.hideAsync();
+      }
+    }, [fontsLoaded]);
+
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const navigation = useNavigation();
   const [notes, setNotes] = useState([]);
@@ -42,6 +54,7 @@ function Home() {
   useEffect(() => {
     StatusBar.setBarStyle(isDarkMode ? "light-content" : "dark-content");
     StatusBar.setBackgroundColor(isDarkMode ? "black" : "white");
+    NavigationBar.setBackgroundColorAsync(isDarkMode ? "black" : "transparent");
     loadNotes();
   }, [isDarkMode]);
 
@@ -83,13 +96,6 @@ function Home() {
   };
 
   const handleSaveNote = () => {
-    if (!newTitle.trim()) {
-      Alert.alert(
-        "You Can Not Save an Empty Note ! Write Something in Title and Notes"
-      );
-      return;
-    }
-
     if (currentNote) {
       const updatedNotes = notes.map((note) =>
         note.id === currentNote.id
@@ -158,6 +164,7 @@ function Home() {
     }
   };
   const { isCustomFont } = useContext(FontContext);
+
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -186,7 +193,7 @@ function Home() {
               style={[
                 styles.headerText,
                 {
-                  fontFamily: isCustomFont ? "ndot" : "cutive",
+                  fontFamily: isCustomFont ? "ndot" : "ntype",
                   color: isDarkMode ? "white" : "black",
                 },
               ]}
@@ -197,11 +204,7 @@ function Home() {
               style={styles.settingsButton}
               onPress={() => navigation.navigate("Settings")}
             >
-              <AntDesign
-                name="setting"
-                size={24}
-                color={isDarkMode ? "white" : "black"}
-              />
+              <Ionicons name="settings-outline" size={24} color={isDarkMode ? "white" : "black"} />
             </TouchableOpacity>
           </View>
         )}
@@ -290,7 +293,7 @@ function Home() {
         >
           <TouchableOpacity style={styles.navButton} onPress={handleSortNotes}>
             <AntDesign
-              name="swap"
+              name="bars"
               size={24}
               color={isDarkMode ? "white" : "black"}
             />
@@ -392,7 +395,7 @@ function Home() {
                       styles.addNoteTxt,
                       {
                         color: isDarkMode ? "white" : "black",
-                        fontFamily: isCustomFont ? "ndot" : "sans-serif",
+                        fontFamily: isCustomFont ? "ndot" : "ntype",
                       },
                     ]}
                   >
@@ -402,11 +405,11 @@ function Home() {
 
                 {/* SAVE ICON IN NOTE MAKING */}
                 <TouchableOpacity
-                  onPress={handleSaveNote}
+                  onPress={pickImage}
                   style={styles.notesSave}
                 >
                   <AntDesign
-                    name="staro"
+                    name="picture"
                     size={24}
                     color={isDarkMode ? "white" : "black"}
                   />
@@ -430,7 +433,7 @@ function Home() {
                 style={[
                   styles.input,
                   {
-                    backgroundColor: isDarkMode ? "#000" : "#fff",
+                    backgroundColor: isDarkMode ? "#1c1c1c" : "#fff",
                     color: isDarkMode ? "white" : "black",
                   },
                 ]}
@@ -442,36 +445,27 @@ function Home() {
               />
               {/* Image Preview with TouchableOpacity */}
               {selectedImage && (
-                <TouchableOpacity onPress={handleImagePress}>
+                <TouchableOpacity onPress={handleImagePress} styles={styles.imgPressOpen}>
                   <Image
                     source={{ uri: selectedImage }}
                     style={styles.imagePreview}
                   />
                 </TouchableOpacity>
               )}
-              <TouchableOpacity
-                onPress={pickImage}
-                style={[
-                  styles.imageButton,
-                  { backgroundColor: isDarkMode ? "#d71921" : "#d71921" },
-                ]}
-              >
-                <AntDesign
-                  name="picture"
-                  size={30}
-                  color="white"
-                  style={styles.addimage}
-                />
-              </TouchableOpacity>
               {selectedImage && (
                 <TouchableOpacity
                   onPress={() => setSelectedImage(null)}
                   style={[
                     styles.removeImageButton,
-                    { backgroundColor: isDarkMode ? "#555" : "#e74c3c" },
+                    { backgroundColor: isDarkMode ? "#fff" : "#fff" },
                   ]}
                 >
-                  <Text style={styles.removeImageButtonText}>Remove Image</Text>
+                 <AntDesign
+                  name="close"
+                  size={30}
+                  color="black"
+                  style={styles.removeImageButtonText}
+                />
                 </TouchableOpacity>
               )}
             </View>
@@ -480,7 +474,7 @@ function Home() {
         {/* Full Image Modal */}
         <Modal
           visible={isFullImageModalVisible}
-          animationType="fade"
+          animationType="slide"
           transparent={true}
           onRequestClose={() => setIsFullImageModalVisible(false)}
         >
@@ -514,25 +508,17 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   deleteSwipeAction: {
-    height: "85%",
+    height: '85%',
     width: 80,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 15,
   },
   headerText: {
-    fontSize: 34,
-    fontFamily: "ndot",
+    fontSize: 40,
     color: "black",
     marginBottom: 23,
-  },
-  searchInput: {
-    backgroundColor: "#f0f0f0",
-    color: "black",
-    fontSize: 16,
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 10,
+    width: '40%',
   },
   noteSmall: {
     borderRadius: 16,
@@ -564,9 +550,9 @@ const styles = StyleSheet.create({
     right: 35,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 8,
+    elevation: 5,
     zIndex: 10,
   },
   navButton: {
@@ -593,77 +579,60 @@ const styles = StyleSheet.create({
   inputTitle: {
     backgroundColor: "#1c1c1c",
     color: "white",
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
     borderRadius: 16,
     padding: 10,
-    marginTop: 15,
     paddingLeft: 15,
   },
   input: {
-    backgroundColor: "#1c1c1c",
     color: "white",
     fontSize: 16,
-    borderRadius: 20,
+    borderRadius: 25,
     padding: 10,
     marginBottom: 20,
-    height: "88%",
+    height: "70%",
     textAlignVertical: "top",
     paddingLeft: 15,
     paddingRight: 15,
   },
   searchInput: {
+    backgroundColor: "#f0f0f0",
+    color: "black",
     fontSize: 20,
     paddingHorizontal: 15,
-    textAlign: "center",
     marginBottom: 10,
     borderRadius: 30,
     width: "92%",
     alignSelf: "center",
     height: 50,
   },
-  addimage: {
-    color: "white",
-    fontWeight: "bold",
-    paddingVertical: 15,
-    textAlign: "center",
-  },
   imagePreviewContainer: {
     marginBottom: 10,
   },
   imagePreview: {
-    width: 65,
-    height: 100,
-    borderRadius: 8,
-    bottom: 127,
-    left: 10,
+    width: 394,
+    height: 150,
+    borderRadius: 30,
+    bottom: 10,
+    borderWidth: 1,
+    borderColor: '#616161',
   },
   removeImageButtonText: {
-    color: "white",
+    color: "#000",
     fontWeight: "bold",
-    paddingVertical: 14,
     textAlign: "center",
-    fontSize: 12,
-  },
-  imageButton: {
-    position: "absolute",
-    bottom: 15,
-    right: 28,
-    backgroundColor: "#d71921",
-    height: 60,
-    borderRadius: 12,
-    alignItems: "center",
-    width: 60,
+    paddingVertical: 5,
   },
   removeImageButton: {
     position: "absolute",
-    bottom: 15,
-    right: 28,
+    bottom: 112,
+    right: 27,
     backgroundColor: "#e74c3c",
-    height: 60,
-    borderRadius: 12,
+    height: 40,
+    borderRadius: 100,
     alignItems: "center",
-    width: 60,
+    width: 40,
   },
   // Styles for the full image modal
   fullImageModalContainer: {
@@ -679,13 +648,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   addNoteView: {
-    width: "30%",
+    width: 130,
     height: 40,
   },
   addNoteTxt: {
-    fontSize: 25,
+    fontSize: 32,
     color: "white",
-    fontWeight: "bold",
+    width: 200,
   },
   modalTopRow: {
     flexDirection: "row",
@@ -779,7 +748,18 @@ dbuttonText: {
   fontWeight: 'bold',
   fontSize: 16,
 },
-
+noteImage: {
+  width: '100%',
+  height: 200,
+  borderRadius: 15,
+  marginBottom: 7,
+  marginTop: 7,
+},
+imgPressOpen: {
+  backgroundColor: 'red',
+  width: 150,
+  height: 150,
+},
 });
 
 export default Home;

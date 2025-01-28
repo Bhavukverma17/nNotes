@@ -12,19 +12,8 @@ import { FontContext } from "../FontContext";
 import ThemeContext from "../ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import {
-  useFonts,
-  Inter_400Regular as inter,
-  Inter_500Medium as interMedium,
-} from "@expo-google-fonts/inter";
-import { Cutive_400Regular as cutive } from "@expo-google-fonts/cutive";
 
 export default function Settings() {
-  let [fontsLoaded] = useFonts({
-    inter,
-    cutive,
-    interMedium,
-  });
   const { isCustomFont, toggleFont } = useContext(FontContext);
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const navigation = useNavigation();
@@ -51,7 +40,7 @@ export default function Settings() {
         <View style={styles.headingBar}>
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => navigation.goBack()}
           >
             <AntDesign
               name="arrowleft"
@@ -65,8 +54,8 @@ export default function Settings() {
               styles.title,
               {
                 color: isDarkMode ? "white" : "black",
-                fontFamily: isCustomFont ? "ndot" : "cutive",
-                fontSize: 22,
+                fontFamily: isCustomFont ? "ndot" : "ntype",
+                fontSize: 28,
               },
             ]}
           >
@@ -92,6 +81,7 @@ export default function Settings() {
             { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0", },
           ]}
         >
+        <View style={styles.itemCont}>
           <Text
             style={[
               styles.itemHeadText,
@@ -108,21 +98,23 @@ export default function Settings() {
                },
             ]}
           >
-            Change font Family of Headers to NDot Font
-            Default is Inter Font. 
+            Change Font of Headers to NDot. Default Font is NType. 
           </Text>
+          </View>
           <View style={styles.ndotarrow}>
               <Text style={{color: isDarkMode ? "white" : "black", fontSize: 25, fontFamily: "ndot", paddingLeft: 20,}}>
                 {">"}
               </Text>
-            </View>
+          </View>
         </TouchableOpacity>
+
         <TouchableOpacity onPress={toggleTheme}
           style={[
             styles.itemWrapperThin,
             { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
           ]}
         >
+          <View style={styles.itemCont}>
           <Text
             style={[
               styles.itemHeadText,
@@ -141,6 +133,7 @@ export default function Settings() {
           >
             Change the Dark/light theme.
           </Text>
+          </View>
           <View style={styles.ndotarrowThin}>
               <Text style={{color: isDarkMode ? "white" : "black", fontSize: 25, fontFamily: "ndot", paddingLeft: 20,}}>
                 {">"}
@@ -167,6 +160,7 @@ export default function Settings() {
             { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
           ]}
         >
+          <View style={styles.itemCont}>
           <Text
             style={[
               styles.itemHeadText,
@@ -185,6 +179,7 @@ export default function Settings() {
           >
             App is Open source. You can view or contribute to Github repository. 
           </Text>
+          </View>
           <View style={styles.ndotarrow}>
               <Text style={{color: isDarkMode ? "white" : "black", fontSize: 25, fontFamily: "ndot", paddingLeft: 20,}}>
                 {">"}
@@ -212,6 +207,7 @@ export default function Settings() {
             { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
           ]}
         >
+          <View style={styles.itemCont}>
           <Text
             style={[
               styles.itemHeadText,
@@ -230,6 +226,7 @@ export default function Settings() {
           >
             Report Bugs on X.com
           </Text>
+          </View>
           <View style={styles.ndotarrowThin}>
               <Text style={{color: isDarkMode ? "white" : "black", fontSize: 25, fontFamily: "ndot", paddingLeft: 20,}}>
                 {">"}
@@ -243,6 +240,7 @@ export default function Settings() {
             { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
           ]}
         >
+          <View style={styles.itemCont}>
           <Text
             style={[
               styles.itemHeadText,
@@ -259,13 +257,14 @@ export default function Settings() {
                },
             ]}
           >
-            V1.2.0
+            V1.3.0 Beta
           </Text>
+          </View>
           <View style={styles.ndotarrowThin}>
               <Text style={{color: isDarkMode ? "white" : "black", fontSize: 25, fontFamily: "ndot", paddingLeft: 20,}}>
                 {">"}
               </Text>
-            </View>
+          </View>
         </TouchableOpacity>
 
         {/* ITEM 3 Style 3.0 - END */}
@@ -296,6 +295,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "white",
     paddingLeft: 20,
+    width: 300,
   },
   arrowleft: {
     marginRight: 10,
@@ -310,62 +310,73 @@ const styles = StyleSheet.create({
   },
   itemTitleText: {
     fontSize: 20,
-    fontWeight: "700",
+    fontWeight: "600",
     marginLeft: 10,
   },
   itemWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     backgroundColor: "red",
     height: 104,
     paddingLeft: 22,
-    paddingRight: 50,
     marginHorizontal: 20,
     borderRadius: 20,
   },
   itemWrapperndot: {
-    backgroundColor: "red",
-    height: 104,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingLeft: 22,
-    paddingRight: 50,
     marginHorizontal: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     marginBottom: 3,
   },
   itemWrapperThin1: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     backgroundColor: "red",
     height: 85,
     paddingLeft: 22,
-    paddingRight: 50,
     marginHorizontal: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     marginBottom: 3,
   },
   itemWrapperThin: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     backgroundColor: "red",
-    height: 85,
     paddingLeft: 22,
-    paddingRight: 50,
     marginHorizontal: 20,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
   itemHeadText: {
-    paddingTop: 15,
     fontWeight: '600',
   },
   ndotarrow: {
-    position: "absolute",
-    right: 20,
-    top: 35,
     width: 30,
     height: 40,
+    // backgroundColor: "green",
+    marginRight: 20,
+
   },
   ndotarrowThin: {
-    position: "absolute",
-    right: 20,
-    top: 27,
     width: 30,
     height: 40,
+    marginRight: 20,
+  },
+  itemCont: {
+    // backgroundColor: "red",
+    flexDirection: "column",
+    paddingVertical: 15,
+    width: "80%",
+  },
+  itemContentText: {
+   
   },
 });
