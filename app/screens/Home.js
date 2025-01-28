@@ -62,7 +62,7 @@ function Home() {
     try {
       await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
     } catch (error) {
-      Alert.alert("Error", "Failed to save notes");
+      Alert.alert("エラー", "メモの保存に失敗しました");
     }
   };
 
@@ -73,7 +73,7 @@ function Home() {
         setNotes(JSON.parse(savedNotes));
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to load notes");
+      Alert.alert("エラー", "メモの読み込みに失敗しました");
     }
   };
 
@@ -184,7 +184,7 @@ function Home() {
             ]}
             value={searchQuery}
             onChangeText={setSearchQuery}
-            placeholder="Search here..."
+            placeholder="メモを検索..."
             placeholderTextColor={isDarkMode ? "#aaa" : "#555"}
           />
         ) : (
@@ -198,7 +198,7 @@ function Home() {
                 },
               ]}
             >
-              Notes
+              メモ
             </Text>
             <TouchableOpacity
               style={styles.settingsButton}
@@ -224,7 +224,7 @@ function Home() {
                   { color: isDarkMode ? "#888" : "#888" },
                 ]}
               >
-                No Notes, tap on + icon to start
+                + アイコンをタップでメモを作成します
               </Text>
             </View>
           ) : (
@@ -326,10 +326,10 @@ function Home() {
         >
           <View style={styles.overlay}>
             <View style={[styles.dmodalContainer, { backgroundColor: isDarkMode ? "#141414" : "white" },]}>
-              <Text style={styles.dmodalTitle}>Delete Note</Text>
+              <Text style={styles.dmodalTitle}>メモを削除</Text>
               <Text style={[styles.dmodalMessage, { color: isDarkMode ? "#fff" : "black" }]}>
-                Are you sure you want to delete this note? This action cannot be
-                undone.
+                このメモを削除してもよろしいですか？
+                この操作は元に戻せません。
               </Text>
 
               <View style={styles.dmodalButtons}>
@@ -337,7 +337,7 @@ function Home() {
                   style={[styles.button, styles.dcancelButton]}
                   onPress={() => setDeleteModalVisible(false)}
                 >
-                  <Text style={styles.dbuttonText}>Cancel</Text>
+                  <Text style={styles.dbuttonText}>キャンセル</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -347,7 +347,7 @@ function Home() {
                     setDeleteModalVisible(false);
                   }}
                 >
-                  <Text style={styles.dbuttonText}>Delete</Text>
+                  <Text style={styles.dbuttonText}>削除</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -399,7 +399,7 @@ function Home() {
                       },
                     ]}
                   >
-                    Add Note
+                    メモを作成
                   </Text>
                 </View>
 
@@ -425,7 +425,7 @@ function Home() {
                 ]}
                 value={newTitle}
                 onChangeText={setNewTitle}
-                placeholder="Title"
+                placeholder="タイトル"
                 placeholderTextColor={isDarkMode ? "#bbb" : "#888"}
               />
 
@@ -440,7 +440,7 @@ function Home() {
                 multiline
                 value={newContent}
                 onChangeText={setNewContent}
-                placeholder="Note"
+                placeholder="メモ"
                 placeholderTextColor={isDarkMode ? "#bbb" : "#888"}
               />
               {/* Image Preview with TouchableOpacity */}
