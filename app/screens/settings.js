@@ -59,7 +59,7 @@ export default function Settings() {
               },
             ]}
           >
-            App Settings
+            アプリの設定
           </Text>
         </View>
 
@@ -72,7 +72,7 @@ export default function Settings() {
               { color: isDarkMode ? "white" : "black", fontSize: 16 },
             ]}
           >
-            Theme
+            テーマ
           </Text>
         </View>
         <TouchableOpacity onPress={toggleFont}
@@ -89,7 +89,7 @@ export default function Settings() {
                },
             ]}
           >
-            NDot Headers
+            NDot のヘッダー
           </Text>
           <Text
             style={[
@@ -98,7 +98,7 @@ export default function Settings() {
                },
             ]}
           >
-            Change Font of Headers to NDot. Default Font is NType. 
+            ヘッダーのフォントを NDot に変更します。デフォルトのフォントは NType です。 
           </Text>
           </View>
           <View style={styles.ndotarrow}>
@@ -122,7 +122,7 @@ export default function Settings() {
                },
             ]}
           >
-            Color Theme
+            カラーテーマ
           </Text>
           <Text
             style={[
@@ -131,7 +131,7 @@ export default function Settings() {
                },
             ]}
           >
-            Change the Dark/light theme.
+            ライトまたはダークにテーマを変更します。
           </Text>
           </View>
           <View style={styles.ndotarrowThin}>
@@ -151,7 +151,7 @@ export default function Settings() {
               { color: isDarkMode ? "white" : "black", fontSize: 16 },
             ]}
           >
-            Source Code
+            ソースコード
           </Text>
         </View>
         <TouchableOpacity onPress={openGitHub}
@@ -168,7 +168,7 @@ export default function Settings() {
                },
             ]}
           >
-            GitHub Repo
+            GitHub リポジトリ
           </Text>
           <Text
             style={[
@@ -177,7 +177,7 @@ export default function Settings() {
                },
             ]}
           >
-            App is Open source. You can view or contribute to Github repository. 
+            このアプリはオープンソースです。GitHub リポジトリを閲覧や貢献ができます。
           </Text>
           </View>
           <View style={styles.ndotarrow}>
@@ -197,7 +197,7 @@ export default function Settings() {
               { color: isDarkMode ? "white" : "black", fontSize: 16 },
             ]}
           >
-            About
+            アプリについて
           </Text>
         </View>
 
@@ -215,7 +215,7 @@ export default function Settings() {
                },
             ]}
           >
-            FeedBack & Support
+            フィードバックとサポート
           </Text>
           <Text
             style={[
@@ -224,7 +224,7 @@ export default function Settings() {
                },
             ]}
           >
-            Report Bugs on X.com
+            X.com でバグを報告する。
           </Text>
           </View>
           <View style={styles.ndotarrowThin}>
@@ -248,7 +248,7 @@ export default function Settings() {
                },
             ]}
           >
-            Version
+            バージョン
           </Text>
           <Text
             style={[
