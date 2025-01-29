@@ -14,8 +14,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 
 export default function Settings() {
-  const { isCustomFont, toggleFont } = useContext(FontContext);
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const { fonts, selectedFont, selectFont } = useContext(FontContext);
   const navigation = useNavigation();
 
   // GitHub URL
@@ -54,7 +54,7 @@ export default function Settings() {
               styles.title,
               {
                 color: isDarkMode ? "white" : "black",
-                fontFamily: isCustomFont ? "ndot" : "ntype",
+                fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
                 fontSize: 28,
               },
             ]}
@@ -64,211 +64,259 @@ export default function Settings() {
         </View>
 
         <ScrollView style={{ flex: 1 }}>
-        {/* ITEM 1 Style 3.0 - START */}
-        <View style={styles.itemTitle}>
-          <Text
-            style={[
-              styles.itemTitleText,
-              { color: isDarkMode ? "white" : "black", fontSize: 16 },
-            ]}
-          >
-            Theme
-          </Text>
-        </View>
-        <TouchableOpacity onPress={toggleFont}
-          style={[
-            styles.itemWrapperndot,
-            { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0", },
-          ]}
-        >
-        <View style={styles.itemCont}>
-          <Text
-            style={[
-              styles.itemHeadText,
-              { color: isDarkMode ? "white" : "black", fontSize: 18,
-               },
-            ]}
-          >
-            NDot Headers
-          </Text>
-          <Text
-            style={[
-              styles.itemContentText,
-              { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16,
-               },
-            ]}
-          >
-            Change Font of Headers to NDot. Default Font is NType. 
-          </Text>
+          
+          {/* ITEM 1 Style 3.0 - START */}
+          <View style={styles.itemTitle}>
+            <Text
+              style={[
+                styles.itemTitleText,
+                { color: isDarkMode ? "white" : "black", fontSize: 16 },
+              ]}
+            >
+              Theme
+            </Text>
           </View>
-          <View style={styles.ndotarrow}>
-              <Text style={{color: isDarkMode ? "white" : "black", fontSize: 25, fontFamily: "ndot", paddingLeft: 20,}}>
-                {">"}
+          <View
+            style={[
+              styles.itemWrapperndot,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+            ]}
+          >
+            <View style={styles.itemContf}>
+              <Text
+                style={[
+                  styles.itemHeadText,
+                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                ]}
+              >
+                Header Font
               </Text>
-          </View>
-        </TouchableOpacity>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }} >
+            {Object.entries(fonts).map(([key, displayName]) => (
+              <TouchableOpacity
+                key={key}
+                onPress={() => selectFont(key)}
+                style={{ paddingTop: 15, paddingRight: 20, }}
+              >
+                <Text
+                  style={{
+                    color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16
+                  }}
+                >
+                  {displayName} {selectedFont === key && <AntDesign name="checkcircle" size={14} color="#D71921" />}
+                </Text>
+              </TouchableOpacity>
+            ))}
+            </View>
+            </View>
 
-        <TouchableOpacity onPress={toggleTheme}
-          style={[
-            styles.itemWrapperThin,
-            { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
-          ]}
-        >
-          <View style={styles.itemCont}>
-          <Text
-            style={[
-              styles.itemHeadText,
-              { color: isDarkMode ? "white" : "black", fontSize: 18,
-               },
-            ]}
-          >
-            Color Theme
-          </Text>
-          <Text
-            style={[
-              styles.itemContentText,
-              { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16,
-               },
-            ]}
-          >
-            Change the Dark/light theme.
-          </Text>
+            {/* 
+            <View>
+            {Object.entries(fonts).map(([key, displayName]) => (
+              <TouchableOpacity
+                key={key}
+                onPress={() => selectFont(key)}
+                style={{ padding: 15 }}
+              >
+                <Text
+                  style={{
+                    fontFamily: key === "ntype" ? undefined : key,
+                    fontWeight: selectedFont === key ? "bold" : "normal",
+                  }}
+                >
+                  {displayName} {selectedFont === key && "✓"}
+                </Text>
+              </TouchableOpacity>
+            ))}
+            </View>
+            */}
           </View>
-          <View style={styles.ndotarrowThin}>
-              <Text style={{color: isDarkMode ? "white" : "black", fontSize: 25, fontFamily: "ndot", paddingLeft: 20,}}>
+
+          <TouchableOpacity
+            onPress={toggleTheme}
+            style={[
+              styles.itemWrapperThin,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+            ]}
+          >
+            <View style={styles.itemCont}>
+              <Text
+                style={[
+                  styles.itemHeadText,
+                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                ]}
+              >
+                Color Theme
+              </Text>
+              <Text
+                style={[
+                  styles.itemContentText,
+                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                ]}
+              >
+                Change the Dark/light theme.
+              </Text>
+            </View>
+            <View style={styles.ndotarrowThin}>
+              <Text
+                style={{
+                  color: isDarkMode ? "white" : "black",
+                  fontSize: 25,
+                  fontFamily: "ndot",
+                  paddingLeft: 20,
+                }}
+              >
                 {">"}
               </Text>
             </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
 
-        {/* ITEM 1 Style 3.0 - END */}
+          {/* ITEM 1 Style 3.0 - END */}
 
-        {/* ITEM 2 Style 3.0 - START */}
-        <View style={styles.itemTitle}>
-          <Text
-            style={[
-              styles.itemTitleText,
-              { color: isDarkMode ? "white" : "black", fontSize: 16 },
-            ]}
-          >
-            Source Code
-          </Text>
-        </View>
-        <TouchableOpacity onPress={openGitHub}
-          style={[
-            styles.itemWrapper,
-            { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
-          ]}
-        >
-          <View style={styles.itemCont}>
-          <Text
-            style={[
-              styles.itemHeadText,
-              { color: isDarkMode ? "white" : "black", fontSize: 18,
-               },
-            ]}
-          >
-            GitHub Repo
-          </Text>
-          <Text
-            style={[
-              styles.itemContentText,
-              { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16,
-               },
-            ]}
-          >
-            App is Open source. You can view or contribute to Github repository. 
-          </Text>
+          {/* ITEM 2 Style 3.0 - START */}
+          <View style={styles.itemTitle}>
+            <Text
+              style={[
+                styles.itemTitleText,
+                { color: isDarkMode ? "white" : "black", fontSize: 16 },
+              ]}
+            >
+              Source Code
+            </Text>
           </View>
-          <View style={styles.ndotarrow}>
-              <Text style={{color: isDarkMode ? "white" : "black", fontSize: 25, fontFamily: "ndot", paddingLeft: 20,}}>
+          <TouchableOpacity
+            onPress={openGitHub}
+            style={[
+              styles.itemWrapper,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+            ]}
+          >
+            <View style={styles.itemCont}>
+              <Text
+                style={[
+                  styles.itemHeadText,
+                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                ]}
+              >
+                GitHub Repo
+              </Text>
+              <Text
+                style={[
+                  styles.itemContentText,
+                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                ]}
+              >
+                App is Open source. You can view or contribute to Github
+                repository.
+              </Text>
+            </View>
+            <View style={styles.ndotarrow}>
+              <Text
+                style={{
+                  color: isDarkMode ? "white" : "black",
+                  fontSize: 25,
+                  fontFamily: "ndot",
+                  paddingLeft: 20,
+                }}
+              >
                 {">"}
               </Text>
             </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
 
-        {/* ITEM 2 Style 3.0 - END */}
+          {/* ITEM 2 Style 3.0 - END */}
 
-        {/* ITEM 3 Style 3.0 - START */}
-        <View style={styles.itemTitle}>
-          <Text
-            style={[
-              styles.itemTitleText,
-              { color: isDarkMode ? "white" : "black", fontSize: 16 },
-            ]}
-          >
-            About
-          </Text>
-        </View>
-
-        <TouchableOpacity onPress={openX}
-          style={[
-            styles.itemWrapperThin1,
-            { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
-          ]}
-        >
-          <View style={styles.itemCont}>
-          <Text
-            style={[
-              styles.itemHeadText,
-              { color: isDarkMode ? "white" : "black", fontSize: 18,
-               },
-            ]}
-          >
-            FeedBack & Support
-          </Text>
-          <Text
-            style={[
-              styles.itemContentText,
-              { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16,
-               },
-            ]}
-          >
-            Report Bugs on X.com
-          </Text>
+          {/* ITEM 3 Style 3.0 - START */}
+          <View style={styles.itemTitle}>
+            <Text
+              style={[
+                styles.itemTitleText,
+                { color: isDarkMode ? "white" : "black", fontSize: 16 },
+              ]}
+            >
+              About
+            </Text>
           </View>
-          <View style={styles.ndotarrowThin}>
-              <Text style={{color: isDarkMode ? "white" : "black", fontSize: 25, fontFamily: "ndot", paddingLeft: 20,}}>
+
+          <TouchableOpacity
+            onPress={openX}
+            style={[
+              styles.itemWrapperThin1,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+            ]}
+          >
+            <View style={styles.itemCont}>
+              <Text
+                style={[
+                  styles.itemHeadText,
+                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                ]}
+              >
+                FeedBack & Support
+              </Text>
+              <Text
+                style={[
+                  styles.itemContentText,
+                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                ]}
+              >
+                Report Bugs on X.com
+              </Text>
+            </View>
+            <View style={styles.ndotarrowThin}>
+              <Text
+                style={{
+                  color: isDarkMode ? "white" : "black",
+                  fontSize: 25,
+                  fontFamily: "ndot",
+                  paddingLeft: 20,
+                }}
+              >
                 {">"}
               </Text>
             </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
 
-        <TouchableOpacity onPress={openGithubReleases}
-          style={[
-            styles.itemWrapperThin,
-            { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
-          ]}
-        >
-          <View style={styles.itemCont}>
-          <Text
+          <TouchableOpacity
+            onPress={openGithubReleases}
             style={[
-              styles.itemHeadText,
-              { color: isDarkMode ? "white" : "black", fontSize: 18,
-               },
+              styles.itemWrapperThin,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
             ]}
           >
-            Version
-          </Text>
-          <Text
-            style={[
-              styles.itemContentText,
-              { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16,
-               },
-            ]}
-          >
-            V1.3.0 Beta
-          </Text>
-          </View>
-          <View style={styles.ndotarrowThin}>
-              <Text style={{color: isDarkMode ? "white" : "black", fontSize: 25, fontFamily: "ndot", paddingLeft: 20,}}>
+            <View style={styles.itemCont}>
+              <Text
+                style={[
+                  styles.itemHeadText,
+                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                ]}
+              >
+                Version
+              </Text>
+              <Text
+                style={[
+                  styles.itemContentText,
+                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                ]}
+              >
+                V1.3.0 Beta
+              </Text>
+            </View>
+            <View style={styles.ndotarrowThin}>
+              <Text
+                style={{
+                  color: isDarkMode ? "white" : "black",
+                  fontSize: 25,
+                  fontFamily: "ndot",
+                  paddingLeft: 20,
+                }}
+              >
                 {">"}
               </Text>
-          </View>
-        </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
 
-        {/* ITEM 3 Style 3.0 - END */}
-
+          {/* ITEM 3 Style 3.0 - END */}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -371,10 +419,14 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   itemCont: {
-    // backgroundColor: "red",
     flexDirection: "column",
     paddingVertical: 15,
     width: "80%",
+  },
+  itemContf: {
+    flexDirection: "column",
+    paddingVertical: 15,
+    width: "100%",
   },
   itemContentText: {
    

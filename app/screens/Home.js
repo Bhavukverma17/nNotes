@@ -30,6 +30,7 @@ function Home() {
   let [fontsLoaded] = useFonts({
       'ntype' : require('../../assets/fonts/NType82-Regular.otf'),
       'ndot' : require('../../assets/fonts/ndot.ttf'),
+      'cutive' : require('../../assets/fonts/CutiveMono.ttf'),
     });
     useEffect(() => {
       if (fontsLoaded) {
@@ -50,6 +51,7 @@ function Home() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [noteIdToDelete, setNoteIdToDelete] = useState(null);
+  const {selectedFont } = useContext(FontContext);
 
   useEffect(() => {
     StatusBar.setBarStyle(isDarkMode ? "light-content" : "dark-content");
@@ -193,7 +195,7 @@ function Home() {
               style={[
                 styles.headerText,
                 {
-                  fontFamily: isCustomFont ? "ndot" : "ntype",
+                  fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
                   color: isDarkMode ? "white" : "black",
                 },
               ]}
@@ -395,7 +397,7 @@ function Home() {
                       styles.addNoteTxt,
                       {
                         color: isDarkMode ? "white" : "black",
-                        fontFamily: isCustomFont ? "ndot" : "ntype",
+                        fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
                       },
                     ]}
                   >
