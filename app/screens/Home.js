@@ -30,7 +30,8 @@ function Home() {
   let [fontsLoaded] = useFonts({
       'ntype' : require('../../assets/fonts/NType82-Regular.otf'),
       'ndot' : require('../../assets/fonts/ndot.ttf'),
-      'cutive' : require('../../assets/fonts/CutiveMono.ttf'),
+      'ndotcapi' : require('../../assets/fonts/NDot57Caps.otf'),
+      'interm' : require('../../assets/fonts/Inter-Medium.otf'),
     });
     useEffect(() => {
       if (fontsLoaded) {

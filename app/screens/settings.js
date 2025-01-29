@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Linking,
   ScrollView,
+  Modal,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontContext } from "../FontContext";
@@ -16,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function Settings() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const { fonts, selectedFont, selectFont } = useContext(FontContext);
+  const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
 
   // GitHub URL
@@ -76,22 +78,56 @@ export default function Settings() {
               Theme
             </Text>
           </View>
-          <View
+          <TouchableOpacity onPress={() => setModalVisible(true)}
             style={[
               styles.itemWrapperndot,
               { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
             ]}
           >
-            <View style={styles.itemContf}>
+            <View style={styles.itemCont}>
               <Text
                 style={[
                   styles.itemHeadText,
                   { color: isDarkMode ? "white" : "black", fontSize: 18 },
                 ]}
               >
-                Header Font
+                Headers Font
               </Text>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }} >
+             <Text
+                style={[
+                  styles.itemContentText,
+                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                ]}
+              >
+                Change Font of Headers to NDot. Default Font is Ntype
+              </Text>
+            </View>
+            <View style={styles.ndotarrowThin}>
+              <Text
+                style={{
+                  color: isDarkMode ? "white" : "black",
+                  fontSize: 25,
+                  fontFamily: "ndot",
+                  paddingLeft: 20,
+                }}
+              >
+                {">"}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <Modal
+            visible={modalVisible}
+            transparent={true}
+            animationType="slide"
+            onRequestClose={() => setModalVisible(false)} 
+          >
+            <View style={[styles.modalContainer, { backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.85)" : "rgba(255, 255, 255, 0.83)" },]}>
+              <View style={[styles.modalContent, { backgroundColor: isDarkMode ? "#141414" : "#f0f0f0" },]}>
+              <Text
+                style={[styles.modalTitle, { color: isDarkMode ? "white" : "black" },]}
+              > Fonts </Text>
+              <View>
             {Object.entries(fonts).map(([key, displayName]) => (
               <TouchableOpacity
                 key={key}
@@ -108,29 +144,14 @@ export default function Settings() {
               </TouchableOpacity>
             ))}
             </View>
+                
+                {/* Button to close the modal */}
+                <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+                  <Text style={[styles.buttonText, { color: "white" },]}>Close</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-
-            {/* 
-            <View>
-            {Object.entries(fonts).map(([key, displayName]) => (
-              <TouchableOpacity
-                key={key}
-                onPress={() => selectFont(key)}
-                style={{ padding: 15 }}
-              >
-                <Text
-                  style={{
-                    fontFamily: key === "ntype" ? undefined : key,
-                    fontWeight: selectedFont === key ? "bold" : "normal",
-                  }}
-                >
-                  {displayName} {selectedFont === key && "✓"}
-                </Text>
-              </TouchableOpacity>
-            ))}
-            </View>
-            */}
-          </View>
+          </Modal>
 
           <TouchableOpacity
             onPress={toggleTheme}
@@ -299,7 +320,7 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
                 ]}
               >
-                V1.3.0 Beta
+                V1.3.1
               </Text>
             </View>
             <View style={styles.ndotarrowThin}>
@@ -430,5 +451,42 @@ const styles = StyleSheet.create({
   },
   itemContentText: {
    
+  },
+  itemWrapperMid: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingLeft: 22,
+    marginHorizontal: 20,
+    marginBottom: 3,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.23)", // Semi-transparent background
+  },
+  modalContent: {
+    width: 300,
+    padding: 25,
+    backgroundColor: "#fff",
+    borderRadius: 25,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 10,
+  },
+  modalTitle: {
+    fontSize: 26,
+    marginBottom: 10,
+  },
+  closeButton: {
+    backgroundColor: "#d71921",
+    padding: 10,
+    borderRadius: 45,
+    marginTop: 20,
+    alignItems: 'center'
   },
 });

@@ -5,8 +5,10 @@ export const FontContext = createContext();
 
 export const FontProvider = ({ children }) => {
   const fonts = {
-    ntype: '1. Ntype',
+    ntype: '1. NType',
     ndot: '2. NDot',
+    ndotcapi : '3. NDot Caps',
+    interm : '4. Inter',
   };
 
   const [selectedFont, setSelectedFont] = useState('ntype');
