@@ -23,6 +23,7 @@ import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import * as SplashScreen from 'expo-splash-screen';
 import * as NavigationBar from 'expo-navigation-bar';
+import { useLanguage } from "./LanguageContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,6 +31,8 @@ function Home() {
   let [fontsLoaded] = useFonts({
       'ntype' : require('../../assets/fonts/NType82-Regular.otf'),
       'ndot' : require('../../assets/fonts/ndot.ttf'),
+      'ndotcapi' : require('../../assets/fonts/NDot57Caps.otf'),
+      'interm' : require('../../assets/fonts/Inter-Medium.otf'),
     });
     useEffect(() => {
       if (fontsLoaded) {
@@ -50,6 +53,8 @@ function Home() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [noteIdToDelete, setNoteIdToDelete] = useState(null);
+  const {selectedFont } = useContext(FontContext);
+  const { translations } = useLanguage();
 
   useEffect(() => {
     StatusBar.setBarStyle(isDarkMode ? "light-content" : "dark-content");
@@ -184,7 +189,7 @@ function Home() {
             ]}
             value={searchQuery}
             onChangeText={setSearchQuery}
-            placeholder="Search here..."
+            placeholder={translations.SearchHere}
             placeholderTextColor={isDarkMode ? "#aaa" : "#555"}
           />
         ) : (
@@ -193,12 +198,12 @@ function Home() {
               style={[
                 styles.headerText,
                 {
-                  fontFamily: isCustomFont ? "ndot" : "ntype",
+                  fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
                   color: isDarkMode ? "white" : "black",
                 },
               ]}
             >
-              Notes
+              {translations.Notes}
             </Text>
             <TouchableOpacity
               style={styles.settingsButton}
@@ -224,7 +229,7 @@ function Home() {
                   { color: isDarkMode ? "#888" : "#888" },
                 ]}
               >
-                No Notes, tap on + icon to start
+                {translations.NoNotes}
               </Text>
             </View>
           ) : (
@@ -239,7 +244,7 @@ function Home() {
                     ]}
                     onPress={() => handleDeletePress(note.id)}
                   >
-                    <Text style={styles.deleteSwipeText}>Delete</Text>
+                    <Text style={styles.deleteSwipeText}>{translations.Del}</Text>
                   </TouchableOpacity>
                 )}
               >
@@ -328,8 +333,7 @@ function Home() {
             <View style={[styles.dmodalContainer, { backgroundColor: isDarkMode ? "#141414" : "white" },]}>
               <Text style={styles.dmodalTitle}>Delete Note</Text>
               <Text style={[styles.dmodalMessage, { color: isDarkMode ? "#fff" : "black" }]}>
-                Are you sure you want to delete this note? This action cannot be
-                undone.
+              {translations.DMess}
               </Text>
 
               <View style={styles.dmodalButtons}>
@@ -337,7 +341,7 @@ function Home() {
                   style={[styles.button, styles.dcancelButton]}
                   onPress={() => setDeleteModalVisible(false)}
                 >
-                  <Text style={styles.dbuttonText}>Cancel</Text>
+                  <Text style={styles.dbuttonText}>{translations.Cancel}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -347,7 +351,7 @@ function Home() {
                     setDeleteModalVisible(false);
                   }}
                 >
-                  <Text style={styles.dbuttonText}>Delete</Text>
+                  <Text style={styles.dbuttonText}>{translations.Del}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -395,11 +399,11 @@ function Home() {
                       styles.addNoteTxt,
                       {
                         color: isDarkMode ? "white" : "black",
-                        fontFamily: isCustomFont ? "ndot" : "ntype",
+                        fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
                       },
                     ]}
                   >
-                    Add Note
+                    {translations.AddNote}
                   </Text>
                 </View>
 
@@ -425,7 +429,7 @@ function Home() {
                 ]}
                 value={newTitle}
                 onChangeText={setNewTitle}
-                placeholder="Title"
+                placeholder={translations.Title}
                 placeholderTextColor={isDarkMode ? "#bbb" : "#888"}
               />
 
@@ -440,7 +444,7 @@ function Home() {
                 multiline
                 value={newContent}
                 onChangeText={setNewContent}
-                placeholder="Note"
+                placeholder={translations.Note}
                 placeholderTextColor={isDarkMode ? "#bbb" : "#888"}
               />
               {/* Image Preview with TouchableOpacity */}
@@ -644,7 +648,7 @@ const styles = StyleSheet.create({
   fullImage: {
     width: "100%",
     height: "80%",
-    resizeMode: "contain", // Ehe Haiga - To Ensure the image is properly scaled
+    resizeMode: "contain",
     borderRadius: 8,
   },
   addNoteView: {
@@ -655,6 +659,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: "white",
     width: 200,
+    height: 40,
   },
   modalTopRow: {
     flexDirection: "row",

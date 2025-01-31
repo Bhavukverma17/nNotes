@@ -6,11 +6,13 @@ import Settings from './app/screens/settings.js';
 import { FontProvider } from './app/FontContext.js'; // FONT da switch bnon lyi
 import { ThemeProvider } from './app/ThemeContext.js'
 import { TransitionPresets } from '@react-navigation/stack';
+import { LanguageProvider } from './app/screens/LanguageContext.js';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
+    <LanguageProvider>
     <ThemeProvider>
     <FontProvider>
     <NavigationContainer>
@@ -25,5 +27,6 @@ export default function App() {
     </NavigationContainer>
     </FontProvider>
     </ThemeProvider>
+    </LanguageProvider>
   );
 }
