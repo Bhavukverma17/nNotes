@@ -33,8 +33,6 @@ function Home() {
       'ndot' : require('../../assets/fonts/ndot.ttf'),
       'ndotcapi' : require('../../assets/fonts/NDot57Caps.otf'),
       'interm' : require('../../assets/fonts/Inter-Medium.otf'),
-      'ndotcapi' : require('../../assets/fonts/NDot57Caps.otf'),
-      'interm' : require('../../assets/fonts/Inter-Medium.otf'),
     });
     useEffect(() => {
       if (fontsLoaded) {
@@ -200,7 +198,6 @@ function Home() {
               style={[
                 styles.headerText,
                 {
-                  fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
                   fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
                   color: isDarkMode ? "white" : "black",
                 },
@@ -387,9 +384,9 @@ function Home() {
             >
               <View style={styles.modalTopRow}>
                 <TouchableOpacity
-                  style={styles.notesBack}
+                  style={styles.notesActnBtn}
                   onPress={handleModalClose}
-                >
+                > 
                   <AntDesign
                     name="arrowleft"
                     size={24}
@@ -403,7 +400,6 @@ function Home() {
                       {
                         color: isDarkMode ? "white" : "black",
                         fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
-                        fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
                       },
                     ]}
                   >
@@ -414,7 +410,7 @@ function Home() {
                 {/* SAVE ICON IN NOTE MAKING */}
                 <TouchableOpacity
                   onPress={pickImage}
-                  style={styles.notesSave}
+                  style={styles.notesActnBtn}
                 >
                   <AntDesign
                     name="picture"
@@ -527,6 +523,7 @@ const styles = StyleSheet.create({
     color: "black",
     marginBottom: 23,
     width: '40%',
+    paddingLeft: 5,
   },
   noteSmall: {
     borderRadius: 16,
@@ -685,8 +682,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   settingsButton: {
-    padding: 5,
-    marginBottom: 18,
+    marginTop: 6,
+    marginBottom: 18, height: 48, width: 48, alignItems: 'center', justifyContent: 'center',
   },
   emptyState: {
     flex: 1,
@@ -768,6 +765,9 @@ imgPressOpen: {
   backgroundColor: 'red',
   width: 150,
   height: 150,
+},
+notesActnBtn: {
+  height: 48, width: 48, alignItems: 'center', justifyContent: 'center'
 },
 });
 
