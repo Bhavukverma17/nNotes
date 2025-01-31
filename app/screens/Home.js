@@ -33,6 +33,8 @@ function Home() {
       'ndot' : require('../../assets/fonts/ndot.ttf'),
       'ndotcapi' : require('../../assets/fonts/NDot57Caps.otf'),
       'interm' : require('../../assets/fonts/Inter-Medium.otf'),
+      'ndotcapi' : require('../../assets/fonts/NDot57Caps.otf'),
+      'interm' : require('../../assets/fonts/Inter-Medium.otf'),
     });
     useEffect(() => {
       if (fontsLoaded) {
@@ -198,6 +200,7 @@ function Home() {
               style={[
                 styles.headerText,
                 {
+                  fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
                   fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
                   color: isDarkMode ? "white" : "black",
                 },
@@ -399,6 +402,7 @@ function Home() {
                       styles.addNoteTxt,
                       {
                         color: isDarkMode ? "white" : "black",
+                        fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
                         fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
                       },
                     ]}

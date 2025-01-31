@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +7,7 @@ import {
   TouchableOpacity,
   Linking,
   ScrollView,
+  Modal,
   Modal,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
@@ -17,6 +19,8 @@ import { useLanguage } from "./LanguageContext";
 
 export default function Settings() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
+  const { fonts, selectedFont, selectFont } = useContext(FontContext);
+  const [modalVisible, setModalVisible] = useState(false);
   const { fonts, selectedFont, selectFont } = useContext(FontContext);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
@@ -59,6 +63,7 @@ export default function Settings() {
               styles.title,
               {
                 color: isDarkMode ? "white" : "black",
+                fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
                 fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
                 fontSize: 28,
               },
@@ -116,6 +121,8 @@ export default function Settings() {
               >
                 {">"}
               </Text>
+            </View>
+          </TouchableOpacity>
             </View>
           </TouchableOpacity>
 
@@ -226,7 +233,9 @@ export default function Settings() {
               </Text>
             </View>
           </TouchableOpacity>
+          </TouchableOpacity>
 
+          {/* ITEM 1 Style 3.0 - END */}
           {/* ITEM 1 Style 3.0 - END */}
 
       {/* Language Selection Modal */}
@@ -335,6 +344,7 @@ export default function Settings() {
               </Text>
             </View>
           </TouchableOpacity>
+          </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => setModalLangVisible(true)}
@@ -374,6 +384,7 @@ export default function Settings() {
               </Text>
             </View>
           </TouchableOpacity>
+          </TouchableOpacity>
 
 
           <TouchableOpacity
@@ -412,6 +423,8 @@ export default function Settings() {
               >
                 {">"}
               </Text>
+            </View>
+          </TouchableOpacity>
             </View>
           </TouchableOpacity>
 
@@ -571,5 +584,42 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     fontWeight: 'bold'
+  },
+  itemWrapperMid: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingLeft: 22,
+    marginHorizontal: 20,
+    marginBottom: 3,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.23)", // Semi-transparent background
+  },
+  modalContent: {
+    width: 300,
+    padding: 25,
+    backgroundColor: "#fff",
+    borderRadius: 25,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 10,
+  },
+  modalTitle: {
+    fontSize: 26,
+    marginBottom: 10,
+  },
+  closeButton: {
+    backgroundColor: "#d71921",
+    padding: 10,
+    borderRadius: 45,
+    marginTop: 20,
+    alignItems: 'center'
   },
 });
