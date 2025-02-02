@@ -437,7 +437,7 @@ function Home() {
                 style={[
                   styles.input,
                   {
-                    backgroundColor: isDarkMode ? "#1c1c1c" : "#fff",
+                    backgroundColor: isDarkMode ? "#000" : "#fff",
                     color: isDarkMode ? "white" : "black",
                   },
                 ]}
@@ -448,6 +448,7 @@ function Home() {
                 placeholderTextColor={isDarkMode ? "#bbb" : "#888"}
               />
               {/* Image Preview with TouchableOpacity */}
+              <View style={styles.imagePreviewContainer}>
               {selectedImage && (
                 <TouchableOpacity onPress={handleImagePress} styles={styles.imgPressOpen}>
                   <Image
@@ -466,12 +467,13 @@ function Home() {
                 >
                  <AntDesign
                   name="close"
-                  size={30}
+                  size={20}
                   color="black"
                   style={styles.removeImageButtonText}
                 />
                 </TouchableOpacity>
               )}
+              </View>
             </View>
           </View>
         </Modal>
@@ -613,13 +615,13 @@ const styles = StyleSheet.create({
     height: 50,
   },
   imagePreviewContainer: {
-    marginBottom: 10,
+    borderRadius: 20,
+    height: '16%',
   },
-  imagePreview: {
-    width: 394,
-    height: 150,
-    borderRadius: 30,
-    bottom: 10,
+  imagePreview: { 
+    width: '100%',
+    height: '100%',
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: '#616161',
   },
@@ -630,14 +632,13 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   removeImageButton: {
-    position: "absolute",
-    bottom: 112,
-    right: 27,
+    bottom: '95%',
+    left: 5,
     backgroundColor: "#e74c3c",
-    height: 40,
+    height: 30,
     borderRadius: 100,
     alignItems: "center",
-    width: 40,
+    width: 30,
   },
   // Styles for the full image modal
   fullImageModalContainer: {

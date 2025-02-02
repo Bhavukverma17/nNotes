@@ -14,6 +14,7 @@ import ThemeContext from "../ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { useLanguage } from "./LanguageContext";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function Settings() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
@@ -27,11 +28,8 @@ export default function Settings() {
   const openGitHub = () => {
     Linking.openURL("https://github.com/Bhavukverma17/nNotes");
   };
-  const openX = () => {
-    Linking.openURL("https://x.com/bhavukverma17");
-  };
-  const openGithubReleases = () => {
-    Linking.openURL("https://github.com/Bhavukverma17/nNotes/releases");
+  const openPlayStore = () => {
+    Linking.openURL("https://play.google.com/store/apps/details?id=com.bhavukverma.nNotes");
   };
 
   return (
@@ -212,8 +210,8 @@ export default function Settings() {
                 {translations.itext2}
               </Text>
             </View>
-            <View style={styles.ndotarrowThin}>
-              <Text
+            <View style={styles.themeIcon}>
+              {/* <Text
                 style={{
                   color: isDarkMode ? "white" : "black",
                   fontSize: 25,
@@ -222,7 +220,13 @@ export default function Settings() {
                 }}
               >
                 {">"}
-              </Text>
+              </Text> */}
+              <MaterialCommunityIcons name="theme-light-dark" style={{
+                  color: isDarkMode ? "white" : "black",
+                  fontSize: 25,
+                  fontFamily: "ndot",
+                  paddingLeft: 5,
+                }} />
             </View>
           </TouchableOpacity>
 
@@ -376,7 +380,7 @@ export default function Settings() {
 
 
           <TouchableOpacity
-            onPress={openGithubReleases}
+            onPress={openPlayStore}
             style={[
               styles.itemWrapperThin,
               { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
@@ -397,7 +401,7 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
                 ]}
               >
-                V1.3.3
+                V1.3.4
               </Text>
             </View>
             <View style={styles.ndotarrowThin}>
@@ -572,5 +576,11 @@ const styles = StyleSheet.create({
   },
   backButton: {
     height: 48, width: 48, alignItems: 'center', justifyContent: 'center',
+  },
+  themeIcon: {
+    width: 30,
+    height: 40,
+    marginRight: 15,
+    justifyContent: 'center'
   },
 });
