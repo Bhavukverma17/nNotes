@@ -11,7 +11,7 @@ const languages = {
     DMess : "Are you sure you want to delete this note? This action cannot be undone.",
     Cancel : "Cancel",
     Del : "Delete",
-    AddNote : "Add Note",
+    AddNote : " ",
     Title : "Title",
     Note: "Note",
     AppSettings: "App Settings",
@@ -24,6 +24,7 @@ const languages = {
     Github: "Github Repository",
     GMess: "App is Open source. You can view or contribute to Github repository.",
     Version: "Version",
+    Category: "Category",
   },
   jp: {
     Error: "エラー",
