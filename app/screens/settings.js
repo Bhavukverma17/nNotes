@@ -7,6 +7,7 @@ import {
   Linking,
   ScrollView,
   Modal,
+  Alert,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontContext } from "../FontContext";
@@ -14,22 +15,130 @@ import ThemeContext from "../ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { useLanguage } from "./LanguageContext";
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as DocumentPicker from "expo-document-picker";
 
 export default function Settings() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const { fonts, selectedFont, selectFont } = useContext(FontContext);
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
-  const { changeLanguage, translations } = useLanguage();
+  const { changeLanguage, translations, language } = useLanguage();
   const [modalLangVisible, setModalLangVisible] = useState(false);
+  const [clearModalVisible, setClearModalVisible] = useState(false);
 
-  // GitHub URL
   const openGitHub = () => {
     Linking.openURL("https://github.com/Bhavukverma17/nNotes");
   };
   const openPlayStore = () => {
-    Linking.openURL("https://play.google.com/store/apps/details?id=com.bhavukverma.nNotes");
+    Linking.openURL(
+      "https://play.google.com/store/apps/details?id=com.bhavukverma.nNotes"
+    );
+  };
+
+  // Load notes from AsyncStorage
+  const loadNotes = async () => {
+    try {
+      const savedNotes = await AsyncStorage.getItem("notes");
+      return savedNotes ? JSON.parse(savedNotes) : [];
+    } catch (error) {
+      Alert.alert("Error", "Failed to load notes");
+      return [];
+    }
+  };
+
+  // Save notes to AsyncStorage
+  const saveNotes = async (updatedNotes) => {
+    try {
+      await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
+    } catch (error) {
+      Alert.alert("Error", "Failed to save notes");
+    }
+  };
+
+  // Export Notes Handler
+  const handleExportNotes = async () => {
+    try {
+      const notes = await loadNotes();
+      if (notes.length === 0) {
+        Alert.alert("Info", "No notes available to export.");
+        return;
+      }
+
+      const fileUri = `${FileSystem.documentDirectory}nNotes_backup.json`;
+      await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(notes, null, 2));
+      await Sharing.shareAsync(fileUri, {
+        mimeType: "application/json",
+        dialogTitle: "Export Notes",
+        UTI: "public.json",
+      });
+    } catch (error) {
+      Alert.alert("Error", "Failed to export notes: " + error.message);
+    }
+  };
+
+  // Import Notes Handler with DocumentPicker
+  const handleImportNotes = async () => {
+    try {
+      // Open document picker to select a JSON file
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "application/json", // Restrict to JSON files
+        copyToCacheDirectory: true, // Copies file to app's cache for easier access
+      });
+
+      // Check if the user cancelled the picker
+      if (result.canceled) {
+        return;
+      }
+
+      // Extract the URI from the result (handle new Expo structure)
+      const fileUri = result.assets && result.assets[0] ? result.assets[0].uri : null;
+
+      // Validate that we have a valid URI
+      if (!fileUri) {
+        Alert.alert("Error", "Failed to retrieve file URI. Please try again.");
+        return;
+      }
+
+      // Read the selected file content
+      const fileContent = await FileSystem.readAsStringAsync(fileUri);
+      const importedNotes = JSON.parse(fileContent);
+
+      // Validate that the imported data is an array
+      if (!Array.isArray(importedNotes)) {
+        Alert.alert("Error", "Invalid notes format in the file. Please select a valid JSON file.");
+        return;
+      }
+
+      // Merge imported notes with existing notes, avoiding duplicates
+      const currentNotes = await loadNotes();
+      const mergedNotes = [
+        ...currentNotes,
+        ...importedNotes.filter((note) =>
+          !currentNotes.some((existing) => existing.id === note.id)
+        ),
+      ];
+
+      // Save the merged notes
+      await saveNotes(mergedNotes);
+      Alert.alert("Success", "Notes imported successfully!");
+    } catch (error) {
+      Alert.alert("Error", "Failed to import notes: " + error.message);
+    }
+  };
+
+  // Clear All Notes Handler
+  const handleClearNotes = async () => {
+    try {
+      await AsyncStorage.removeItem("notes");
+      setClearModalVisible(false);
+      Alert.alert("Success", "All notes have been cleared!");
+    } catch (error) {
+      Alert.alert("Error", "Failed to clear notes: " + error.message);
+    }
   };
 
   return (
@@ -156,7 +265,8 @@ export default function Settings() {
                       <Text
                         style={{
                           color: isDarkMode ? "#ADADAD" : "#616161",
-                          fontSize: 18, margin: 6,
+                          fontSize: 18,
+                          margin: 6,
                         }}
                       >
                         {displayName}{" "}
@@ -172,7 +282,6 @@ export default function Settings() {
                   ))}
                 </View>
 
-                {/* Button to close the modal */}
                 <TouchableOpacity
                   onPress={() => setModalVisible(false)}
                   style={styles.closeButton}
@@ -211,7 +320,140 @@ export default function Settings() {
               </Text>
             </View>
             <View style={styles.themeIcon}>
-              {/* <Text
+              <MaterialCommunityIcons
+                name="theme-light-dark"
+                style={{
+                  color: isDarkMode ? "white" : "black",
+                  fontSize: 25,
+                  fontFamily: "ndot",
+                  paddingLeft: 5,
+                }}
+              />
+            </View>
+          </TouchableOpacity>
+
+          {/* ITEM 1 Style 3.0 - END */}
+
+          {/* Language Selection Modal */}
+          <Modal
+            visible={modalLangVisible}
+            transparent
+            animationType="slide"
+            onRequestClose={() => setModalLangVisible(false)}
+          >
+            <View
+              style={[
+                styles.modalContainer,
+                {
+                  backgroundColor: isDarkMode
+                    ? "rgba(0, 0, 0, 0.85)"
+                    : "rgba(255, 255, 255, 0.83)",
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.modalContent,
+                  { backgroundColor: isDarkMode ? "#141414" : "#f0f0f0" },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.modalTitle,
+                    { color: isDarkMode ? "white" : "black" },
+                  ]}
+                >
+                  Language
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    changeLanguage("en");
+                    setModalLangVisible(false);
+                  }}
+                  style={styles.option}
+                >
+                  <Text
+                    style={[
+                      styles.langOption,
+                      {
+                        color:
+                          language === "en"
+                            ? "#D71921" // Red for active language
+                            : isDarkMode
+                            ? "white"
+                            : "black",
+                      },
+                    ]}
+                  >
+                    1. English (Default)
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    changeLanguage("jp");
+                    setModalLangVisible(false);
+                  }}
+                  style={styles.option}
+                >
+                  <Text
+                    style={[
+                      styles.langOption,
+                      {
+                        color:
+                          language === "jp"
+                            ? "#D71921" // Red for active language
+                            : isDarkMode
+                            ? "white"
+                            : "black",
+                      },
+                    ]}
+                  >
+                    2. 日本語 (Japanese)
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+
+          {/* DATA SECTION - START */}
+          <View style={styles.itemTitle}>
+            <Text
+              style={[
+                styles.itemTitleText,
+                { color: isDarkMode ? "white" : "black", fontSize: 16 },
+              ]}
+            >
+              {translations.Data || "Data"}
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            onPress={handleExportNotes}
+            style={[
+              styles.itemWrapperndot,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+            ]}
+          >
+            <View style={styles.itemCont}>
+              <Text
+                style={[
+                  styles.itemHeadText,
+                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                ]}
+              >
+                Export Notes
+              </Text>
+              <Text
+                style={[
+                  styles.itemContentText,
+                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                ]}
+              >
+                Save your notes to a file
+              </Text>
+            </View>
+            <View style={styles.ndotarrowThin}>
+              <Text
                 style={{
                   color: isDarkMode ? "white" : "black",
                   fontSize: 25,
@@ -220,73 +462,133 @@ export default function Settings() {
                 }}
               >
                 {">"}
-              </Text> */}
-              <MaterialCommunityIcons name="theme-light-dark" style={{
-                  color: isDarkMode ? "white" : "black",
-                  fontSize: 25,
-                  fontFamily: "ndot",
-                  paddingLeft: 5,
-                }} />
+              </Text>
             </View>
           </TouchableOpacity>
 
-          {/* ITEM 1 Style 3.0 - END */}
+          <TouchableOpacity
+            onPress={handleImportNotes}
+            style={[
+              styles.itemWrapperMid,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+            ]}
+          >
+            <View style={styles.itemCont}>
+              <Text
+                style={[
+                  styles.itemHeadText,
+                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                ]}
+              >
+                Import Notes
+              </Text>
+              <Text
+                style={[
+                  styles.itemContentText,
+                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                ]}
+              >
+                Load notes from a JSON file
+              </Text>
+            </View>
+            <View style={styles.ndotarrow}>
+              <Text
+                style={{
+                  color: isDarkMode ? "white" : "black",
+                  fontSize: 25,
+                  fontFamily: "ndot",
+                  paddingLeft: 20,
+                }}
+              >
+                {">"}
+              </Text>
+            </View>
+          </TouchableOpacity>
 
-      {/* Language Selection Modal */}
-      <Modal visible={modalLangVisible} transparent animationType="slide">
-        <View style={[
-                styles.modalContainer,
-                {
-                  backgroundColor: isDarkMode
-                    ? "rgba(0, 0, 0, 0.85)"
-                    : "rgba(255, 255, 255, 0.83)",
-                },
-              ]}>
-          <View style={[
-                  styles.modalContent,
-                  { backgroundColor: isDarkMode ? "#141414" : "#f0f0f0" },
-                ]}>
-          <Text
+          <TouchableOpacity
+            onPress={() => setClearModalVisible(true)}
+            style={[
+              styles.itemWrapperThin,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+            ]}
+          >
+            <View style={styles.itemCont}>
+              <Text
+                style={[
+                  styles.itemHeadText,
+                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                ]}
+              >
+                Clear All Notes
+              </Text>
+              <Text
+                style={[
+                  styles.itemContentText,
+                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                ]}
+              >
+                Delete all notes permanently
+              </Text>
+            </View>
+            <View style={styles.ndotarrowThin}>
+              <Text
+                style={{
+                  color: isDarkMode ? "white" : "black",
+                  fontSize: 25,
+                  fontFamily: "ndot",
+                  paddingLeft: 20,
+                }}
+              >
+                {">"}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <Modal
+            visible={clearModalVisible}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setClearModalVisible(false)}
+          >
+            <View style={styles.overlay}>
+              <View
+                style={[
+                  styles.dmodalContainer,
+                  { backgroundColor: isDarkMode ? "#141414" : "white" },
+                ]}
+              >
+                <Text style={styles.dmodalTitle}>Clear All Notes</Text>
+                <Text
                   style={[
-                    styles.modalTitle,
-                    { color: isDarkMode ? "white" : "black" },
+                    styles.dmodalMessage,
+                    { color: isDarkMode ? "#fff" : "black" },
                   ]}
                 >
-                  Language
+                  Are you sure you want to delete all notes? This action cannot
+                  be undone.
                 </Text>
-             <TouchableOpacity
-               onPress={() => {
-                 changeLanguage("en");
-                 setModalLangVisible(false);
-               }}
-               style={styles.option}
-             >
-               <Text style={[
-                    styles.langOption,
-                    { color: isDarkMode ? "white" : "black" },
-                  ]} >1. English (Default)</Text>
-             </TouchableOpacity>
-             <TouchableOpacity
-               onPress={() => {
-                 changeLanguage("jp");
-                 setModalLangVisible(false);
-               }}
-               style={styles.option}
-             >
-               <Text style={[
-                    styles.langOption,
-                    { color: isDarkMode ? "white" : "black" },
-                  ]} >2. 日本語 (Japanese)</Text>
-             </TouchableOpacity>
-             <TouchableOpacity
-               onPress={() => setModalLangVisible(false)}
-               style={styles.closeButton}
-             >
-               <Text style={[styles.buttonText, { color: "white" }]} >Save Selection</Text>
-             </TouchableOpacity>
-           </View>
-         </View>
-       </Modal>
+
+                <View style={styles.dmodalButtons}>
+                  <TouchableOpacity
+                    style={[styles.button, styles.dcancelButton]}
+                    onPress={() => setClearModalVisible(false)}
+                  >
+                    <Text style={styles.dbuttonText}>
+                      {translations.Cancel}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={[styles.button, styles.ddeleteButton]}
+                    onPress={handleClearNotes}
+                  >
+                    <Text style={styles.dbuttonText}>{translations.Del}</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+          {/* DATA SECTION - END */}
 
           {/* ITEM 2 Style 3.0 - START */}
           <View style={styles.itemTitle}>
@@ -378,7 +680,6 @@ export default function Settings() {
             </View>
           </TouchableOpacity>
 
-
           <TouchableOpacity
             onPress={openPlayStore}
             style={[
@@ -401,7 +702,7 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
                 ]}
               >
-                V1.3.4
+                V1.4.0
               </Text>
             </View>
             <View style={styles.ndotarrowThin}>
@@ -504,13 +805,12 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 20,
   },
   itemHeadText: {
-    fontWeight: '600',
+    fontWeight: "600",
   },
   ndotarrow: {
     width: 30,
     height: 40,
     marginRight: 20,
-
   },
   ndotarrowThin: {
     width: 30,
@@ -560,27 +860,82 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 35,
     marginBottom: 10,
-    fontFamily: 'ntype'
+    fontFamily: "ntype",
   },
   closeButton: {
     backgroundColor: "#d71921",
     padding: 8,
     borderRadius: 45,
     marginTop: 25,
-    alignItems: 'center'
+    alignItems: "center",
   },
   buttonText: {
     fontSize: 18,
     margin: 6,
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
   backButton: {
-    height: 48, width: 48, alignItems: 'center', justifyContent: 'center',
+    height: 48,
+    width: 48,
+    alignItems: "center",
+    justifyContent: "center",
   },
   themeIcon: {
     width: 30,
     height: 40,
     marginRight: 15,
-    justifyContent: 'center'
+    justifyContent: "center",
+  },
+  option: {
+    paddingVertical: 10,
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  dmodalContainer: {
+    width: "80%",
+    backgroundColor: "#141414",
+    borderRadius: 18,
+    padding: 20,
+    alignItems: "center",
+  },
+  dmodalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#d71921",
+  },
+  dmodalMessage: {
+    fontSize: 16,
+    color: "#fff",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  dmodalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 5,
+    paddingVertical: 10,
+    borderRadius: 20,
+    alignItems: "center",
+  },
+  dcancelButton: {
+    backgroundColor: "#3c3c3c",
+  },
+  ddeleteButton: {
+    backgroundColor: "#d71921",
+  },
+  dbuttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
