@@ -286,34 +286,34 @@ function Home() {
               {translations.Notes}
             </Text>
             <View style={styles.twoContainer}>
-            {isSelecting && (
+              {isSelecting && (
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={handleDeleteSelected}
+                >
+                  <MaterialIcons
+                    name="delete"
+                    size={24}
+                    color={isDarkMode ? "white" : "black"}
+                  />
+                </TouchableOpacity>
+              )}
               <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={handleDeleteSelected}
+                style={styles.settingsButton}
+                onPress={() => {
+                  if (isSelecting) {
+                    handleCancelSelection();
+                  } else {
+                    navigation.navigate("Settings");
+                  }
+                }}
               >
-                <MaterialIcons
-                  name="delete"
+                <Ionicons
+                  name={isSelecting ? "close" : "settings-outline"}
                   size={24}
                   color={isDarkMode ? "white" : "black"}
                 />
               </TouchableOpacity>
-            )}
-            <TouchableOpacity
-              style={styles.settingsButton}
-              onPress={() => {
-                if (isSelecting) {
-                  handleCancelSelection();
-                } else {
-                  navigation.navigate("Settings");
-                }
-              }}
-            >
-              <Ionicons
-                name={isSelecting ? "close" : "settings-outline"}
-                size={24}
-                color={isDarkMode ? "white" : "black"}
-              />
-            </TouchableOpacity>
             </View>
           </View>
         )}
@@ -692,6 +692,16 @@ function Home() {
                 placeholder={translations.Note}
                 placeholderTextColor={isDarkMode ? "#bbb" : "#888"}
               />
+              <View style={styles.statsContainer}>
+                <Text style={styles.statsText}>
+                  Words:{" "}
+                  {
+                    newContent.split(/\s+/).filter((word) => word.length > 0)
+                      .length
+                  }{" "}
+                  | Characters: {newContent.length}
+                </Text>
+              </View>
               <View style={styles.imagePreviewContainer}>
                 {selectedImage && (
                   <TouchableOpacity onPress={handleImagePress}>
@@ -858,9 +868,8 @@ const styles = StyleSheet.create({
   },
   imagePreviewContainer: {
     borderRadius: 20,
-    height: "20%",
-    width: "35%",
-    paddingHorizontal: 10,
+    height: "15%",
+    width: "30%",
   },
   imagePreview: {
     width: "100%",
@@ -1109,6 +1118,14 @@ const styles = StyleSheet.create({
   },
   twoContainer: {
     flexDirection: "row",
+  },
+  statsContainer: {
+    marginVertical: 10,
+    marginHorizontal: 10,
+  },
+  statsText: {
+    color: "#bbb",
+    fontSize: 12,
   },
 });
 
