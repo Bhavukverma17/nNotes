@@ -21,24 +21,26 @@ import ThemeContext from "../ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
-import * as SplashScreen from 'expo-splash-screen';
-import * as NavigationBar from 'expo-navigation-bar';
+import * as SplashScreen from "expo-splash-screen";
+import * as NavigationBar from "expo-navigation-bar";
 import { useLanguage } from "./LanguageContext";
+import { Share } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 
 SplashScreen.preventAutoHideAsync();
 
 function Home() {
   let [fontsLoaded] = useFonts({
-      'ntype' : require('../../assets/fonts/NType82-Regular.otf'),
-      'ndot' : require('../../assets/fonts/ndot.ttf'),
-      'ndotcapi' : require('../../assets/fonts/NDot57Caps.otf'),
-      'interm' : require('../../assets/fonts/Inter-Medium.otf'),
-    });
-    useEffect(() => {
-      if (fontsLoaded) {
-        SplashScreen.hideAsync();
-      }
-    }, [fontsLoaded]);
+    ntype: require("../../assets/fonts/NType82-Regular.otf"),
+    ndot: require("../../assets/fonts/ndot.ttf"),
+    ndotcapi: require("../../assets/fonts/NDot57Caps.otf"),
+    interm: require("../../assets/fonts/Inter-Medium.otf"),
+  });
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const navigation = useNavigation();
@@ -53,8 +55,12 @@ function Home() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [noteIdToDelete, setNoteIdToDelete] = useState(null);
-  const {selectedFont } = useContext(FontContext);
+  const { selectedFont } = useContext(FontContext);
   const { translations } = useLanguage();
+  const [noteColor, setNoteColor] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [filterCategory, setFilterCategory] = useState("All");
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     StatusBar.setBarStyle(isDarkMode ? "light-content" : "dark-content");
@@ -62,6 +68,11 @@ function Home() {
     NavigationBar.setBackgroundColorAsync(isDarkMode ? "black" : "transparent");
     loadNotes();
   }, [isDarkMode]);
+  useEffect(() => {
+    if (isFocused) {
+      loadNotes(); // Reload notes when screen is focused
+    }
+  }, [isFocused]);
 
   const saveNotes = async (updatedNotes) => {
     try {
@@ -76,6 +87,8 @@ function Home() {
       const savedNotes = await AsyncStorage.getItem("notes");
       if (savedNotes) {
         setNotes(JSON.parse(savedNotes));
+      } else {
+        setNotes([]);
       }
     } catch (error) {
       Alert.alert("Error", "Failed to load notes");
@@ -96,8 +109,8 @@ function Home() {
 
   const handleDeleteNote = (noteId) => {
     const updatedNotes = notes.filter((note) => note.id !== noteId);
-            setNotes(updatedNotes); // Update the notes state
-            saveNotes(updatedNotes); // Save updated notes to AsyncStorage
+    setNotes(updatedNotes);
+    saveNotes(updatedNotes);
   };
 
   const handleSaveNote = () => {
@@ -109,6 +122,9 @@ function Home() {
               title: newTitle,
               content: newContent,
               image: selectedImage,
+              color: noteColor || "neutral",
+              pinned: note.pinned || false,
+              category: selectedCategory || "Uncategorized",
             }
           : note
       );
@@ -120,12 +136,18 @@ function Home() {
         title: newTitle,
         content: newContent,
         image: selectedImage,
+        color: noteColor || "neutral",
+        pinned: false,
+        category: selectedCategory || "Uncategorized",
+        createdAt: new Date().toISOString(),
       };
       const updatedNotes = [newNote, ...notes];
       setNotes(updatedNotes);
       saveNotes(updatedNotes);
     }
     setModalVisible(false);
+    setNoteColor(null);
+    setSelectedCategory(null);
   };
 
   const pickImage = async () => {
@@ -140,26 +162,28 @@ function Home() {
     }
   };
 
-  const filteredNotes = notes.filter(
-    (note) =>
-      note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      note.content.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredNotes = notes
+    .filter(
+      (note) =>
+        (note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          note.content.toLowerCase().includes(searchQuery.toLowerCase())) &&
+        (filterCategory === "All" || note.category === filterCategory)
+    )
+    .sort((a, b) => (b.pinned === a.pinned ? 0 : b.pinned ? 1 : -1));
 
   const handleSearchToggle = () => {
     setIsSearching((prev) => !prev);
     setSearchQuery("");
   };
 
-  // Open full image on pressing img preview jgadment
   const [isFullImageModalVisible, setIsFullImageModalVisible] = useState(false);
   const handleImagePress = () => {
-    setIsFullImageModalVisible(true); // Show the full image modal
+    setIsFullImageModalVisible(true);
   };
   const handleSortNotes = () => {
-    const reversedNotes = [...notes].reverse(); // Reverse the notes
-    setNotes(reversedNotes); // Update the state with reversed notes
-    saveNotes(reversedNotes); // Save the reversed notes to AsyncStorage
+    const reversedNotes = [...notes].reverse();
+    setNotes(reversedNotes);
+    saveNotes(reversedNotes);
   };
   const handleModalClose = () => {
     if (newTitle || newContent || selectedImage) {
@@ -169,9 +193,22 @@ function Home() {
     }
   };
   const { isCustomFont } = useContext(FontContext);
+  const colors = ["#f0f0f0", "#ffcccc", "#cce5ff", "#ccffcc", "#fff3cc"];
+
+  const colorPairs = {
+    neutral: { light: "#f0f0f0", dark: "#1c1c1c" },
+    red: { light: "#ffcccc", dark: "#4a1a1a" },
+    blue: { light: "#cce5ff", dark: "#1a2e4a" },
+    green: { light: "#ccffcc", dark: "#1a4a1a" },
+    yellow: { light: "#fff3cc", dark: "#4a3e1a" },
+  };
+
+  const currentColors = Object.keys(colorPairs).map(
+    (key) => colorPairs[key][isDarkMode ? "dark" : "light"]
+  );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}> 
       <View
         style={[
           styles.scontainer,
@@ -198,21 +235,55 @@ function Home() {
               style={[
                 styles.headerText,
                 {
-                  fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
+                  fontFamily:
+                    selectedFont === "Ntype" ? undefined : selectedFont,
                   color: isDarkMode ? "white" : "black",
                 },
               ]}
             >
               {translations.Notes}
             </Text>
+
             <TouchableOpacity
               style={styles.settingsButton}
               onPress={() => navigation.navigate("Settings")}
             >
-              <Ionicons name="settings-outline" size={24} color={isDarkMode ? "white" : "black"} />
+              <Ionicons
+                name="settings-outline"
+                size={24}
+                color={isDarkMode ? "white" : "black"}
+              />
             </TouchableOpacity>
           </View>
         )}
+        <View style={styles.filterContainer}>
+          {["All", "Uncategorized", "Work", "Personal", "Ideas"].map((cat) => (
+            <TouchableOpacity
+              key={cat}
+              onPress={() => setFilterCategory(cat)}
+              style={[
+                styles.filterButton,
+                filterCategory === cat && styles.activeFilterButton,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.filterButtonText,
+                  {
+                    color:
+                      filterCategory === cat
+                        ? "#ffffff"
+                        : isDarkMode
+                        ? "#ffffff"
+                        : "#000000",
+                  },
+                ]}
+              >
+                {cat}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
         <ScrollView
           contentContainerStyle={[
@@ -244,37 +315,84 @@ function Home() {
                     ]}
                     onPress={() => handleDeletePress(note.id)}
                   >
-                    <Text style={styles.deleteSwipeText}>{translations.Del}</Text>
+                    <Text style={styles.deleteSwipeText}>
+                      {translations.Del}
+                    </Text>
                   </TouchableOpacity>
                 )}
               >
                 <TouchableOpacity
                   style={[
                     styles.noteSmall,
-                    { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+                    {
+                      backgroundColor:
+                        note.color && colorPairs[note.color]
+                          ? colorPairs[note.color][
+                              isDarkMode ? "dark" : "light"
+                            ]
+                          : isDarkMode
+                          ? "#1c1c1c"
+                          : "#f0f0f0",
+                    },
                   ]}
                   onPress={() => {
                     setCurrentNote(note);
                     setNewTitle(note.title);
                     setNewContent(note.content);
                     setSelectedImage(note.image || null);
+                    setNoteColor(note.color || "neutral");
+                    setSelectedCategory(note.category || "Uncategorized");
                     setModalVisible(true);
                   }}
                 >
-                  <Text
-                    style={[
-                      styles.noteTitle,
-                      { color: isDarkMode ? "white" : "black" },
-                    ]}
-                  >
-                    {note.title}
-                  </Text>
                   {note.image && (
                     <Image
                       source={{ uri: note.image }}
                       style={styles.noteImage}
                     />
                   )}
+                  <View style={styles.noteHeader}>
+                    <Text
+                      style={[
+                        styles.noteTitle,
+                        { color: isDarkMode ? "white" : "#4a4a4a" },
+                      ]}
+                    >
+                      {note.title}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => {
+                        const updatedNotes = notes.map((n) =>
+                          n.id === note.id ? { ...n, pinned: !n.pinned } : n
+                        );
+                        setNotes(updatedNotes);
+                        saveNotes(updatedNotes);
+                      }}
+                      style={styles.pinButton}
+                    >
+                      <AntDesign
+                        name={note.pinned ? "pushpin" : "pushpino"}
+                        size={20}
+                        color={
+                          note.pinned
+                            ? "#d71921"
+                            : isDarkMode
+                            ? "white"
+                            : "#4a4a4a"
+                        }
+                      />
+                    </TouchableOpacity>
+                  </View>
+
+                  <Text
+                    style={[
+                      styles.noteCategory,
+                      { color: isDarkMode ? "#bbb" : "#666" },
+                    ]}
+                  >
+                    {note.category || "Uncategorized"}
+                  </Text>
+
                   <Text
                     style={[
                       styles.noteContent,
@@ -283,6 +401,14 @@ function Home() {
                     numberOfLines={expandedNoteId === note.id ? null : 4}
                   >
                     {note.content}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.timestamp,
+                      { color: isDarkMode ? "#888" : "#666" },
+                    ]}
+                  >
+                    {new Date(note.createdAt).toLocaleDateString()}
                   </Text>
                 </TouchableOpacity>
               </Swipeable>
@@ -322,7 +448,6 @@ function Home() {
           </TouchableOpacity>
         </View>
 
-        {/* Delete Modal */}
         <Modal
           visible={deleteModalVisible}
           transparent={true}
@@ -330,10 +455,20 @@ function Home() {
           onRequestClose={() => setDeleteModalVisible(false)}
         >
           <View style={styles.overlay}>
-            <View style={[styles.dmodalContainer, { backgroundColor: isDarkMode ? "#141414" : "white" },]}>
+            <View
+              style={[
+                styles.dmodalContainer,
+                { backgroundColor: isDarkMode ? "#141414" : "white" },
+              ]}
+            >
               <Text style={styles.dmodalTitle}>Delete Note</Text>
-              <Text style={[styles.dmodalMessage, { color: isDarkMode ? "#fff" : "black" }]}>
-              {translations.DMess}
+              <Text
+                style={[
+                  styles.dmodalMessage,
+                  { color: isDarkMode ? "#fff" : "black" },
+                ]}
+              >
+                {translations.DMess}
               </Text>
 
               <View style={styles.dmodalButtons}>
@@ -357,8 +492,6 @@ function Home() {
             </View>
           </View>
         </Modal>
- 
-        {/* Note Making Modal */}
 
         <Modal
           visible={modalVisible}
@@ -386,7 +519,7 @@ function Home() {
                 <TouchableOpacity
                   style={styles.notesActnBtn}
                   onPress={handleModalClose}
-                > 
+                >
                   <AntDesign
                     name="arrowleft"
                     size={24}
@@ -399,32 +532,90 @@ function Home() {
                       styles.addNoteTxt,
                       {
                         color: isDarkMode ? "white" : "black",
-                        fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
+                        fontFamily:
+                          selectedFont === "Ntype" ? undefined : selectedFont,
                       },
                     ]}
                   >
                     {translations.AddNote}
                   </Text>
                 </View>
+                <View style={styles.ImgShr}>
+                  <TouchableOpacity
+                    onPress={pickImage}
+                    style={styles.notesActnBtn}
+                  >
+                    <AntDesign
+                      name="picture"
+                      size={24}
+                      color={isDarkMode ? "white" : "black"}
+                    />
+                  </TouchableOpacity>
 
-                {/* SAVE ICON IN NOTE MAKING */}
-                <TouchableOpacity
-                  onPress={pickImage}
-                  style={styles.notesActnBtn}
-                >
-                  <AntDesign
-                    name="picture"
-                    size={24}
-                    color={isDarkMode ? "white" : "black"}
+                  <TouchableOpacity
+                    style={styles.notesActnBtn}
+                    onPress={async () => {
+                      try {
+                        const noteText = `${newTitle}\n\n${newContent}`;
+                        await Share.share({
+                          message: noteText,
+                          title: newTitle,
+                        });
+                      } catch (error) {
+                        Alert.alert("Error", "Failed to share note");
+                      }
+                    }}
+                  >
+                    <AntDesign
+                      name="sharealt"
+                      size={22}
+                      color={isDarkMode ? "white" : "black"}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View style={styles.categoryPicker}>
+                {["Uncategorized", "Work", "Personal", "Ideas"].map((cat) => (
+                  <TouchableOpacity
+                    key={cat}
+                    style={[
+                      styles.categoryOption,
+                      selectedCategory === cat && styles.selectedCategoryOption,
+                    ]}
+                    onPress={() => setSelectedCategory(cat)}
+                  >
+                    <Text
+                      style={[
+                        styles.categoryText,
+                        { color: isDarkMode ? "white" : "black" },
+                      ]}
+                    >
+                      {cat}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <View style={styles.colorPicker}>
+                {Object.keys(colorPairs).map((key, index) => (
+                  <TouchableOpacity
+                    key={key}
+                    style={[
+                      styles.colorOption,
+                      { backgroundColor: currentColors[index] },
+                      noteColor === key && styles.selectedColorOption,
+                    ]}
+                    onPress={() => setNoteColor(key)}
                   />
-                </TouchableOpacity>
+                ))}
               </View>
               <TextInput
                 style={[
                   styles.inputTitle,
                   {
                     backgroundColor: isDarkMode ? "#000" : "#fff",
-                    color: isDarkMode ? "white" : "black",
+                    color: isDarkMode ? "white" : "#4a4a4a",
                   },
                 ]}
                 value={newTitle}
@@ -437,7 +628,12 @@ function Home() {
                 style={[
                   styles.input,
                   {
-                    backgroundColor: isDarkMode ? "#000" : "#fff",
+                    backgroundColor:
+                      noteColor && colorPairs[noteColor]
+                        ? colorPairs[noteColor][isDarkMode ? "dark" : "light"]
+                        : isDarkMode
+                        ? "#1a1a1a"
+                        : "#ededed",
                     color: isDarkMode ? "white" : "black",
                   },
                 ]}
@@ -447,37 +643,36 @@ function Home() {
                 placeholder={translations.Note}
                 placeholderTextColor={isDarkMode ? "#bbb" : "#888"}
               />
-              {/* Image Preview with TouchableOpacity */}
               <View style={styles.imagePreviewContainer}>
-              {selectedImage && (
-                <TouchableOpacity onPress={handleImagePress} styles={styles.imgPressOpen}>
-                  <Image
-                    source={{ uri: selectedImage }}
-                    style={styles.imagePreview}
-                  />
-                </TouchableOpacity>
-              )}
-              {selectedImage && (
-                <TouchableOpacity
-                  onPress={() => setSelectedImage(null)}
-                  style={[
-                    styles.removeImageButton,
-                    { backgroundColor: isDarkMode ? "#fff" : "#fff" },
-                  ]}
-                >
-                 <AntDesign
-                  name="close"
-                  size={20}
-                  color="black"
-                  style={styles.removeImageButtonText}
-                />
-                </TouchableOpacity>
-              )}
+                {selectedImage && (
+                  <TouchableOpacity onPress={handleImagePress}>
+                    <Image
+                      source={{ uri: selectedImage }}
+                      style={styles.imagePreview}
+                    />
+                  </TouchableOpacity>
+                )}
+                {selectedImage && (
+                  <TouchableOpacity
+                    onPress={() => setSelectedImage(null)}
+                    style={[
+                      styles.removeImageButton,
+                      { backgroundColor: isDarkMode ? "#fff" : "#fff" },
+                    ]}
+                  >
+                    <AntDesign
+                      name="close"
+                      size={20}
+                      color="black"
+                      style={styles.removeImageButtonText}
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
           </View>
         </Modal>
-        {/* Full Image Modal */}
+
         <Modal
           visible={isFullImageModalVisible}
           animationType="slide"
@@ -493,7 +688,7 @@ function Home() {
                   : "rgba(255, 255, 255, 0.9)",
               },
             ]}
-            onPress={() => setIsFullImageModalVisible(false)} // Close modal when tapping outside image
+            onPress={() => setIsFullImageModalVisible(false)}
           >
             <Image source={{ uri: selectedImage }} style={styles.fullImage} />
           </TouchableOpacity>
@@ -514,7 +709,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   deleteSwipeAction: {
-    height: '85%',
+    height: "85%",
     width: 80,
     alignItems: "center",
     justifyContent: "center",
@@ -523,8 +718,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 40,
     color: "black",
-    marginBottom: 23,
-    width: '40%',
+    width: "40%",
     paddingLeft: 5,
   },
   noteSmall: {
@@ -535,9 +729,9 @@ const styles = StyleSheet.create({
   },
   noteTitle: {
     color: "black",
-    fontWeight: "bold",
-    marginBottom: 5,
-    fontSize: 17,
+    fontWeight: 900,
+    marginBottom: 4,
+    fontSize: 20,
   },
   noteContent: {
     color: "black",
@@ -553,8 +747,8 @@ const styles = StyleSheet.create({
     borderRadius: 45,
     position: "absolute",
     bottom: 16,
-    left: 35,
-    right: 35,
+    left: 40,
+    right: 40,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
@@ -586,22 +780,21 @@ const styles = StyleSheet.create({
   inputTitle: {
     backgroundColor: "#1c1c1c",
     color: "white",
-    fontSize: 22,
-    fontWeight: "bold",
+    fontSize: 27,
+    fontWeight: 900,
     borderRadius: 16,
     padding: 10,
     paddingLeft: 15,
   },
   input: {
-    color: "white",
-    fontSize: 16,
+    fontSize: 18,
     borderRadius: 25,
-    padding: 10,
-    marginBottom: 20,
-    height: "70%",
+    padding: 1,
+    height: "55%",
     textAlignVertical: "top",
-    paddingLeft: 15,
-    paddingRight: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    marginBottom: 5,
   },
   searchInput: {
     backgroundColor: "#f0f0f0",
@@ -616,14 +809,16 @@ const styles = StyleSheet.create({
   },
   imagePreviewContainer: {
     borderRadius: 20,
-    height: '16%',
+    height: "20%",
+    width: "35%",
+    paddingHorizontal: 10,
   },
-  imagePreview: { 
-    width: '100%',
-    height: '100%',
+  imagePreview: {
+    width: "100%",
+    height: "100%",
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#616161',
+    borderColor: "#616161",
   },
   removeImageButtonText: {
     color: "#000",
@@ -632,7 +827,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   removeImageButton: {
-    bottom: '95%',
+    bottom: "95%",
     left: 5,
     backgroundColor: "#e74c3c",
     height: 30,
@@ -640,7 +835,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 30,
   },
-  // Styles for the full image modal
   fullImageModalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -681,10 +875,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     paddingHorizontal: 18,
+    marginBottom: 5,
   },
   settingsButton: {
     marginTop: 6,
-    marginBottom: 18, height: 48, width: 48, alignItems: 'center', justifyContent: 'center',
+    height: 48,
+    width: 48,
+    alignItems: "center",
+    justifyContent: "center",
   },
   emptyState: {
     flex: 1,
@@ -706,70 +904,142 @@ const styles = StyleSheet.create({
   deleteSwipeText: {
     color: "white",
   },
- overlay: {
-  flex: 1,
-  backgroundColor: 'rgba(0, 0, 0, 0.7)',
-  justifyContent: 'center',
-  alignItems: 'center',
-},
-dmodalContainer: {
-  width: '80%',
-  backgroundColor: '#141414',
-  borderRadius: 18,
-  padding: 20,
-  alignItems: 'center',
-},
-dmodalTitle: {
-  fontSize: 20,
-  fontWeight: 'bold',
-  marginBottom: 10,
-  color: '#d71921',
-},
-dmodalMessage: {
-  fontSize: 16,
-  color: '#fff',
-  fontWeight: 'bold',
-  textAlign: 'center',
-  marginBottom: 20,
-},
-dmodalButtons: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  width: '100%',
-},
-button: {
-  flex: 1,
-  marginHorizontal: 5,
-  paddingVertical: 10,
-  borderRadius: 20,
-  alignItems: 'center',
-},
-dcancelButton: {
-  backgroundColor: '#3c3c3c',
-},
-ddeleteButton: {
-  backgroundColor: '#d71921',
-},
-dbuttonText: {
-  color: '#fff',
-  fontWeight: 'bold',
-  fontSize: 16,
-},
-noteImage: {
-  width: '100%',
-  height: 200,
-  borderRadius: 15,
-  marginBottom: 7,
-  marginTop: 7,
-},
-imgPressOpen: {
-  backgroundColor: 'red',
-  width: 150,
-  height: 150,
-},
-notesActnBtn: {
-  height: 48, width: 48, alignItems: 'center', justifyContent: 'center'
-},
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  dmodalContainer: {
+    width: "80%",
+    backgroundColor: "#141414",
+    borderRadius: 18,
+    padding: 20,
+    alignItems: "center",
+  },
+  dmodalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#d71921",
+  },
+  dmodalMessage: {
+    fontSize: 16,
+    color: "#fff",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  dmodalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 5,
+    paddingVertical: 10,
+    borderRadius: 20,
+    alignItems: "center",
+  },
+  dcancelButton: {
+    backgroundColor: "#3c3c3c",
+  },
+  ddeleteButton: {
+    backgroundColor: "#d71921",
+  },
+  dbuttonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  noteImage: {
+    width: "100%",
+    height: 200,
+    borderRadius: 12,
+    marginBottom: 7,
+    marginTop: 1,
+  },
+  notesActnBtn: {
+    height: 48,
+    width: 48,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  ImgShr: {
+    flexDirection: "row",
+  },
+  timestamp: {
+    fontSize: 12,
+    marginTop: 5,
+  },
+  colorPicker: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+    marginVertical: 10,
+  },
+  colorOption: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: "#888",
+  },
+  selectedColorOption: {
+    borderWidth: 2,
+    borderColor: "#000",
+  },
+  noteHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  pinButton: {
+    padding: 1,
+  },
+  categoryPicker: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginVertical: 10,
+  },
+  categoryOption: {
+    padding: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#888",
+  },
+  selectedCategoryOption: {
+    borderColor: "#d71921",
+    backgroundColor: "#d7192133",
+  },
+  categoryText: {
+    fontSize: 14,
+  },
+  filterContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+  filterButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    margin: 2,
+    borderRadius: 10,
+  },
+  activeFilterButton: {
+    backgroundColor: "#d71921",
+  },
+  filterButtonText: {
+    fontSize: 14,
+  },
+  noteCategory: {
+    fontSize: 12,
+    marginBottom: 4,
+  },
 });
 
 export default Home;
