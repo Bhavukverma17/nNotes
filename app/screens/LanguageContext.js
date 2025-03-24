@@ -8,7 +8,7 @@ const languages = {
     Notes : "Notes",
     NoNotes : "No Notes, tap on + icon to start",
     DNote : "Delete Note",
-    DMess : "Are you sure you want to delete this note? This action cannot be undone.",
+    DMess: "Are you sure you want to delete",
     Cancel : "Cancel",
     Del : "Delete",
     AddNote : " ",

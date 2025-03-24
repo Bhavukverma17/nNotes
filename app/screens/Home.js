@@ -26,6 +26,7 @@ import * as NavigationBar from "expo-navigation-bar";
 import { useLanguage } from "./LanguageContext";
 import { Share } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
+import { MaterialIcons } from "@expo/vector-icons";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -54,13 +55,14 @@ function Home() {
   const [isSearching, setIsSearching] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [noteIdToDelete, setNoteIdToDelete] = useState(null);
   const { selectedFont } = useContext(FontContext);
   const { translations } = useLanguage();
   const [noteColor, setNoteColor] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [filterCategory, setFilterCategory] = useState("All");
   const isFocused = useIsFocused();
+  const [isSelecting, setIsSelecting] = useState(false);
+  const [selectedNotes, setSelectedNotes] = useState([]);
 
   useEffect(() => {
     StatusBar.setBarStyle(isDarkMode ? "light-content" : "dark-content");
@@ -206,9 +208,49 @@ function Home() {
   const currentColors = Object.keys(colorPairs).map(
     (key) => colorPairs[key][isDarkMode ? "dark" : "light"]
   );
+  const handleLongPress = (noteId) => {
+    if (!isSelecting) {
+      setIsSelecting(true);
+      setSelectedNotes([noteId]);
+    } else {
+      toggleNoteSelection(noteId);
+    }
+  };
+
+  const toggleNoteSelection = (noteId) => {
+    if (selectedNotes.includes(noteId)) {
+      setSelectedNotes(selectedNotes.filter((id) => id !== noteId));
+      if (selectedNotes.length === 1) {
+        setIsSelecting(false);
+      }
+    } else {
+      setSelectedNotes([...selectedNotes, noteId]);
+    }
+  };
+
+  const handleDeleteSelected = () => {
+    if (selectedNotes.length > 0) {
+      setDeleteModalVisible(true); // Show confirmation modal instead of immediate alert
+    }
+  };
+  const confirmDeleteSelected = () => {
+    const updatedNotes = notes.filter(
+      (note) => !selectedNotes.includes(note.id)
+    );
+    setNotes(updatedNotes);
+    saveNotes(updatedNotes);
+    setSelectedNotes([]);
+    setIsSelecting(false);
+    setDeleteModalVisible(false);
+  };
+
+  const handleCancelSelection = () => {
+    setSelectedNotes([]);
+    setIsSelecting(false);
+  };
 
   return (
-    <SafeAreaView style={styles.container}> 
+    <SafeAreaView style={styles.container}>
       <View
         style={[
           styles.scontainer,
@@ -231,6 +273,18 @@ function Home() {
           />
         ) : (
           <View style={styles.headerContent}>
+            {isSelecting && (
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={handleDeleteSelected}
+              >
+                <MaterialIcons
+                  name="delete"
+                  size={24}
+                  color={isDarkMode ? "white" : "black"}
+                />
+              </TouchableOpacity>
+            )}
             <Text
               style={[
                 styles.headerText,
@@ -243,19 +297,25 @@ function Home() {
             >
               {translations.Notes}
             </Text>
-
             <TouchableOpacity
               style={styles.settingsButton}
-              onPress={() => navigation.navigate("Settings")}
+              onPress={() => {
+                if (isSelecting) {
+                  handleCancelSelection();
+                } else {
+                  navigation.navigate("Settings");
+                }
+              }}
             >
               <Ionicons
-                name="settings-outline"
+                name={isSelecting ? "close" : "settings-outline"}
                 size={24}
                 color={isDarkMode ? "white" : "black"}
               />
             </TouchableOpacity>
           </View>
         )}
+
         <View style={styles.filterContainer}>
           {["All", "Uncategorized", "Work", "Personal", "Ideas"].map((cat) => (
             <TouchableOpacity
@@ -305,37 +365,25 @@ function Home() {
             </View>
           ) : (
             filteredNotes.map((note) => (
-              <Swipeable
+              <TouchableOpacity
                 key={note.id}
-                renderRightActions={() => (
-                  <TouchableOpacity
-                    style={[
-                      styles.deleteSwipeAction,
-                      { backgroundColor: isDarkMode ? "#d71921" : "#d71921" },
-                    ]}
-                    onPress={() => handleDeletePress(note.id)}
-                  >
-                    <Text style={styles.deleteSwipeText}>
-                      {translations.Del}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              >
-                <TouchableOpacity
-                  style={[
-                    styles.noteSmall,
-                    {
-                      backgroundColor:
-                        note.color && colorPairs[note.color]
-                          ? colorPairs[note.color][
-                              isDarkMode ? "dark" : "light"
-                            ]
-                          : isDarkMode
-                          ? "#1c1c1c"
-                          : "#f0f0f0",
-                    },
-                  ]}
-                  onPress={() => {
+                style={[
+                  styles.noteSmall,
+                  {
+                    backgroundColor:
+                      note.color && colorPairs[note.color]
+                        ? colorPairs[note.color][isDarkMode ? "dark" : "light"]
+                        : isDarkMode
+                        ? "#1c1c1c"
+                        : "#f0f0f0",
+                  },
+                  selectedNotes.includes(note.id) && styles.selectedNote,
+                ]}
+                onLongPress={() => handleLongPress(note.id)}
+                onPress={() => {
+                  if (isSelecting) {
+                    toggleNoteSelection(note.id);
+                  } else {
                     setCurrentNote(note);
                     setNewTitle(note.title);
                     setNewContent(note.content);
@@ -343,75 +391,75 @@ function Home() {
                     setNoteColor(note.color || "neutral");
                     setSelectedCategory(note.category || "Uncategorized");
                     setModalVisible(true);
-                  }}
-                >
-                  {note.image && (
-                    <Image
-                      source={{ uri: note.image }}
-                      style={styles.noteImage}
+                  }
+                }}
+              >
+                {note.image && (
+                  <Image
+                    source={{ uri: note.image }}
+                    style={styles.noteImage}
+                  />
+                )}
+                <View style={styles.noteHeader}>
+                  <Text
+                    style={[
+                      styles.noteTitle,
+                      { color: isDarkMode ? "white" : "#4a4a4a" },
+                    ]}
+                  >
+                    {note.title}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      const updatedNotes = notes.map((n) =>
+                        n.id === note.id ? { ...n, pinned: !n.pinned } : n
+                      );
+                      setNotes(updatedNotes);
+                      saveNotes(updatedNotes);
+                    }}
+                    style={styles.pinButton}
+                  >
+                    <AntDesign
+                      name={note.pinned ? "pushpin" : "pushpino"}
+                      size={20}
+                      color={
+                        note.pinned
+                          ? "#d71921"
+                          : isDarkMode
+                          ? "white"
+                          : "#4a4a4a"
+                      }
                     />
-                  )}
-                  <View style={styles.noteHeader}>
-                    <Text
-                      style={[
-                        styles.noteTitle,
-                        { color: isDarkMode ? "white" : "#4a4a4a" },
-                      ]}
-                    >
-                      {note.title}
-                    </Text>
-                    <TouchableOpacity
-                      onPress={() => {
-                        const updatedNotes = notes.map((n) =>
-                          n.id === note.id ? { ...n, pinned: !n.pinned } : n
-                        );
-                        setNotes(updatedNotes);
-                        saveNotes(updatedNotes);
-                      }}
-                      style={styles.pinButton}
-                    >
-                      <AntDesign
-                        name={note.pinned ? "pushpin" : "pushpino"}
-                        size={20}
-                        color={
-                          note.pinned
-                            ? "#d71921"
-                            : isDarkMode
-                            ? "white"
-                            : "#4a4a4a"
-                        }
-                      />
-                    </TouchableOpacity>
-                  </View>
+                  </TouchableOpacity>
+                </View>
 
-                  <Text
-                    style={[
-                      styles.noteCategory,
-                      { color: isDarkMode ? "#bbb" : "#666" },
-                    ]}
-                  >
-                    {note.category || "Uncategorized"}
-                  </Text>
+                <Text
+                  style={[
+                    styles.noteCategory,
+                    { color: isDarkMode ? "#bbb" : "#666" },
+                  ]}
+                >
+                  {note.category || "Uncategorized"}
+                </Text>
 
-                  <Text
-                    style={[
-                      styles.noteContent,
-                      { color: isDarkMode ? "white" : "black" },
-                    ]}
-                    numberOfLines={expandedNoteId === note.id ? null : 4}
-                  >
-                    {note.content}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.timestamp,
-                      { color: isDarkMode ? "#888" : "#666" },
-                    ]}
-                  >
-                    {new Date(note.createdAt).toLocaleDateString()}
-                  </Text>
-                </TouchableOpacity>
-              </Swipeable>
+                <Text
+                  style={[
+                    styles.noteContent,
+                    { color: isDarkMode ? "white" : "black" },
+                  ]}
+                  numberOfLines={expandedNoteId === note.id ? null : 4}
+                >
+                  {note.content}
+                </Text>
+                <Text
+                  style={[
+                    styles.timestamp,
+                    { color: isDarkMode ? "#888" : "#666" },
+                  ]}
+                >
+                  {new Date(note.createdAt).toLocaleDateString()}
+                </Text>
+              </TouchableOpacity>
             ))
           )}
         </ScrollView>
@@ -461,14 +509,16 @@ function Home() {
                 { backgroundColor: isDarkMode ? "#141414" : "white" },
               ]}
             >
-              <Text style={styles.dmodalTitle}>Delete Note</Text>
+              <Text style={styles.dmodalTitle}>Delete Notes</Text>
               <Text
                 style={[
                   styles.dmodalMessage,
                   { color: isDarkMode ? "#fff" : "black" },
                 ]}
               >
-                {translations.DMess}
+                {selectedNotes.length > 1
+                  ? `${translations.DMess} ${selectedNotes.length} notes?`
+                  : translations.DMess}
               </Text>
 
               <View style={styles.dmodalButtons}>
@@ -481,10 +531,7 @@ function Home() {
 
                 <TouchableOpacity
                   style={[styles.button, styles.ddeleteButton]}
-                  onPress={() => {
-                    handleDeleteNote(noteIdToDelete);
-                    setDeleteModalVisible(false);
-                  }}
+                  onPress={confirmDeleteSelected}
                 >
                   <Text style={styles.dbuttonText}>{translations.Del}</Text>
                 </TouchableOpacity>
@@ -1039,6 +1086,25 @@ const styles = StyleSheet.create({
   noteCategory: {
     fontSize: 12,
     marginBottom: 4,
+  },
+  deleteButton: {
+    height: 48,
+    width: 48,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  selectedNote: {
+    borderWidth: 2,
+    borderColor: "#d71921",
+    opacity: 0.8,
+  },
+  headerContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+    paddingHorizontal: 18,
+    marginBottom: 5,
   },
 });
 
