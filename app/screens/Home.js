@@ -273,18 +273,6 @@ function Home() {
           />
         ) : (
           <View style={styles.headerContent}>
-            {isSelecting && (
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={handleDeleteSelected}
-              >
-                <MaterialIcons
-                  name="delete"
-                  size={24}
-                  color={isDarkMode ? "white" : "black"}
-                />
-              </TouchableOpacity>
-            )}
             <Text
               style={[
                 styles.headerText,
@@ -297,6 +285,19 @@ function Home() {
             >
               {translations.Notes}
             </Text>
+            <View style={styles.twoContainer}>
+            {isSelecting && (
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={handleDeleteSelected}
+              >
+                <MaterialIcons
+                  name="delete"
+                  size={24}
+                  color={isDarkMode ? "white" : "black"}
+                />
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               style={styles.settingsButton}
               onPress={() => {
@@ -313,6 +314,7 @@ function Home() {
                 color={isDarkMode ? "white" : "black"}
               />
             </TouchableOpacity>
+            </View>
           </View>
         )}
 
@@ -925,7 +927,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   settingsButton: {
-    marginTop: 6,
     height: 48,
     width: 48,
     alignItems: "center",
@@ -1105,6 +1106,9 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 18,
     marginBottom: 5,
+  },
+  twoContainer: {
+    flexDirection: "row",
   },
 });
 
