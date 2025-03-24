@@ -411,6 +411,29 @@ export default function Settings() {
                     2. 日本語 (Japanese)
                   </Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    changeLanguage("de");
+                    setModalLangVisible(false);
+                  }}
+                  style={styles.option}
+                >
+                  <Text
+                    style={[
+                      styles.langOption,
+                      {
+                        color:
+                          language === "de"
+                            ? "#D71921" // Red for active language
+                            : isDarkMode
+                            ? "white"
+                            : "black",
+                      },
+                    ]}
+                  >
+                    3. Deutsch (German)
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </Modal>
