@@ -447,7 +447,7 @@ function Home() {
                 <Text
                   style={[
                     styles.noteContent,
-                    { color: isDarkMode ? "white" : "black" },
+                    { color: isDarkMode ? "white" : "#4a4a4a" },
                   ]}
                   numberOfLines={expandedNoteId === note.id ? null : 4}
                 >
@@ -788,13 +788,13 @@ const styles = StyleSheet.create({
   },
   noteTitle: {
     color: "black",
-    fontWeight: 900,
-    marginBottom: 4,
     fontSize: 20,
+    fontFamily: "interm",
   },
   noteContent: {
     color: "black",
     fontSize: 15,
+    fontFamily: "interm",
   },
   bottomNav: {
     flexDirection: "row",
@@ -1029,6 +1029,7 @@ const styles = StyleSheet.create({
   timestamp: {
     fontSize: 12,
     marginTop: 5,
+    textAlign: "right"
   },
   colorPicker: {
     flexDirection: "row",
@@ -1096,6 +1097,7 @@ const styles = StyleSheet.create({
   noteCategory: {
     fontSize: 12,
     marginBottom: 4,
+    fontFamily: "ndotcapi"
   },
   deleteButton: {
     height: 48,
