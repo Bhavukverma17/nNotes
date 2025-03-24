@@ -49,8 +49,33 @@ const languages = {
     Github: "Github リポジトリ",
     GMess: "このアプリはオープンソースです。GitHub リポジトリを閲覧や貢献ができます。",
     Version: "バージョン",
-    
+    Category: "Category",
   },
+  de: {
+    Error: "Fehler",
+    Fts : "Fehler beim Speichern der Notiz",
+    SearchHere : "Suche hier...",
+    Notes : "Notizen",
+    NoNotes : "Keine Notizen, drücke auf das + Icon um welche zu erstellen",
+    DNote : "Notiz löschen",
+    DMess: "Bist du sicher das du die Notiz löschen willst?",
+    Cancel : "Abbrechen",
+    Del : "Löschen",
+    AddNote : " ",
+    Title : "Titel",
+    Note: "Notiz",
+    AppSettings: "App Einstellungen",
+    Theme: "Erscheinungsbild",
+    Header: "Überschrift",
+    itext1: "Ändere die Schriftart von Überschriften zu NDot. Die Standart Schriftart ist NType.",
+    Colortheme: "Farben Erscheinungsbild",
+    itext2: "Ändere zwischen Nacht / Tag Modus.",
+    About: "Über",
+    Github: "Github Repository",
+    GMess: "App ist Open Source. Du kannst es über GitHub anschauen oder dabei helfen.",
+    Version: "Version",
+    Category: "Kategorie",
+  }
 };
 
 const LanguageContext = createContext();
