@@ -3,7 +3,7 @@
     "version": ">= 14.4.0",
     "appVersionSource": "remote"
   },
- "build": {
+  "build": {
     "development": {
       "developmentClient": true,
       "distribution": "internal"
@@ -26,11 +26,13 @@
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "android": {
+        "buildType": "app-bundle"
+      }
     }
   },
   "submit": {
     "production": {}
   }
 }
-

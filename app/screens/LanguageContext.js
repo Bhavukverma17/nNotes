@@ -17,7 +17,7 @@ const languages = {
     AppSettings: "App Settings",
     Theme: "Theme",
     Header: "Headers",
-    itext1: "Change Font of Headers to NDot. Default Font is NType.",
+    itext1: "Change Font of Headers. Default Font is NType.",
     Colortheme: "Color Theme",
     itext2: "Change the Dark/light theme.",
     About: "About",

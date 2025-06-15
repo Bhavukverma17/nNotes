@@ -725,7 +725,7 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
                 ]}
               >
-                V1.5.0
+                V1.6.0 Beta
               </Text>
             </View>
             <View style={styles.ndotarrowThin}>
@@ -741,6 +741,14 @@ export default function Settings() {
               </Text>
             </View>
           </TouchableOpacity>
+          <View style={styles.madebyView} marginTop="20">
+            <Text style={styles.madebyTxt}> App made by Bhavuk verma</Text>
+            <AntDesign name="heart" size={15} style={styles.heartic} />
+          </View>
+          <View style={styles.madebyView} marginBottom="10">
+            <Text style={styles.madebyTxt}> App icon by Lee seth - 13 galaxy</Text>
+            <AntDesign name="youtube" size={15} style={styles.heartic} />
+          </View>
 
           {/* ITEM 2 Style 3.0 - END */}
         </ScrollView>
@@ -801,8 +809,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingLeft: 22,
     marginHorizontal: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 26,
+    borderTopRightRadius: 26,
     marginBottom: 3,
   },
   itemWrapperThin1: {
@@ -813,8 +821,8 @@ const styles = StyleSheet.create({
     height: 85,
     paddingLeft: 22,
     marginHorizontal: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 26,
+    borderTopRightRadius: 26,
     marginBottom: 3,
   },
   itemWrapperThin: {
@@ -824,8 +832,8 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     paddingLeft: 22,
     marginHorizontal: 20,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 26,
+    borderBottomRightRadius: 26,
   },
   itemHeadText: {
     fontWeight: "600",
@@ -921,7 +929,7 @@ const styles = StyleSheet.create({
   dmodalContainer: {
     width: "80%",
     backgroundColor: "#141414",
-    borderRadius: 18,
+    borderRadius: 26,
     padding: 20,
     alignItems: "center",
   },
@@ -961,4 +969,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
+  madebyView: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  madebyTxt: {
+    color: "grey",
+    textAlign: "center",
+    fontFamily: "ndot",
+  },
+  heartic: {
+    marginHorizontal: 5,
+    color: "#d71921",
+  }
 });

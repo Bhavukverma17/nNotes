@@ -5,10 +5,40 @@ import Home from './app/screens/Home.js'; // Ehe hegi Main file, jithe code aa
 import Settings from './app/screens/settings.js'; 
 import { FontProvider } from './app/FontContext.js'; // FONT da switch bnon lyi
 import { ThemeProvider } from './app/ThemeContext.js'
-import { TransitionPresets } from '@react-navigation/stack';
 import { LanguageProvider } from './app/screens/LanguageContext.js';
 
 const Stack = createStackNavigator();
+
+const customTransition = {
+  gestureEnabled: true,
+  gestureDirection: 'horizontal',
+  transitionSpec: {
+    open: {
+      animation: 'timing',
+      config: {
+        duration: 250,
+      },
+    },
+    close: {
+      animation: 'timing',
+      config: {
+        duration: 250,
+      },
+    },
+  },
+  cardStyleInterpolator: ({ current, layouts }) => ({
+    cardStyle: {
+      transform: [
+        {
+          translateX: current.progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: [layouts.screen.width, 0],
+          }),
+        },
+      ],
+    },
+  }),
+};
 
 export default function App() {
   return (
@@ -21,8 +51,7 @@ export default function App() {
         navigationBarColor: "white",
         }}>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Settings" component={Settings} options={{
-      ...TransitionPresets.SlideFromRightIOS, }} />
+        <Stack.Screen name="Settings" component={Settings} options={customTransition} />
       </Stack.Navigator>
     </NavigationContainer>
     </FontProvider>
