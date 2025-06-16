@@ -29,6 +29,7 @@ export default function Settings() {
   const { changeLanguage, translations, language } = useLanguage();
   const [modalLangVisible, setModalLangVisible] = useState(false);
   const [clearModalVisible, setClearModalVisible] = useState(false);
+  const [contributorsModalVisible, setContributorsModalVisible] = useState(false);
 
   const openGitHub = () => {
     Linking.openURL("https://github.com/Bhavukverma17/nNotes");
@@ -142,7 +143,7 @@ export default function Settings() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? "black" : "white" }]}>
       <View
         style={[
           styles.scontainer,
@@ -197,7 +198,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemHeadText,
-                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                  { color: isDarkMode ? "white" : "black" },
                 ]}
               >
                 {translations.Header} Font
@@ -205,7 +206,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemContentText,
-                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                  { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
                 {translations.itext1}
@@ -305,7 +306,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemHeadText,
-                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                  { color: isDarkMode ? "white" : "black" },
                 ]}
               >
                 {translations.Colortheme}
@@ -313,7 +314,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemContentText,
-                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                  { color: isDarkMode ? "#ADADAD" : "#616161"},
                 ]}
               >
                 {translations.itext2}
@@ -461,7 +462,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemHeadText,
-                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                  { color: isDarkMode ? "white" : "black"},
                 ]}
               >
                 Export Notes
@@ -469,7 +470,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemContentText,
-                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                  { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
                 Save your notes to a file
@@ -500,7 +501,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemHeadText,
-                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                  { color: isDarkMode ? "white" : "black" },
                 ]}
               >
                 Import Notes
@@ -508,7 +509,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemContentText,
-                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                  { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
                 Load notes from a JSON file
@@ -539,7 +540,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemHeadText,
-                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                  { color: isDarkMode ? "white" : "black"},
                 ]}
               >
                 Clear All Notes
@@ -547,7 +548,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemContentText,
-                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                  { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
                 Delete all notes permanently
@@ -636,7 +637,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemHeadText,
-                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                  { color: isDarkMode ? "white" : "black"},
                 ]}
               >
                 {translations.Github}
@@ -644,7 +645,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemContentText,
-                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                  { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
                 {translations.GMess}
@@ -675,7 +676,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemHeadText,
-                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                  { color: isDarkMode ? "white" : "black" },
                 ]}
               >
                 Change Language
@@ -683,10 +684,49 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemContentText,
-                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                  { color: isDarkMode ? "#ADADAD" : "#616161"},
                 ]}
               >
                 Change the Language of App.
+              </Text>
+            </View>
+            <View style={styles.ndotarrow}>
+              <Text
+                style={{
+                  color: isDarkMode ? "white" : "black",
+                  fontSize: 25,
+                  fontFamily: "ndot",
+                  paddingLeft: 20,
+                }}
+              >
+                {">"}
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setContributorsModalVisible(true)}
+            style={[
+              styles.itemWrapperMid,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+            ]}
+          >
+            <View style={styles.itemCont}>
+              <Text
+                style={[
+                  styles.itemHeadText,
+                  { color: isDarkMode ? "white" : "black"},
+                ]}
+              >
+                Contributors
+              </Text>
+              <Text
+                style={[
+                  styles.itemContentText,
+                  { color: isDarkMode ? "#ADADAD" : "#616161"},
+                ]}
+              >
+                View app contributors
               </Text>
             </View>
             <View style={styles.ndotarrow}>
@@ -714,7 +754,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemHeadText,
-                  { color: isDarkMode ? "white" : "black", fontSize: 18 },
+                  { color: isDarkMode ? "white" : "black" },
                 ]}
               >
                 App {translations.Version}
@@ -722,7 +762,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemContentText,
-                  { color: isDarkMode ? "#ADADAD" : "#616161", fontSize: 16 },
+                  { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
                 V1.6.0 Beta
@@ -741,16 +781,93 @@ export default function Settings() {
               </Text>
             </View>
           </TouchableOpacity>
-          <View style={styles.madebyView} marginTop="20">
-            <Text style={styles.madebyTxt}> App made by Bhavuk verma</Text>
-            <AntDesign name="heart" size={15} style={styles.heartic} />
-          </View>
-          <View style={styles.madebyView} marginBottom="10">
-            <Text style={styles.madebyTxt}> App icon by Lee seth - 13 galaxy</Text>
-            <AntDesign name="youtube" size={15} style={styles.heartic} />
-          </View>
-
           {/* ITEM 2 Style 3.0 - END */}
+
+          {/* Contributors Modal */}
+          <Modal
+            visible={contributorsModalVisible}
+            transparent={true}
+            animationType="slide"
+            onRequestClose={() => setContributorsModalVisible(false)}
+          >
+            <View
+              style={[
+                styles.modalContainer,
+                {
+                  backgroundColor: isDarkMode
+                    ? "rgba(0, 0, 0, 0.85)"
+                    : "rgba(255, 255, 255, 0.83)",
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.modalContent,
+                  { backgroundColor: isDarkMode ? "#141414" : "#f0f0f0" },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.modalTitle,
+                    { color: isDarkMode ? "white" : "black" },
+                  ]}
+                >
+                  Contributors
+                </Text>
+                <View style={styles.contributorItem}>
+                  <Text
+                    style={[
+                      styles.contributorTitle,
+                      { color: isDarkMode ? "white" : "black" },
+                    ]}
+                  >
+                    App Developer
+                  </Text>
+                  <View style={styles.contributorContent}>
+                    <Text
+                      style={[
+                        styles.contributorText,
+                        { color: isDarkMode ? "#ADADAD" : "#616161" },
+                      ]}
+                    >
+                      Bhavuk verma
+                    </Text>
+                    <AntDesign name="heart" size={20} color="#d71921" />
+                  </View>
+                </View>
+                <View style={styles.contributorItem}>
+                  <Text
+                    style={[
+                      styles.contributorTitle,
+                      { color: isDarkMode ? "white" : "black" },
+                    ]}
+                  >
+                    App Icon
+                  </Text>
+                  <View style={styles.contributorContent}>
+                    <Text
+                      style={[
+                        styles.contributorText,
+                        { color: isDarkMode ? "#ADADAD" : "#616161" },
+                      ]}
+                    >
+                      Lee seth - 13 galaxy
+                    </Text>
+                    <AntDesign name="youtube" size={20} color="#d71921" />
+                  </View>
+                </View>
+
+                <TouchableOpacity
+                  onPress={() => setContributorsModalVisible(false)}
+                  style={styles.closeButton}
+                >
+                  <Text style={[styles.buttonText, { color: "white" }]}>
+                    Close
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -760,11 +877,9 @@ export default function Settings() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black",
   },
   scontainer: {
     flex: 1,
-    backgroundColor: "black",
     paddingTop: 20,
     paddingHorizontal: 10,
   },
@@ -837,6 +952,10 @@ const styles = StyleSheet.create({
   },
   itemHeadText: {
     fontWeight: "600",
+    fontSize: 17,
+  },
+  itemContentText: {
+    fontSize: 15,
   },
   ndotarrow: {
     width: 30,
@@ -969,18 +1088,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-  madebyView: {
+  contributorItem: {
+    marginVertical: 15,
+    paddingHorizontal: 10,
+  },
+  contributorTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 5,
+  },
+  contributorContent: {
     flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent: "space-between",
   },
-  madebyTxt: {
-    color: "grey",
-    textAlign: "center",
-    fontFamily: "ndot",
+  contributorText: {
+    fontSize: 16,
   },
-  heartic: {
-    marginHorizontal: 5,
-    color: "#d71921",
-  }
 });

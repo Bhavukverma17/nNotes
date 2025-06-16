@@ -175,7 +175,7 @@ const NoteModal = ({
     >
       <Animated.View 
         style={[
-          styles.modalContainer,
+          styles.modalContainer, { backgroundColor: isDarkMode ? "black" : "white" },
           {
             opacity: fadeAnim,
           }
@@ -455,7 +455,6 @@ const NoteModal = ({
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   keyboardAvoidingView: {
     flex: 1,

@@ -80,7 +80,7 @@ function Home() {
   useEffect(() => {
     StatusBar.setBarStyle(isDarkMode ? "light-content" : "dark-content");
     StatusBar.setBackgroundColor(isDarkMode ? "black" : "white");
-    NavigationBar.setBackgroundColorAsync(isDarkMode ? "black" : "transparent");
+    // NavigationBar.setBackgroundColorAsync(isDarkMode ? "black" : "transparent");
     loadNotes();
     loadCategories();
     loadLayoutPreference();
@@ -367,7 +367,7 @@ function Home() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? "black" : "white" }]}>
       <View
         style={[
           styles.scontainer,
@@ -603,11 +603,9 @@ function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black",
   },
   scontainer: {
     flex: 1,
-    backgroundColor: "black",
     paddingTop: 20,
   },
   headerText: {
@@ -626,8 +624,8 @@ const styles = StyleSheet.create({
     borderRadius: 45,
     position: "absolute",
     bottom: 16,
-    left: 40,
-    right: 40,
+    left: 50,
+    right: 50,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
@@ -643,7 +641,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   navButtonActive: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#f0f0f020",
+    borderRadius: 40,
   },
   searchInput: {
     fontSize: 20,
@@ -672,7 +671,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    marginTop: 250,
+    // marginTop: 200,
   },
   emptyStateText: {
     color: "#888",
