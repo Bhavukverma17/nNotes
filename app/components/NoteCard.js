@@ -49,6 +49,18 @@ const NoteCard = ({
         >
           {note.title}
         </Text>
+        <View style={styles.noteHeaderRight}>
+
+        <View style={styles.noteCategoryContainer}>
+        <Text
+        style={[
+          styles.noteCategory,
+          { color: "white" },
+        ]}
+      >
+        {note.category || "Personal"}
+      </Text>
+      </View>
         <TouchableOpacity
           onPress={onPinPress}
           style={styles.pinButton}
@@ -69,21 +81,15 @@ const NoteCard = ({
             }
           />
         </TouchableOpacity>
+        </View>
       </View>
-
-      <Text
-        style={[
-          styles.noteCategory,
-          { color: isDarkMode ? "#bbb" : "#666" },
-        ]}
-      >
-        {note.category || "Personal"}
-      </Text>
+           
+      
 
       <Text
         style={[
           styles.noteContent,
-          { color: isDarkMode ? "white" : "#4a4a4a" },
+          { color: isDarkMode ? "#d9d9d9" : "#4a4a4a" },
         ]}
         numberOfLines={4}
       >
@@ -103,10 +109,10 @@ const NoteCard = ({
 
 const styles = StyleSheet.create({
   noteSmall: {
-    borderRadius: 26,
+    borderRadius: 25,
     padding: 16,
-    marginBottom: 16,
-    marginHorizontal: 18,
+    marginBottom: 12,
+    marginHorizontal: 16,
   },
   noteTitle: {
     fontSize: 20,
@@ -134,8 +140,7 @@ const styles = StyleSheet.create({
   },
   noteCategory: {
     fontSize: 12,
-    marginBottom: 4,
-    fontFamily: "ndot",
+    fontFamily: "ndotcapi",
   },
   timestamp: {
     fontSize: 12,
@@ -146,6 +151,22 @@ const styles = StyleSheet.create({
   selectedNote: {
     borderWidth: 2,
     borderColor: "#d71921",
+  },
+  noteCategoryContainer: {
+    backgroundColor: "#1c19d7",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 14,
+    padding: 5,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: "#7370ff",
+  },
+  noteHeaderRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
   },
 });
 

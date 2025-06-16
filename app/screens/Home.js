@@ -80,7 +80,7 @@ function Home() {
   useEffect(() => {
     StatusBar.setBarStyle(isDarkMode ? "light-content" : "dark-content");
     StatusBar.setBackgroundColor(isDarkMode ? "black" : "white");
-    // NavigationBar.setBackgroundColorAsync(isDarkMode ? "black" : "transparent");
+    NavigationBar.setBackgroundColorAsync(isDarkMode ? "black" : "transparent");
     loadNotes();
     loadCategories();
     loadLayoutPreference();
@@ -657,7 +657,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-    paddingHorizontal: 18,
+    paddingHorizontal: 15,
     marginBottom: 5,
   },
   settingsButton: {
@@ -691,7 +691,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   categoriesScroll: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 16,
     paddingVertical: 10,
   },
   categoryButton: {
