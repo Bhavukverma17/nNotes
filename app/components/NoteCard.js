@@ -52,10 +52,9 @@ const NoteCard = ({
 
         <View style={styles.noteCategoryContainer}>
         <Text
-        style={[
-          styles.noteCategory,
-          { color: "white" },
-        ]}
+        style={
+          styles.noteCategory
+        }
       >
         {note.category || "Personal"}
       </Text>
@@ -137,10 +136,7 @@ const styles = StyleSheet.create({
   pinButton: {
     padding: 1,
   },
-  noteCategory: {
-    fontSize: 13,
-    fontFamily: "ntype",
-  },
+  
   timestamp: {
     fontSize: 12,
     textAlign: "right",
@@ -165,6 +161,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
+  },
+  noteCategory: {
+    fontSize: 13,
+    fontFamily: "interm",
+    color: "white",
   },
 });
 

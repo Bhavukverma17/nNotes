@@ -577,15 +577,15 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   colorOption: {
-    width: 35,
+    width: 60,
     height: 35,
     borderRadius: 17.5,
     borderWidth: 1,
-    borderColor: "#888",
+    borderColor: "#ccc",
   },
   selectedColorOption: {
-    borderWidth: 2,
-    borderColor: "#d71921",
+    borderWidth: 3,
+    borderColor: "#010101",
     transform: [{ scale: 1.1 }],
   },
   statsContainer: {
