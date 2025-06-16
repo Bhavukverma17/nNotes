@@ -369,7 +369,7 @@ const NoteModal = ({
                   styles.inputTitle,
                   {
                     color: isDarkMode ? "white" : "black",
-                    fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
+                    fontFamily: "interm",
                   },
                 ]}
                 value={newTitle}
@@ -391,7 +391,7 @@ const NoteModal = ({
                         ? "#1a1a1a"
                         : "#ededed",
                     color: isDarkMode ? "white" : "black",
-                    fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
+                    fontFamily: "azeret",
                   },
                 ]}
                 multiline
@@ -497,13 +497,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   inputTitle: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "600",
-    marginVertical: 15,
+    marginVertical: 10,
     paddingHorizontal: 5,
   },
   input: {
-    fontSize: 16,
+    fontSize: 15,
     borderRadius: 15,
     padding: 15,
     minHeight: 200,

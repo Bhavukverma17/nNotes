@@ -39,6 +39,7 @@ function Home() {
     ndot: require("../../assets/fonts/ndot.ttf"),
     ndotcapi: require("../../assets/fonts/NDot57Caps.otf"),
     interm: require("../../assets/fonts/Inter-Medium.otf"),
+    azeret: require("../../assets/fonts/AzeretMono-Regular.ttf"),
   });
 
   useEffect(() => {

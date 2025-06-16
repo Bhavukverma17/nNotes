@@ -43,8 +43,7 @@ const NoteCard = ({
         <Text
           style={[
             styles.noteTitle,
-            { color: isDarkMode ? "white" : "black" },
-            { fontFamily: selectedFont === "Ntype" ? undefined : selectedFont },
+            { color: isDarkMode ? "white" : "black" }
           ]}
         >
           {note.title}
@@ -115,12 +114,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   noteTitle: {
-    fontSize: 20,
+    fontSize: 17,
     fontFamily: "interm",
   },
   noteContent: {
-    fontSize: 15,
-    fontFamily: "interm",
+    fontSize: 12,
+    fontFamily: "azeret",
   },
   noteImage: {
     width: "100%",
@@ -139,28 +138,27 @@ const styles = StyleSheet.create({
     padding: 1,
   },
   noteCategory: {
-    fontSize: 12,
-    fontFamily: "ndotcapi",
+    fontSize: 13,
+    fontFamily: "ntype",
   },
   timestamp: {
     fontSize: 12,
-    marginTop: 5,
     textAlign: "right",
-    fontFamily: "ndotcapi",
+    fontFamily: "azeret",
   },
   selectedNote: {
     borderWidth: 2,
     borderColor: "#d71921",
   },
   noteCategoryContainer: {
-    backgroundColor: "#1c19d7",
+    backgroundColor: "#006eff",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 14,
     padding: 5,
     paddingHorizontal: 10,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: "#7370ff",
   },
   noteHeaderRight: {
