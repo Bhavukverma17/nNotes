@@ -765,7 +765,7 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
-                V1.6.0 Beta
+                V1.6.1 Stable
               </Text>
             </View>
             <View style={styles.ndotarrowThin}>
