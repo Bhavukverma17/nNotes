@@ -23,7 +23,6 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import * as NavigationBar from "expo-navigation-bar";
 import { useLanguage } from "./LanguageContext";
-import { Share } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import NoteCard from "../components/NoteCard";
 import NoteModal from "../components/NoteModal";
@@ -609,7 +608,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   headerText: {
-    fontSize: 40,
+    fontSize: 38,
     color: "black",
     flex: 2,
     paddingLeft: 5,
