@@ -19,6 +19,70 @@ import { COLOR_PAIRS, CATEGORIES, DEFAULT_CATEGORY, DEFAULT_COLOR } from '../con
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CategoryManager from './CategoryManager';
 
+const COLOR_NAME_TO_HEX = {
+  'red': '#ff0000',
+  'green': '#00ff00',
+  'blue': '#0000ff',
+  'yellow': '#ffff00',
+  'purple': '#800080',
+  'orange': '#ffa500',
+  'pink': '#ffc0cb',
+  'brown': '#a52a2a',
+  'black': '#000000',
+  'white': '#ffffff',
+  'gray': '#808080',
+  'grey': '#808080',
+  'cyan': '#00ffff',
+  'magenta': '#ff00ff',
+  'lime': '#00ff00',
+  'maroon': '#800000',
+  'navy': '#000080',
+  'olive': '#808000',
+  'teal': '#008080',
+  'violet': '#ee82ee',
+  'indigo': '#4b0082',
+  'gold': '#ffd700',
+  'silver': '#c0c0c0',
+  'beige': '#f5f5dc',
+  'tan': '#d2b48c',
+  'coral': '#ff7f50',
+  'crimson': '#dc143c',
+  'fuchsia': '#ff00ff',
+  'khaki': '#f0e68c',
+  'lavender': '#e6e6fa',
+  'plum': '#dda0dd',
+  'salmon': '#fa8072',
+  'sienna': '#a0522d',
+  'turquoise': '#40e0d0',
+  'wheat': '#f5deb3',
+};
+
+function isColorDark(color) {
+  let c = color ? color.trim().toLowerCase() : '';
+  
+  // Check if it's a color name and convert to hex
+  if (COLOR_NAME_TO_HEX[c]) {
+    c = COLOR_NAME_TO_HEX[c];
+  }
+  
+  if (c[0] === '#') {
+    c = c.substring(1);
+    if (c.length === 3) c = c[0]+c[0]+c[1]+c[1]+c[2]+c[2];
+    if (c.length !== 6) return false;
+    const r = parseInt(c.substr(0,2),16);
+    const g = parseInt(c.substr(2,2),16);
+    const b = parseInt(c.substr(4,2),16);
+    return (0.299*r + 0.587*g + 0.114*b) < 186;
+  }
+  if (c.startsWith('rgb')) {
+    const nums = c.match(/\d+/g);
+    if (!nums || nums.length < 3) return false;
+    const [r, g, b] = nums.map(Number);
+    return (0.299*r + 0.587*g + 0.114*b) < 186;
+  }
+  return false;
+}
+
 const NoteModal = ({
   visible,
   onClose,
@@ -43,8 +107,10 @@ const NoteModal = ({
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [showCategoryInput, setShowCategoryInput] = useState(false);
   const [newCategory, setNewCategory] = useState('');
-  const [categories, setCategories] = useState(['All', 'Personal']);
+  const [categories, setCategories] = useState(['All']);
   const [showCategoryManager, setShowCategoryManager] = useState(false);
+
+  const inputTextColor = isColorDark(noteColor) ? '#fff' : '#000';
 
   useEffect(() => {
     loadCategories();
@@ -82,9 +148,9 @@ const NoteModal = ({
       const savedCategories = await AsyncStorage.getItem('customCategories');
       if (savedCategories) {
         const customCategories = JSON.parse(savedCategories);
-        setCategories(['All', 'Personal', ...customCategories]);
+        setCategories(['All', ...customCategories]);
       } else {
-        setCategories(['All', 'Personal']);
+        setCategories(['All']);
       }
     } catch (error) {
       console.error('Error loading categories:', error);
@@ -104,7 +170,7 @@ const NoteModal = ({
 
     try {
       const updatedCategories = [...categories, newCategory.trim()];
-      const customCategories = updatedCategories.filter(cat => cat !== 'All' && cat !== 'Personal');
+      const customCategories = updatedCategories.filter(cat => cat !== 'All');
       await AsyncStorage.setItem('customCategories', JSON.stringify(customCategories));
       setCategories(updatedCategories);
       setSelectedCategory(newCategory.trim());
@@ -348,20 +414,24 @@ const NoteModal = ({
                 </View>
               </View>
 
-              <View style={styles.colorPicker}>
-                {Object.keys(COLOR_PAIRS).map((key, index) => (
-                  <TouchableOpacity
-                    key={key}
-                    style={[
-                      styles.colorOption,
-                      { backgroundColor: currentColors[index] },
-                      noteColor === key && styles.selectedColorOption,
-                    ]}
-                    onPress={() => setNoteColor(key)}
-                    accessible={true}
-                    accessibilityLabel={`Select ${key} color`}
-                  />
-                ))}
+              <View style={styles.colorInputContainer}>
+                <Text style={{ color: isDarkMode ? '#fff' : '#000', marginBottom: 6 }}>Note Color</Text>
+                <TextInput
+                  style={[
+                    styles.colorInputBox,
+                    {
+                      backgroundColor: isDarkMode ? '#222' : '#f5f5f5',
+                      color: isDarkMode ? '#fff' : '#000',
+                      borderColor: noteColor,
+                    },
+                  ]}
+                  placeholder="Enter color hex code (e.g. red, #ff0000)"
+                  placeholderTextColor={isDarkMode ? '#888' : '#666'}
+                  value={noteColor}
+                  onChangeText={setNoteColor}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
               </View>
 
               <TextInput
@@ -384,13 +454,8 @@ const NoteModal = ({
                 style={[
                   styles.input,
                   {
-                    backgroundColor:
-                      noteColor && COLOR_PAIRS[noteColor]
-                        ? COLOR_PAIRS[noteColor][isDarkMode ? "dark" : "light"]
-                        : isDarkMode
-                        ? "#1a1a1a"
-                        : "#ededed",
-                    color: isDarkMode ? "white" : "black",
+                    backgroundColor: noteColor || (isDarkMode ? "#666" : "#ededed"),
+                    color: inputTextColor ,
                     fontFamily: "azeret",
                   },
                 ]}
@@ -398,7 +463,7 @@ const NoteModal = ({
                 value={newContent}
                 onChangeText={setNewContent}
                 placeholder="Start writing..."
-                placeholderTextColor={isDarkMode ? "#bbb" : "#888"}
+                placeholderTextColor={isColorDark(noteColor) ? '#bbb' : '#888'}
                 accessible={true}
                 accessibilityLabel="Note content"
               />
@@ -570,23 +635,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  colorPicker: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 5,
+  colorInputContainer: {
     marginBottom: 15,
   },
-  colorOption: {
-    width: 60,
-    height: 35,
-    borderRadius: 17.5,
-    borderWidth: 1,
-    borderColor: "#ccc",
-  },
-  selectedColorOption: {
-    borderWidth: 3,
-    borderColor: "#010101",
-    transform: [{ scale: 1.1 }],
+  colorInputBox: {
+    borderWidth: 2,
+    borderRadius: 10,
+    padding: 10,
+    fontSize: 15,
   },
   statsContainer: {
     marginVertical: 10,

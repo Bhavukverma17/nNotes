@@ -13,7 +13,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CategoryManager = ({ visible, onClose, isDarkMode, onCategoriesUpdate }) => {
-  const [categories, setCategories] = useState(['All', 'Personal']);
+  const [categories, setCategories] = useState(['All']);
   const [newCategory, setNewCategory] = useState('');
 
   useEffect(() => {
@@ -27,9 +27,9 @@ const CategoryManager = ({ visible, onClose, isDarkMode, onCategoriesUpdate }) =
       const savedCategories = await AsyncStorage.getItem('customCategories');
       if (savedCategories) {
         const customCategories = JSON.parse(savedCategories);
-        setCategories(['All', 'Personal', ...customCategories]);
+        setCategories(['All', ...customCategories]);
       } else {
-        setCategories(['All', 'Personal']);
+        setCategories(['All']);
       }
     } catch (error) {
       console.error('Error loading categories:', error);
@@ -38,8 +38,8 @@ const CategoryManager = ({ visible, onClose, isDarkMode, onCategoriesUpdate }) =
 
   const saveCategories = async (updatedCategories) => {
     try {
-      // Filter out 'All' and 'Personal' as they are our default categories
-      const customCategories = updatedCategories.filter(cat => cat !== 'All' && cat !== 'Personal');
+      
+      const customCategories = updatedCategories.filter(cat => cat !== 'All');
       await AsyncStorage.setItem('customCategories', JSON.stringify(customCategories));
       setCategories(updatedCategories);
       onCategoriesUpdate(updatedCategories);
@@ -65,14 +65,14 @@ const CategoryManager = ({ visible, onClose, isDarkMode, onCategoriesUpdate }) =
   };
 
   const handleDeleteCategory = (categoryToDelete) => {
-    if (categoryToDelete === 'All' || categoryToDelete === 'Personal') {
+    if (categoryToDelete === 'All') {
       Alert.alert('Error', 'Cannot delete default categories');
       return;
     }
 
     Alert.alert(
       'Delete Category',
-      `Are you sure you want to delete "${categoryToDelete}"? Notes in this category will be moved to Personal.`,
+      `Are you sure you want to delete "${categoryToDelete}"? Notes in this category will be moved to All.`,
       [
         {
           text: 'Cancel',
@@ -91,7 +91,7 @@ const CategoryManager = ({ visible, onClose, isDarkMode, onCategoriesUpdate }) =
   };
 
   const isDefaultCategory = (category) => {
-    return category === 'All' || category === 'Personal';
+    return category === 'All';
   };
 
   return (

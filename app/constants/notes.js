@@ -1,4 +1,4 @@
-export const CATEGORIES = ["All", "Personal", "Work", "To-Do", "Ideas"];
+export const CATEGORIES = ["All"];
 
 export const COLOR_PAIRS = {
   neutral: { light: "#f0f0f0", dark: "#1c1c1c" },
@@ -13,8 +13,7 @@ export const SORT_OPTIONS = {
   DATE_ASC: "Oldest First",
   TITLE_ASC: "Title A-Z",
   TITLE_DESC: "Title Z-A",
-  PINNED: "Pinned First",
 };
 
-export const DEFAULT_CATEGORY = "Personal";
+export const DEFAULT_CATEGORY = "All";
 export const DEFAULT_COLOR = "neutral"; 

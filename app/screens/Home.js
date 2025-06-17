@@ -54,7 +54,7 @@ function Home() {
   const [filteredNotes, setFilteredNotes] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [categories, setCategories] = useState(['All', 'Personal']);
+  const [categories, setCategories] = useState(['All']);
   const [showCategoryManager, setShowCategoryManager] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentNote, setCurrentNote] = useState(null);
@@ -66,7 +66,7 @@ function Home() {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const { selectedFont } = useContext(FontContext);
   const { translations } = useLanguage();
-  const [noteColor, setNoteColor] = useState(DEFAULT_COLOR);
+  const [noteColor, setNoteColor] = useState(" ");
   const [selectedNotes, setSelectedNotes] = useState([]);
   const [sortOption, setSortOption] = useState(SORT_OPTIONS.DATE_DESC);
   const [isLoading, setIsLoading] = useState(true);
@@ -126,9 +126,9 @@ function Home() {
       const savedCategories = await AsyncStorage.getItem('customCategories');
       if (savedCategories) {
         const customCategories = JSON.parse(savedCategories);
-        setCategories(['All', 'Personal', ...customCategories]);
+        setCategories(['All', ...customCategories]);
       } else {
-        setCategories(['All', 'Personal']);
+        setCategories(['All']);
       }
     } catch (error) {
       console.error('Error loading categories:', error);
@@ -183,7 +183,7 @@ function Home() {
     setNewTitle("");
     setNewContent("");
     setSelectedImage(null);
-    setNoteColor(DEFAULT_COLOR);
+    setNoteColor("");
     setSelectedCategory('All');
     setModalVisible(true);
   };
@@ -270,9 +270,6 @@ function Home() {
       case SORT_OPTIONS.TITLE_DESC:
         filtered.sort((a, b) => b.title.localeCompare(a.title));
         break;
-      case SORT_OPTIONS.PINNED:
-        filtered.sort((a, b) => (b.pinned === a.pinned ? 0 : b.pinned ? 1 : -1));
-        break;
     }
 
     return filtered;
@@ -335,19 +332,12 @@ function Home() {
           setNewTitle(note.title);
           setNewContent(note.content);
           setSelectedImage(note.image || null);
-          setNoteColor(note.color || DEFAULT_COLOR);
+          setNoteColor(note.color || "");
           setSelectedCategory(note.category || 'All');
           setModalVisible(true);
         }
       }}
       onLongPress={() => handleLongPress(note.id)}
-      onPinPress={() => {
-        const updatedNotes = notes.map((n) =>
-          n.id === note.id ? { ...n, pinned: !n.pinned } : n
-        );
-        setNotes(updatedNotes);
-        saveNotes(updatedNotes);
-      }}
       isSelected={selectedNotes.includes(note.id)}
       selectedFont={selectedFont}
     />
