@@ -22,7 +22,7 @@ const languages = {
     itext2: "Change the Dark/light theme.",
     About: "About",
     Github: "Github Repository",
-    GMess: "App is Open source. You can view or contribute to Github repository.",
+    GMess: "View or contribute to Github repository.",
     Version: "Version",
     Category: "Category",
   },
