@@ -243,7 +243,7 @@ const NoteModal = ({
     >
       <Animated.View 
         style={[
-          styles.modalContainer, { backgroundColor: isDarkMode ? "black" : "white" },
+          styles.modalContainer, { backgroundColor: isDarkMode ? "black" : "#EEEEEE" },
           {
             opacity: fadeAnim,
           }
@@ -257,7 +257,7 @@ const NoteModal = ({
             style={[
               styles.modalContent,
               {
-                backgroundColor: isDarkMode ? "#000000" : "#ffffff",
+                backgroundColor: isDarkMode ? "#000000" : "#EEEEEE",
                 transform: [{
                   translateY: slideAnim.interpolate({
                     inputRange: [0, 1],
@@ -344,6 +344,11 @@ const NoteModal = ({
                             : isDarkMode
                             ? "#1a1a1a"
                             : "#f5f5f5",
+                          borderColor: selectedCategory === cat
+                            ? "#d71921"
+                            : isDarkMode
+                            ? "#555"
+                            : "#ccc",
                         },
                       ]}
                       onPress={() => setSelectedCategory(cat)}
@@ -370,6 +375,8 @@ const NoteModal = ({
                         styles.addCategoryButton,
                         {
                           backgroundColor: isDarkMode ? "#1a1a1a" : "#f5f5f5",
+                          borderWidth: 1,
+                          borderColor: isDarkMode ? "#555" : "#ccc",
                         },
                       ]}
                       onPress={() => setShowCategoryInput(true)}
@@ -386,7 +393,7 @@ const NoteModal = ({
                         style={[
                           styles.categoryInput,
                           {
-                            backgroundColor: isDarkMode ? "#333" : "#f5f5f5",
+                            backgroundColor: isDarkMode ? "#333" : "#f9f9f9",
                             color: isDarkMode ? "white" : "black",
                           },
                         ]}
@@ -422,9 +429,10 @@ const NoteModal = ({
                   style={[
                     styles.colorInputBox,
                     {
-                      backgroundColor: isDarkMode ? '#222' : '#f5f5f5',
+                      backgroundColor: isDarkMode ? '#222' : '#f9f9f9',
                       color: isDarkMode ? '#fff' : '#000',
                       borderColor: noteColor,
+                      fontFamily: 'interm',
                     },
                   ]}
                   placeholder="Enter color hex code (e.g. red, #ff0000)"
@@ -456,7 +464,7 @@ const NoteModal = ({
                 style={[
                   styles.input,
                   {
-                    backgroundColor: noteColor || (isDarkMode ? "#222" : "#ededed"),
+                    backgroundColor: noteColor || (isDarkMode ? "#222" : "#ffffff"),
                     color: inputTextColor ,
                     fontFamily: "azeret",
                   },
@@ -596,6 +604,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 20,
     marginRight: 8,
+    borderWidth: 1,
   },
   selectedCategoryButton: {
     backgroundColor: '#d71921',
@@ -603,6 +612,7 @@ const styles = StyleSheet.create({
   categoryButtonText: {
     fontSize: 14,
     fontWeight: '500',
+    fontFamily: 'interm',
   },
   addCategoryButton: {
     width: 40,
@@ -641,8 +651,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   colorInputBox: {
-    borderWidth: 2,
-    borderRadius: 10,
+    borderWidth: 1.5,
+    borderRadius: 18,
     padding: 10,
     fontSize: 15,
   },
@@ -653,6 +663,7 @@ const styles = StyleSheet.create({
   statsText: {
     fontSize: 12,
     fontWeight: '500',
+    fontFamily: 'azeret',
   },
   imagePreviewContainer: {
     marginVertical: 15,

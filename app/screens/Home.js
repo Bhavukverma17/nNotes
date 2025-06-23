@@ -357,11 +357,11 @@ function Home() {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? "black" : "white" }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? "black" : "#EEEEEE" }]}>
       <View
         style={[
           styles.scontainer,
-          { backgroundColor: isDarkMode ? "black" : "white" },
+          { backgroundColor: isDarkMode ? "black" : "#EEEEEE" },
         ]}
       >
         {isSearching ? (
@@ -442,7 +442,8 @@ function Home() {
                 style={[
                   styles.categoryButton,
                   {
-                    backgroundColor: selectedCategory === cat ? '#d71921' : isDarkMode ? '#333' : '#f5f5f5',
+                    backgroundColor: selectedCategory === cat ? '#d71921' : isDarkMode ? '#333' : '#f9f9f9', 
+                    borderColor: selectedCategory === cat ? '#d71921' : isDarkMode ? '#555' : '#ccc',
                   },
                 ]}
                 onPress={() => setSelectedCategory(cat)}
@@ -460,7 +461,10 @@ function Home() {
             <TouchableOpacity
               style={[
                 styles.categoryButton,
-                { backgroundColor: isDarkMode ? '#333' : '#f5f5f5' },
+                { backgroundColor: isDarkMode ? '#333' : '#f9f9f9',
+                  borderColor: isDarkMode ? '#555' : '#ccc',
+                  marginRight: 16
+                 },
               ]}
               onPress={() => setShowCategoryManager(true)}
             >
@@ -479,7 +483,7 @@ function Home() {
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={[
             styles.notescontain,
-            { backgroundColor: isDarkMode ? "#000" : "#fff" },
+            { backgroundColor: isDarkMode ? "#000" : "#EEEEEE" },
             { paddingBottom: 100 },
           ]}
           ListEmptyComponent={renderEmptyState}
@@ -490,7 +494,7 @@ function Home() {
         <View
           style={[
             styles.bottomNav,
-            { backgroundColor: isDarkMode ? "#262626" : "#fff" },
+            { backgroundColor: isDarkMode ? "#262626" : "#f9f9f9" },
           ]}
         >
           <TouchableOpacity
@@ -661,7 +665,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    // marginTop: 200,
   },
   emptyStateText: {
     color: "#888",
@@ -692,18 +695,13 @@ const styles = StyleSheet.create({
     minWidth: 80,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: "#ccc",
   },
   categoryButtonText: {
     fontSize: 13,
     fontWeight: "500",
+    fontFamily: "interm",
   },
   notescontain: {
     flexGrow: 1,

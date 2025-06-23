@@ -149,18 +149,18 @@ export default function Settings() {
     <SafeAreaView
       style={[
         styles.container,
-        { backgroundColor: isDarkMode ? "black" : "white" },
+        { backgroundColor: isDarkMode ? "black" : "#eeeeee" },
       ]}
     >
       <View
         style={[
           styles.scontainer,
-          { backgroundColor: isDarkMode ? "black" : "white" },
+          { backgroundColor: isDarkMode ? "black" : "#eeeeee" },
         ]}
       >
         <View style={styles.headingBar}>
           <TouchableOpacity
-            style={[styles.backButton, { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" }]}
+            style={[styles.backButton, { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" }]}
             onPress={() => navigation.goBack()}
           >
             <Feather
@@ -184,13 +184,15 @@ export default function Settings() {
           </Text>
         </View>
 
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView 
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}>
           {/* ITEM 1 Style 3.0 - START */}
           <View style={styles.itemTitle}>
             <Text
               style={[
                 styles.itemTitleText,
-                { color: isDarkMode ? "white" : "black", fontSize: 15 },
+                { color: isDarkMode ? "white" : "#656565", fontSize: 15},
               ]}
             >
               {translations.Theme}
@@ -200,7 +202,7 @@ export default function Settings() {
             onPress={() => setModalVisible(true)}
             style={[
               styles.itemWrapperTop,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" },
             ]}
           >
             <View style={styles.itemCont}>
@@ -254,7 +256,7 @@ export default function Settings() {
               <View
                 style={[
                   styles.modalContent,
-                  { backgroundColor: isDarkMode ? "#141414" : "#f5f5f5" },
+                  { backgroundColor: isDarkMode ? "#141414" : "#f9f9f9" },
                 ]}
               >
                 <Text
@@ -308,7 +310,7 @@ export default function Settings() {
             onPress={toggleTheme}
             style={[
               styles.itemWrapperEnd,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" },
             ]}
           >
             <View style={styles.itemCont}>
@@ -362,7 +364,7 @@ export default function Settings() {
               <View
                 style={[
                   styles.modalContent,
-                  { backgroundColor: isDarkMode ? "#141414" : "#f5f5f5" },
+                  { backgroundColor: isDarkMode ? "#141414" : "#f9f9f9" },
                 ]}
               >
                 <Text
@@ -451,7 +453,7 @@ export default function Settings() {
             <Text
               style={[
                 styles.itemTitleText,
-                { color: isDarkMode ? "white" : "black", fontSize: 15 },
+                { color: isDarkMode ? "white" : "#656565", fontSize: 15 },
               ]}
             >
               {translations.Data || "Data"}
@@ -462,7 +464,7 @@ export default function Settings() {
             onPress={handleExportNotes}
             style={[
               styles.itemWrapperTop,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" },
             ]}
           >
             <View style={styles.itemCont}>
@@ -496,7 +498,7 @@ export default function Settings() {
             onPress={handleImportNotes}
             style={[
               styles.itemWrapperMid,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" },
             ]}
           >
             <View style={styles.itemCont}>
@@ -530,7 +532,7 @@ export default function Settings() {
             onPress={() => setClearModalVisible(true)}
             style={[
               styles.itemWrapperEnd,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" },
             ]}
           >
             <View style={styles.itemCont}>
@@ -611,7 +613,7 @@ export default function Settings() {
             <Text
               style={[
                 styles.itemTitleText,
-                { color: isDarkMode ? "white" : "black", fontSize: 15 },
+                { color: isDarkMode ? "white" : "#656565", fontSize: 15 },
               ]}
             >
               {translations.About}
@@ -622,7 +624,7 @@ export default function Settings() {
             onPress={openGitHub}
             style={[
               styles.itemWrapperTop,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" },
             ]}
           >
             <View style={styles.itemCont}>
@@ -656,7 +658,7 @@ export default function Settings() {
             onPress={() => setModalLangVisible(true)}
             style={[
               styles.itemWrapperMid,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" },
             ]}
           >
             <View style={styles.itemCont}>
@@ -695,7 +697,7 @@ export default function Settings() {
             onPress={() => setContributorsModalVisible(true)}
             style={[
               styles.itemWrapperMid,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" },
             ]}
           >
             <View style={styles.itemCont}>
@@ -734,7 +736,7 @@ export default function Settings() {
             onPress={openPlayStore}
             style={[
               styles.itemWrapperEnd,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" },
             ]}
           >
             <View style={styles.itemCont}>
@@ -781,7 +783,7 @@ export default function Settings() {
               <View
                 style={[
                   styles.modalContent,
-                  { backgroundColor: isDarkMode ? "#141414" : "#f5f5f5" },
+                  { backgroundColor: isDarkMode ? "#141414" : "#f9f9f9" },
                 ]}
               >
                 <Text
@@ -877,6 +879,7 @@ const styles = StyleSheet.create({
   itemTitle: {
     marginTop: 20,
     paddingVertical: 10,
+    marginLeft: 10,
     width: "100%",
     alignItems: "left",
     justifyContent: "center",
@@ -885,6 +888,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "600",
     marginLeft: 10,
+    fontFamily: "interm",
   },
   itemWrapperTop: {
     flexDirection: "row",
@@ -912,10 +916,12 @@ const styles = StyleSheet.create({
   },
   itemHeadText: {
     fontWeight: "600",
-    fontSize: 17,
+    fontSize: 16,
+    fontFamily: "interm",
   },
   itemContentText: {
-    fontSize: 15,
+    fontSize: 14,
+    fontFamily: "interm",
   },
   ndotarrow: {
     width: 30,

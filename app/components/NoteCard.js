@@ -78,7 +78,7 @@ const NoteCard = ({
     ? note.color
     : isDarkMode
     ? "#1c1c1c"
-    : "#f5f5f5";
+    : "#f9f9f9";
 
   const textColor = isColorDark(backgroundColor) ? '#fff' : '#000';
 
@@ -143,7 +143,7 @@ const NoteCard = ({
 
 const styles = StyleSheet.create({
   noteSmall: {
-    borderRadius: 25,
+    borderRadius: 20,
     padding: 16,
     marginBottom: 10,
     marginHorizontal: 16,
