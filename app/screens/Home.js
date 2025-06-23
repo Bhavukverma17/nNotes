@@ -80,7 +80,7 @@ function Home() {
   useEffect(() => {
     StatusBar.setBarStyle(isDarkMode ? "light-content" : "dark-content");
     StatusBar.setBackgroundColor(isDarkMode ? "black" : "white");
-    NavigationBar.setBackgroundColorAsync(isDarkMode ? "black" : "transparent");
+    NavigationBar.setBackgroundColorAsync(isDarkMode ? "black" : "white");
     loadNotes();
     loadCategories();
     loadLayoutPreference();
@@ -369,7 +369,7 @@ function Home() {
             style={[
               styles.searchInput,
               {
-                backgroundColor: isDarkMode ? "#333" : "#f0f0f0",
+                backgroundColor: isDarkMode ? "#333" : "#f5f5f5",
                 color: isDarkMode ? "white" : "black",
               },
             ]}
@@ -442,7 +442,7 @@ function Home() {
                 style={[
                   styles.categoryButton,
                   {
-                    backgroundColor: selectedCategory === cat ? '#d71921' : isDarkMode ? '#333' : '#f0f0f0',
+                    backgroundColor: selectedCategory === cat ? '#d71921' : isDarkMode ? '#333' : '#f5f5f5',
                   },
                 ]}
                 onPress={() => setSelectedCategory(cat)}
@@ -460,7 +460,7 @@ function Home() {
             <TouchableOpacity
               style={[
                 styles.categoryButton,
-                { backgroundColor: isDarkMode ? '#333' : '#f0f0f0' },
+                { backgroundColor: isDarkMode ? '#333' : '#f5f5f5' },
               ]}
               onPress={() => setShowCategoryManager(true)}
             >
@@ -505,7 +505,7 @@ function Home() {
             accessibilityLabel="Change sort order"
           >
             <Ionicons
-              name="swap-vertical-sharp"
+              name="options-outline"
               size={24}
               color={isDarkMode ? "white" : "black"}
             />
@@ -631,7 +631,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   navButtonActive: {
-    backgroundColor: "#f0f0f020",
+    backgroundColor: "#f5f5f520",
     borderRadius: 40,
   },
   searchInput: {

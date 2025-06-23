@@ -1,7 +1,7 @@
 export const CATEGORIES = ["All"];
 
 export const COLOR_PAIRS = {
-  neutral: { light: "#f0f0f0", dark: "#1c1c1c" },
+  neutral: { light: "#f5f5f5", dark: "#1c1c1c" },
   red: { light: "#ffcccc", dark: "#4a1a1a" },
   blue: { light: "#cce5ff", dark: "#1a2e4a" },
   green: { light: "#ccffcc", dark: "#1a4a1a" },
