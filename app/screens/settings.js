@@ -756,7 +756,7 @@ export default function Settings() {
               </Text>
             </View>
             <View style={styles.itemIcon}>
-              <Ionicons name="logo-google-playstore" size={24} color="black" />
+              <Ionicons name="logo-google-playstore" size={24} color={isDarkMode ? "white" : "black"} />
             </View>
           </TouchableOpacity>
           {/* ITEM 2 Style 3.0 - END */}
@@ -989,6 +989,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 50,
+    marginLeft  : 5,
   },
   option: {
     paddingVertical: 10,
