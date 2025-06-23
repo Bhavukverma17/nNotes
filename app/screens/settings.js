@@ -15,11 +15,14 @@ import ThemeContext from "../ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { useLanguage } from "./LanguageContext";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import Feather from '@expo/vector-icons/Feather';
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as DocumentPicker from "expo-document-picker";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 
 export default function Settings() {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
@@ -143,7 +146,12 @@ export default function Settings() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? "black" : "white" }]}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: isDarkMode ? "black" : "white" },
+      ]}
+    >
       <View
         style={[
           styles.scontainer,
@@ -152,13 +160,13 @@ export default function Settings() {
       >
         <View style={styles.headingBar}>
           <TouchableOpacity
-            style={styles.backButton}
+            style={[styles.backButton, { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" }]}
             onPress={() => navigation.goBack()}
           >
-            <AntDesign
-              name="arrowleft"
-              size={24}
-              color={isDarkMode ? "white" : "black"}
+            <Feather
+              name="arrow-left"
+              size={22}
+              color= {isDarkMode ? "white" : "black"}
             />
           </TouchableOpacity>
           <Text
@@ -167,7 +175,8 @@ export default function Settings() {
               {
                 color: isDarkMode ? "white" : "black",
                 fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
-                fontSize: 28,
+                fontSize: 26,
+                marginLeft: 10,
               },
             ]}
           >
@@ -181,7 +190,7 @@ export default function Settings() {
             <Text
               style={[
                 styles.itemTitleText,
-                { color: isDarkMode ? "white" : "black", fontSize: 16 },
+                { color: isDarkMode ? "white" : "black", fontSize: 15 },
               ]}
             >
               {translations.Theme}
@@ -190,8 +199,8 @@ export default function Settings() {
           <TouchableOpacity
             onPress={() => setModalVisible(true)}
             style={[
-              styles.itemWrapperndot,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+              styles.itemWrapperTop,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
             ]}
           >
             <View style={styles.itemCont}>
@@ -212,7 +221,7 @@ export default function Settings() {
                 {translations.itext1}
               </Text>
             </View>
-            <View style={styles.ndotarrowThin}>
+            <View style={styles.ndotarrow}>
               <Text
                 style={{
                   color: isDarkMode ? "white" : "black",
@@ -245,7 +254,7 @@ export default function Settings() {
               <View
                 style={[
                   styles.modalContent,
-                  { backgroundColor: isDarkMode ? "#141414" : "#f0f0f0" },
+                  { backgroundColor: isDarkMode ? "#141414" : "#f5f5f5" },
                 ]}
               >
                 <Text
@@ -298,8 +307,8 @@ export default function Settings() {
           <TouchableOpacity
             onPress={toggleTheme}
             style={[
-              styles.itemWrapperThin,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+              styles.itemWrapperEnd,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
             ]}
           >
             <View style={styles.itemCont}>
@@ -314,20 +323,18 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemContentText,
-                  { color: isDarkMode ? "#ADADAD" : "#616161"},
+                  { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
                 {translations.itext2}
               </Text>
             </View>
-            <View style={styles.themeIcon}>
-              <MaterialCommunityIcons
-                name="theme-light-dark"
+            <View style={styles.itemIcon}>
+              <MaterialIcons
+                name={isDarkMode ? "dark-mode" : "light-mode"}
                 style={{
                   color: isDarkMode ? "white" : "black",
-                  fontSize: 25,
-                  fontFamily: "ndot",
-                  paddingLeft: 5,
+                  fontSize: 24,
                 }}
               />
             </View>
@@ -355,7 +362,7 @@ export default function Settings() {
               <View
                 style={[
                   styles.modalContent,
-                  { backgroundColor: isDarkMode ? "#141414" : "#f0f0f0" },
+                  { backgroundColor: isDarkMode ? "#141414" : "#f5f5f5" },
                 ]}
               >
                 <Text
@@ -444,7 +451,7 @@ export default function Settings() {
             <Text
               style={[
                 styles.itemTitleText,
-                { color: isDarkMode ? "white" : "black", fontSize: 16 },
+                { color: isDarkMode ? "white" : "black", fontSize: 15 },
               ]}
             >
               {translations.Data || "Data"}
@@ -454,15 +461,15 @@ export default function Settings() {
           <TouchableOpacity
             onPress={handleExportNotes}
             style={[
-              styles.itemWrapperndot,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+              styles.itemWrapperTop,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
             ]}
           >
             <View style={styles.itemCont}>
               <Text
                 style={[
                   styles.itemHeadText,
-                  { color: isDarkMode ? "white" : "black"},
+                  { color: isDarkMode ? "white" : "black" },
                 ]}
               >
                 Export Notes
@@ -473,20 +480,15 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
-                Save your notes to a file
+                Save your notes to a JSON file
               </Text>
             </View>
-            <View style={styles.ndotarrowThin}>
-              <Text
-                style={{
-                  color: isDarkMode ? "white" : "black",
-                  fontSize: 25,
-                  fontFamily: "ndot",
-                  paddingLeft: 20,
-                }}
-              >
-                {">"}
-              </Text>
+            <View style={styles.itemIcon}>
+              <AntDesign 
+                name="export" 
+                size={24} 
+                color={isDarkMode ? "white" : "black"} 
+                />
             </View>
           </TouchableOpacity>
 
@@ -494,7 +496,7 @@ export default function Settings() {
             onPress={handleImportNotes}
             style={[
               styles.itemWrapperMid,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
             ]}
           >
             <View style={styles.itemCont}>
@@ -515,32 +517,27 @@ export default function Settings() {
                 Load notes from a JSON file
               </Text>
             </View>
-            <View style={styles.ndotarrow}>
-              <Text
-                style={{
-                  color: isDarkMode ? "white" : "black",
-                  fontSize: 25,
-                  fontFamily: "ndot",
-                  paddingLeft: 20,
-                }}
-              >
-                {">"}
-              </Text>
+            <View style={styles.itemIcon}>
+              <AntDesign 
+                name="download" 
+                size={24} 
+                color={isDarkMode ? "white" : "black"} 
+              />
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => setClearModalVisible(true)}
             style={[
-              styles.itemWrapperThin,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+              styles.itemWrapperEnd,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
             ]}
           >
             <View style={styles.itemCont}>
               <Text
                 style={[
                   styles.itemHeadText,
-                  { color: isDarkMode ? "white" : "black"},
+                  { color: isDarkMode ? "white" : "black" },
                 ]}
               >
                 Clear All Notes
@@ -554,17 +551,12 @@ export default function Settings() {
                 Delete all notes permanently
               </Text>
             </View>
-            <View style={styles.ndotarrowThin}>
-              <Text
-                style={{
-                  color: isDarkMode ? "white" : "black",
-                  fontSize: 25,
-                  fontFamily: "ndot",
-                  paddingLeft: 20,
-                }}
-              >
-                {">"}
-              </Text>
+            <View style={styles.itemIcon}>
+              <AntDesign 
+                name="delete" 
+                size={24} 
+                color={isDarkMode ? "white" : "black"} 
+              />
             </View>
           </TouchableOpacity>
 
@@ -619,7 +611,7 @@ export default function Settings() {
             <Text
               style={[
                 styles.itemTitleText,
-                { color: isDarkMode ? "white" : "black", fontSize: 16 },
+                { color: isDarkMode ? "white" : "black", fontSize: 15 },
               ]}
             >
               {translations.About}
@@ -629,15 +621,15 @@ export default function Settings() {
           <TouchableOpacity
             onPress={openGitHub}
             style={[
-              styles.itemWrapperndot,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+              styles.itemWrapperTop,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
             ]}
           >
             <View style={styles.itemCont}>
               <Text
                 style={[
                   styles.itemHeadText,
-                  { color: isDarkMode ? "white" : "black"},
+                  { color: isDarkMode ? "white" : "black" },
                 ]}
               >
                 {translations.Github}
@@ -651,17 +643,12 @@ export default function Settings() {
                 {translations.GMess}
               </Text>
             </View>
-            <View style={styles.ndotarrowThin}>
-              <Text
-                style={{
-                  color: isDarkMode ? "white" : "black",
-                  fontSize: 25,
-                  fontFamily: "ndot",
-                  paddingLeft: 20,
-                }}
-              >
-                {">"}
-              </Text>
+            <View style={styles.itemIcon}>
+              <AntDesign
+                name="github"
+                size={24}
+                color={isDarkMode ? "white" : "black"}
+              />
             </View>
           </TouchableOpacity>
 
@@ -669,7 +656,7 @@ export default function Settings() {
             onPress={() => setModalLangVisible(true)}
             style={[
               styles.itemWrapperMid,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
             ]}
           >
             <View style={styles.itemCont}>
@@ -684,7 +671,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemContentText,
-                  { color: isDarkMode ? "#ADADAD" : "#616161"},
+                  { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
                 Change the Language of App.
@@ -708,14 +695,14 @@ export default function Settings() {
             onPress={() => setContributorsModalVisible(true)}
             style={[
               styles.itemWrapperMid,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
             ]}
           >
             <View style={styles.itemCont}>
               <Text
                 style={[
                   styles.itemHeadText,
-                  { color: isDarkMode ? "white" : "black"},
+                  { color: isDarkMode ? "white" : "black" },
                 ]}
               >
                 Contributors
@@ -723,7 +710,7 @@ export default function Settings() {
               <Text
                 style={[
                   styles.itemContentText,
-                  { color: isDarkMode ? "#ADADAD" : "#616161"},
+                  { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
                 View app contributors
@@ -746,8 +733,8 @@ export default function Settings() {
           <TouchableOpacity
             onPress={openPlayStore}
             style={[
-              styles.itemWrapperThin,
-              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f0f0f0" },
+              styles.itemWrapperEnd,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f5f5f5" },
             ]}
           >
             <View style={styles.itemCont}>
@@ -765,20 +752,11 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
-                V1.6.1 Stable
+                V1.7.0 Stable
               </Text>
             </View>
-            <View style={styles.ndotarrowThin}>
-              <Text
-                style={{
-                  color: isDarkMode ? "white" : "black",
-                  fontSize: 25,
-                  fontFamily: "ndot",
-                  paddingLeft: 20,
-                }}
-              >
-                {">"}
-              </Text>
+            <View style={styles.itemIcon}>
+              <Ionicons name="logo-google-playstore" size={24} color="black" />
             </View>
           </TouchableOpacity>
           {/* ITEM 2 Style 3.0 - END */}
@@ -803,7 +781,7 @@ export default function Settings() {
               <View
                 style={[
                   styles.modalContent,
-                  { backgroundColor: isDarkMode ? "#141414" : "#f0f0f0" },
+                  { backgroundColor: isDarkMode ? "#141414" : "#f5f5f5" },
                 ]}
               >
                 <Text
@@ -881,12 +859,13 @@ const styles = StyleSheet.create({
   scontainer: {
     flex: 1,
     paddingTop: 20,
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
   },
   headingBar: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
+    marginBottom: 10,
   },
   title: {
     fontSize: 20,
@@ -901,54 +880,35 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "left",
     justifyContent: "center",
-    paddingLeft: 30,
   },
   itemTitleText: {
     fontSize: 20,
     fontWeight: "600",
     marginLeft: 10,
   },
-  itemWrapper: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "red",
-    height: 104,
-    paddingLeft: 22,
-    marginHorizontal: 20,
-    borderRadius: 20,
-  },
-  itemWrapperndot: {
+  itemWrapperTop: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingLeft: 22,
-    marginHorizontal: 20,
-    borderTopLeftRadius: 26,
-    borderTopRightRadius: 26,
+    marginHorizontal: 5,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
     marginBottom: 3,
   },
-  itemWrapperThin1: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "red",
-    height: 85,
-    paddingLeft: 22,
-    marginHorizontal: 20,
-    borderTopLeftRadius: 26,
-    borderTopRightRadius: 26,
-    marginBottom: 3,
-  },
-  itemWrapperThin: {
+  itemWrapperEnd: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "red",
     paddingLeft: 22,
-    marginHorizontal: 20,
+    marginHorizontal: 5,
     borderBottomLeftRadius: 26,
     borderBottomRightRadius: 26,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
   },
   itemHeadText: {
     fontWeight: "600",
@@ -960,12 +920,7 @@ const styles = StyleSheet.create({
   ndotarrow: {
     width: 30,
     height: 40,
-    marginRight: 20,
-  },
-  ndotarrowThin: {
-    width: 30,
-    height: 40,
-    marginRight: 20,
+    marginRight: 25,
   },
   itemCont: {
     flexDirection: "column",
@@ -986,8 +941,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingLeft: 22,
-    marginHorizontal: 20,
+    marginHorizontal: 5,
     marginBottom: 3,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
   },
   modalContainer: {
     flex: 1,
@@ -1025,16 +984,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   backButton: {
-    height: 48,
-    width: 48,
+    height: 36,
+    width: 36,
     alignItems: "center",
     justifyContent: "center",
-  },
-  themeIcon: {
-    width: 30,
-    height: 40,
-    marginRight: 15,
-    justifyContent: "center",
+    borderRadius: 50,
   },
   option: {
     paddingVertical: 10,
@@ -1104,5 +1058,11 @@ const styles = StyleSheet.create({
   },
   contributorText: {
     fontSize: 16,
+  },
+  itemIcon: {
+    width: 30,
+    height: 40,
+    marginRight: 15,
+    justifyContent: "center",
   },
 });
