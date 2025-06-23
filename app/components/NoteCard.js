@@ -78,7 +78,7 @@ const NoteCard = ({
     ? note.color
     : isDarkMode
     ? "#1c1c1c"
-    : "#f0f0f0";
+    : "#f5f5f5";
 
   const textColor = isColorDark(backgroundColor) ? '#fff' : '#000';
 
