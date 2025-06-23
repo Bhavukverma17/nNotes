@@ -121,7 +121,7 @@ const CategoryManager = ({ visible, onClose, isDarkMode, onCategoriesUpdate }) =
               style={[
                 styles.input,
                 {
-                  backgroundColor: isDarkMode ? '#333' : '#f0f0f0',
+                  backgroundColor: isDarkMode ? '#333' : '#f5f5f5',
                   color: isDarkMode ? '#fff' : '#000',
                 },
               ]}
