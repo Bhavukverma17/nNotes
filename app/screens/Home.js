@@ -536,7 +536,7 @@ function Home() {
             accessibilityLabel={isSearching ? "Exit search" : "Search notes"}
           >
             <AntDesign
-              name="search1"
+              name="search"
               size={24}
               color={isSearching ? "#d71921" : isDarkMode ? "white" : "black"}
             />
