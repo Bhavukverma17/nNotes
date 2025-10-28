@@ -275,7 +275,7 @@ const NoteModal = ({
                 accessibilityLabel="Close modal"
               >
                 <AntDesign
-                  name="arrowleft"
+                  name="arrow-left"
                   size={24}
                   color={isDarkMode ? "white" : "black"}
                 />
