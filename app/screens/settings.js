@@ -554,8 +554,8 @@ export default function Settings() {
               </Text>
             </View>
             <View style={styles.itemIcon}>
-              <AntDesign 
-                name="delete" 
+              <MaterialIcons 
+                name="delete-outline" 
                 size={24} 
                 color={isDarkMode ? "white" : "black"} 
               />
@@ -754,7 +754,7 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
-                V1.7.0 Stable
+                V1.8.0 Stable
               </Text>
             </View>
             <View style={styles.itemIcon}>

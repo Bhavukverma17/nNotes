@@ -508,8 +508,8 @@ function Home() {
             accessible={true}
             accessibilityLabel="Change sort order"
           >
-            <Ionicons
-              name="options-outline"
+            <MaterialIcons
+              name="auto-fix-high"
               size={24}
               color={isDarkMode ? "white" : "black"}
             />
@@ -535,7 +535,7 @@ function Home() {
             accessible={true}
             accessibilityLabel={isSearching ? "Exit search" : "Search notes"}
           >
-            <AntDesign
+            <Ionicons
               name="search"
               size={24}
               color={isSearching ? "#d71921" : isDarkMode ? "white" : "black"}
