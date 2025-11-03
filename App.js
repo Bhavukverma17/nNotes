@@ -46,9 +46,9 @@ export default function App() {
     <ThemeProvider>
     <FontProvider>
     <NavigationContainer>
+      {/* FIX: Removed navigationBarColor: "white" */}
       <Stack.Navigator screenOptions={{ 
         headerShown: false, 
-        navigationBarColor: "white",
         }}>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Settings" component={Settings} options={customTransition} />

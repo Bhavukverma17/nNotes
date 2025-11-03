@@ -9,7 +9,7 @@ import {
   Modal,
   Alert,
   Image,
-  StatusBar,
+  // FIX: Removed StatusBar from 'react-native'
   FlatList,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -30,6 +30,7 @@ import DeleteModal from "../components/DeleteModal";
 import { CATEGORIES, COLOR_PAIRS, DEFAULT_CATEGORY, DEFAULT_COLOR, SORT_OPTIONS } from "../constants/notes";
 import useDebounce from "../hooks/useDebounce";
 import CategoryManager from '../components/CategoryManager';
+import { StatusBar } from "expo-status-bar"; // FIX: Added import for expo-status-bar
 
 SplashScreen.preventAutoHideAsync();
 
@@ -74,13 +75,21 @@ function Home() {
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
   const [isMasonryLayout, setIsMasonryLayout] = useState(false);
+  
+  // ===================================================================
+  // FIX: THIS LINE WAS MISSING. IT IS NOW ADDED BACK.
   const isFocused = useIsFocused();
+  // ===================================================================
+
   const [isSelecting, setIsSelecting] = useState(false);
 
   useEffect(() => {
-    StatusBar.setBarStyle(isDarkMode ? "light-content" : "dark-content");
-    StatusBar.setBackgroundColor(isDarkMode ? "black" : "white");
-    NavigationBar.setBackgroundColorAsync(isDarkMode ? "black" : "white");
+    // FIX: Removed deprecated StatusBar.setBarStyle and StatusBar.setBackgroundColor
+    // FIX: Set navigation bar button style (light/dark) instead of background color
+    NavigationBar.setButtonStyleAsync(isDarkMode ? "light" : "dark");
+    
+    // FIX: Removed deprecated NavigationBar.setBackgroundColorAsync
+    
     loadNotes();
     loadCategories();
     loadLayoutPreference();
@@ -358,6 +367,8 @@ function Home() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? "black" : "#EEEEEE" }]}>
+      {/* FIX: Added StatusBar component to control style */}
+      <StatusBar style={isDarkMode ? "light" : "dark"} />
       <View
         style={[
           styles.scontainer,

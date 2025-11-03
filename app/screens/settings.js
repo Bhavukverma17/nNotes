@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+// FIX: Added useEffect to React import
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -22,6 +23,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as DocumentPicker from "expo-document-picker";
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { StatusBar } from "expo-status-bar"; // FIX: Added import for expo-status-bar
+import * as NavigationBar from "expo-navigation-bar"; // FIX: Added import for expo-navigation-bar
 
 
 export default function Settings() {
@@ -34,6 +37,11 @@ export default function Settings() {
   const [clearModalVisible, setClearModalVisible] = useState(false);
   const [contributorsModalVisible, setContributorsModalVisible] = useState(false);
 
+  // FIX: Added useEffect to control system bar styles on this screen
+  useEffect(() => {
+    NavigationBar.setButtonStyleAsync(isDarkMode ? "light" : "dark");
+  }, [isDarkMode]);
+
   const openGitHub = () => {
     Linking.openURL("https://github.com/Bhavukverma17/nNotes");
   };
@@ -43,6 +51,8 @@ export default function Settings() {
     );
   };
 
+  // ... (rest of your functions: loadNotes, saveNotes, handleExportNotes, etc.) ...
+  
   // Load notes from AsyncStorage
   const loadNotes = async () => {
     try {
@@ -145,6 +155,7 @@ export default function Settings() {
     }
   };
 
+
   return (
     <SafeAreaView
       style={[
@@ -152,6 +163,8 @@ export default function Settings() {
         { backgroundColor: isDarkMode ? "black" : "#eeeeee" },
       ]}
     >
+      {/* FIX: Added StatusBar component to control style */}
+      <StatusBar style={isDarkMode ? "light" : "dark"} />
       <View
         style={[
           styles.scontainer,
@@ -854,6 +867,7 @@ export default function Settings() {
   );
 }
 
+// ... (styles remain the same) ...
 const styles = StyleSheet.create({
   container: {
     flex: 1,
