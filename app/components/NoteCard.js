@@ -174,14 +174,16 @@ const styles = StyleSheet.create({
     borderColor: "#d71921",
   },
   noteCategoryContainer: {
-    backgroundColor: "#006eff",
+    // SUGGESTION: Use red accent color
+    backgroundColor: "#d71921", // Was #006eff
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 14,
     padding: 5,
     paddingHorizontal: 10,
     borderWidth: 0.5,
-    borderColor: "#7370ff",
+    // SUGGESTION: Use red accent color
+    borderColor: "#d71921", // Was #7370ff
     position: "absolute",
     top: 10,
     right: 10,
@@ -194,4 +196,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NoteCard; 
+export default NoteCard;
