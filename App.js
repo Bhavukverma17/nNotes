@@ -6,6 +6,7 @@ import Settings from './app/screens/settings.js';
 import { FontProvider } from './app/FontContext.js'; // FONT da switch bnon lyi
 import { ThemeProvider } from './app/ThemeContext.js'
 import { LanguageProvider } from './app/screens/LanguageContext.js';
+import { SafeAreaProvider } from 'react-native-safe-area-context'; // Import SafeAreaProvider
 
 const Stack = createStackNavigator();
 
@@ -42,20 +43,23 @@ const customTransition = {
 
 export default function App() {
   return (
-    <LanguageProvider>
-    <ThemeProvider>
-    <FontProvider>
-    <NavigationContainer>
-      {/* FIX: Removed navigationBarColor: "white" */}
-      <Stack.Navigator screenOptions={{ 
-        headerShown: false, 
-        }}>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Settings" component={Settings} options={customTransition} />
-      </Stack.Navigator>
-    </NavigationContainer>
-    </FontProvider>
-    </ThemeProvider>
-    </LanguageProvider>
+    // Wrap your entire app with SafeAreaProvider
+    <SafeAreaProvider>
+      <LanguageProvider>
+      <ThemeProvider>
+      <FontProvider>
+      <NavigationContainer>
+        {/* FIX: Removed navigationBarColor: "white" */}
+        <Stack.Navigator screenOptions={{ 
+          headerShown: false, 
+          }}>
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Settings" component={Settings} options={customTransition} />
+        </Stack.Navigator>
+      </NavigationContainer>
+      </FontProvider>
+      </ThemeProvider>
+      </LanguageProvider>
+    </SafeAreaProvider>
   );
 }
