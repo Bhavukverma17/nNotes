@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  useCallback,
+} from "react";
 import {
   View,
   Text,
@@ -27,10 +33,17 @@ import { useIsFocused } from "@react-navigation/native";
 import NoteCard from "../components/NoteCard";
 import NoteModal from "../components/NoteModal";
 import DeleteModal from "../components/DeleteModal";
-import { CATEGORIES, COLOR_PAIRS, DEFAULT_CATEGORY, DEFAULT_COLOR, SORT_OPTIONS } from "../constants/notes";
+import {
+  CATEGORIES,
+  COLOR_PAIRS,
+  DEFAULT_CATEGORY,
+  DEFAULT_COLOR,
+  SORT_OPTIONS,
+} from "../constants/notes";
 import useDebounce from "../hooks/useDebounce";
-import CategoryManager from '../components/CategoryManager';
+import CategoryManager from "../components/CategoryManager";
 import { StatusBar } from "expo-status-bar"; // FIX: Added import for expo-status-bar
+import SortModal from "../components/SortModal";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -53,9 +66,9 @@ function Home() {
   const navigation = useNavigation();
   const [notes, setNotes] = useState([]);
   const [filteredNotes, setFilteredNotes] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [categories, setCategories] = useState(['All']);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [categories, setCategories] = useState(["All"]);
   const [showCategoryManager, setShowCategoryManager] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentNote, setCurrentNote] = useState(null);
@@ -75,6 +88,7 @@ function Home() {
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
   const [isMasonryLayout, setIsMasonryLayout] = useState(false);
+  const [sortModalVisible, setSortModalVisible] = useState(false); // state added for sort modal
 
   // ===================================================================
   // FIX: THIS LINE WAS MISSING. IT IS NOW ADDED BACK.
@@ -150,37 +164,37 @@ function Home() {
 
   const loadCategories = async () => {
     try {
-      const savedCategories = await AsyncStorage.getItem('customCategories');
+      const savedCategories = await AsyncStorage.getItem("customCategories");
       if (savedCategories) {
         const customCategories = JSON.parse(savedCategories);
-        setCategories(['All', ...customCategories]);
+        setCategories(["All", ...customCategories]);
       } else {
-        setCategories(['All']);
+        setCategories(["All"]);
       }
     } catch (error) {
-      console.error('Error loading categories:', error);
+      console.error("Error loading categories:", error);
     }
   };
 
   const loadLayoutPreference = async () => {
     try {
-      const savedLayout = await AsyncStorage.getItem('layoutPreference');
+      const savedLayout = await AsyncStorage.getItem("layoutPreference");
       if (savedLayout) {
-        setIsMasonryLayout(savedLayout === 'masonry');
+        setIsMasonryLayout(savedLayout === "masonry");
       }
     } catch (error) {
-      console.error('Error loading layout preference:', error);
+      console.error("Error loading layout preference:", error);
     }
   };
 
   const loadThemePreference = async () => {
     try {
-      const savedTheme = await AsyncStorage.getItem('themePreference');
+      const savedTheme = await AsyncStorage.getItem("themePreference");
       if (savedTheme) {
         toggleTheme();
       }
     } catch (error) {
-      console.error('Error loading theme preference:', error);
+      console.error("Error loading theme preference:", error);
     }
   };
 
@@ -188,15 +202,15 @@ function Home() {
     let filtered = [...notes];
 
     // Apply category filter
-    if (selectedCategory !== 'All') {
-      filtered = filtered.filter(note => note.category === selectedCategory);
+    if (selectedCategory !== "All") {
+      filtered = filtered.filter((note) => note.category === selectedCategory);
     }
 
     // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
-        note =>
+        (note) =>
           note.title.toLowerCase().includes(query) ||
           note.content.toLowerCase().includes(query)
       );
@@ -211,15 +225,18 @@ function Home() {
     setNewContent("");
     setSelectedImage(null);
     setNoteColor("");
-    setSelectedCategory('All');
+    setSelectedCategory("All");
     setModalVisible(true);
   };
 
-  const handleDeleteNote = useCallback((noteId) => {
-    const updatedNotes = notes.filter((note) => note.id !== noteId);
-    setNotes(updatedNotes);
-    saveNotes(updatedNotes);
-  }, [notes]);
+  const handleDeleteNote = useCallback(
+    (noteId) => {
+      const updatedNotes = notes.filter((note) => note.id !== noteId);
+      setNotes(updatedNotes);
+      saveNotes(updatedNotes);
+    },
+    [notes]
+  );
 
   const handleSaveNote = useCallback(() => {
     if (currentNote) {
@@ -252,13 +269,25 @@ function Home() {
       saveNotes(updatedNotes);
     }
     setModalVisible(false);
-  }, [currentNote, notes, newTitle, newContent, selectedImage, noteColor, selectedCategory]);
+  }, [
+    currentNote,
+    notes,
+    newTitle,
+    newContent,
+    selectedImage,
+    noteColor,
+    selectedCategory,
+  ]);
 
   const pickImage = async () => {
     try {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== "granted") {
-        Alert.alert("Permission needed", "Please grant permission to access your photos");
+        Alert.alert(
+          "Permission needed",
+          "Please grant permission to access your photos"
+        );
         return;
       }
 
@@ -279,8 +308,12 @@ function Home() {
   const filteredAndSortedNotes = useMemo(() => {
     let filtered = filteredNotes.filter(
       (note) =>
-        (note.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
-          note.content.toLowerCase().includes(debouncedSearchQuery.toLowerCase())) &&
+        (note.title
+          .toLowerCase()
+          .includes(debouncedSearchQuery.toLowerCase()) ||
+          note.content
+            .toLowerCase()
+            .includes(debouncedSearchQuery.toLowerCase())) &&
         (selectedCategory === "All" || note.category === selectedCategory)
     );
 
@@ -302,14 +335,17 @@ function Home() {
     return filtered;
   }, [filteredNotes, debouncedSearchQuery, selectedCategory, sortOption]);
 
-  const handleLongPress = useCallback((noteId) => {
-    if (!isSelecting) {
-      setIsSelecting(true);
-      setSelectedNotes([noteId]);
-    } else {
-      toggleNoteSelection(noteId);
-    }
-  }, [isSelecting]);
+  const handleLongPress = useCallback(
+    (noteId) => {
+      if (!isSelecting) {
+        setIsSelecting(true);
+        setSelectedNotes([noteId]);
+      } else {
+        toggleNoteSelection(noteId);
+      }
+    },
+    [isSelecting]
+  );
 
   const toggleNoteSelection = useCallback((noteId) => {
     setSelectedNotes((prev) => {
@@ -347,36 +383,36 @@ function Home() {
     setIsSelecting(false);
   }, []);
 
-  const renderNote = useCallback(({ item: note }) => (
-    <NoteCard
-      note={note}
-      isDarkMode={isDarkMode}
-      onPress={() => {
-        if (isSelecting) {
-          toggleNoteSelection(note.id);
-        } else {
-          setCurrentNote(note);
-          setNewTitle(note.title);
-          setNewContent(note.content);
-          setSelectedImage(note.image || null);
-          setNoteColor(note.color || "");
-          setSelectedCategory(note.category || 'All');
-          setModalVisible(true);
-        }
-      }}
-      onLongPress={() => handleLongPress(note.id)}
-      isSelected={selectedNotes.includes(note.id)}
-      selectedFont={selectedFont}
-    />
-  ), [isDarkMode, isSelecting, selectedNotes, notes, selectedFont]);
+  const renderNote = useCallback(
+    ({ item: note }) => (
+      <NoteCard
+        note={note}
+        isDarkMode={isDarkMode}
+        onPress={() => {
+          if (isSelecting) {
+            toggleNoteSelection(note.id);
+          } else {
+            setCurrentNote(note);
+            setNewTitle(note.title);
+            setNewContent(note.content);
+            setSelectedImage(note.image || null);
+            setNoteColor(note.color || "");
+            setSelectedCategory(note.category || "All");
+            setModalVisible(true);
+          }
+        }}
+        onLongPress={() => handleLongPress(note.id)}
+        isSelected={selectedNotes.includes(note.id)}
+        selectedFont={selectedFont}
+      />
+    ),
+    [isDarkMode, isSelecting, selectedNotes, notes, selectedFont]
+  );
 
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
       <Text
-        style={[
-          styles.emptyStateText,
-          { color: isDarkMode ? "#888" : "#888" },
-        ]}
+        style={[styles.emptyStateText, { color: isDarkMode ? "#888" : "#888" }]}
       >
         {translations.NoNotes}
       </Text>
@@ -384,7 +420,12 @@ function Home() {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? "black" : "#EEEEEE" }]}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        { backgroundColor: isDarkMode ? "black" : "#EEEEEE" },
+      ]}
+    >
       {/* FIX: Added StatusBar component to control style */}
       <StatusBar style={isDarkMode ? "light" : "dark"} />
       <View
@@ -447,7 +488,9 @@ function Home() {
                   }
                 }}
                 accessible={true}
-                accessibilityLabel={isSelecting ? "Cancel selection" : "Open settings"}
+                accessibilityLabel={
+                  isSelecting ? "Cancel selection" : "Open settings"
+                }
               >
                 <Ionicons
                   name={isSelecting ? "close-circle" : "settings-outline"}
@@ -471,8 +514,18 @@ function Home() {
                 style={[
                   styles.categoryButton,
                   {
-                    backgroundColor: selectedCategory === cat ? '#d71921' : isDarkMode ? '#333' : '#f9f9f9',
-                    borderColor: selectedCategory === cat ? '#d71921' : isDarkMode ? '#555' : '#ccc',
+                    backgroundColor:
+                      selectedCategory === cat
+                        ? "#d71921"
+                        : isDarkMode
+                        ? "#333"
+                        : "#f9f9f9",
+                    borderColor:
+                      selectedCategory === cat
+                        ? "#d71921"
+                        : isDarkMode
+                        ? "#555"
+                        : "#ccc",
                   },
                 ]}
                 onPress={() => setSelectedCategory(cat)}
@@ -480,7 +533,14 @@ function Home() {
                 <Text
                   style={[
                     styles.categoryButtonText,
-                    { color: selectedCategory === cat ? '#fff' : isDarkMode ? '#fff' : '#000' },
+                    {
+                      color:
+                        selectedCategory === cat
+                          ? "#fff"
+                          : isDarkMode
+                          ? "#fff"
+                          : "#000",
+                    },
                   ]}
                 >
                   {cat}
@@ -490,17 +550,18 @@ function Home() {
             <TouchableOpacity
               style={[
                 styles.categoryButton,
-                { backgroundColor: isDarkMode ? '#333' : '#f9f9f9',
-                  borderColor: isDarkMode ? '#555' : '#ccc',
-                  marginRight: 16
-                 },
+                {
+                  backgroundColor: isDarkMode ? "#333" : "#f9f9f9",
+                  borderColor: isDarkMode ? "#555" : "#ccc",
+                  marginRight: 16,
+                },
               ]}
               onPress={() => setShowCategoryManager(true)}
             >
               <MaterialIcons
                 name="settings"
                 size={20}
-                color={isDarkMode ? '#fff' : '#000'}
+                color={isDarkMode ? "#fff" : "#000"}
               />
             </TouchableOpacity>
           </ScrollView>
@@ -528,21 +589,17 @@ function Home() {
         >
           <TouchableOpacity
             style={styles.navButton}
-            onPress={() => {
-              const options = Object.values(SORT_OPTIONS);
-              const currentIndex = options.indexOf(sortOption);
-              const nextIndex = (currentIndex + 1) % options.length;
-              setSortOption(options[nextIndex]);
-            }}
+            onPress={() => setSortModalVisible(true)} // <-- NEW ONPRESS
             accessible={true}
             accessibilityLabel="Change sort order"
           >
             <MaterialIcons
-              name="auto-fix-high"
+              name="sort" // <-- NEW ICON
               size={24}
               color={isDarkMode ? "white" : "black"}
             />
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.navButton}
             onPress={handleAddNote}
@@ -614,9 +671,21 @@ function Home() {
           onCategoriesUpdate={(updatedCategories) => {
             setCategories(updatedCategories);
             if (!updatedCategories.includes(selectedCategory)) {
-              setSelectedCategory('All');
+              setSelectedCategory("All");
             }
           }}
+        />
+
+        <SortModal
+          visible={sortModalVisible}
+          onClose={() => setSortModalVisible(false)}
+          currentSortOption={sortOption}
+          onSelectSortOption={(option) => {
+            setSortOption(option);
+            setSortModalVisible(false);
+          }}
+          isDarkMode={isDarkMode}
+          translations={translations}
         />
       </View>
     </SafeAreaView>
@@ -647,8 +716,8 @@ const styles = StyleSheet.create({
     borderRadius: 45,
     position: "absolute",
     bottom: 16,
-    left: '10%',
-    right: '10%',
+    left: "10%",
+    right: "10%",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
