@@ -24,6 +24,7 @@
     "expo-document-picker": "~14.0.7",
     "expo-file-system": "~19.0.17",
     "expo-font": "~14.0.9",
+    "expo-haptics": "~15.0.7",
     "expo-image-picker": "~17.0.8",
     "expo-navigation-bar": "~5.0.9",
     "expo-print": "~15.0.7",

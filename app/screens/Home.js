@@ -44,6 +44,7 @@ import useDebounce from "../hooks/useDebounce";
 import CategoryManager from "../components/CategoryManager";
 import { StatusBar } from "expo-status-bar"; // FIX: Added import for expo-status-bar
 import SortModal from "../components/SortModal";
+import * as Haptics from 'expo-haptics';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -337,6 +338,7 @@ function Home() {
 
   const handleLongPress = useCallback(
     (noteId) => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); // Vibrate on long press
       if (!isSelecting) {
         setIsSelecting(true);
         setSelectedNotes([noteId]);
@@ -363,9 +365,10 @@ function Home() {
 
   const handleDeleteSelected = useCallback(() => {
     if (selectedNotes.length > 0) {
-      setDeleteModalVisible(true);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning); // Warning vibration
+        setDeleteModalVisible(true);
     }
-  }, [selectedNotes]);
+    }, [selectedNotes]);
 
   const confirmDeleteSelected = useCallback(() => {
     const updatedNotes = notes.filter(
