@@ -10,6 +10,7 @@ import {
   Alert,
   Image,
   FlatList,
+  BackHandler,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
@@ -74,7 +75,7 @@ function Home() {
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
   const [isMasonryLayout, setIsMasonryLayout] = useState(false);
-  
+
   // ===================================================================
   // FIX: THIS LINE WAS MISSING. IT IS NOW ADDED BACK.
   const isFocused = useIsFocused();
@@ -83,12 +84,30 @@ function Home() {
   const [isSelecting, setIsSelecting] = useState(false);
 
   useEffect(() => {
+    const backAction = () => {
+      if (isSearching) {
+        setIsSearching(false);
+        setSearchInput("");
+        return true;
+      }
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [isSearching]);
+
+  useEffect(() => {
     // FIX: Removed deprecated StatusBar.setBarStyle and StatusBar.setBackgroundColor
     // FIX: Set navigation bar button style (light/dark) instead of background color
     NavigationBar.setButtonStyleAsync(isDarkMode ? "light" : "dark");
-    
+
     // FIX: Removed deprecated NavigationBar.setBackgroundColorAsync
-    
+
     loadNotes();
     loadCategories();
     loadLayoutPreference();
@@ -452,7 +471,7 @@ function Home() {
                 style={[
                   styles.categoryButton,
                   {
-                    backgroundColor: selectedCategory === cat ? '#d71921' : isDarkMode ? '#333' : '#f9f9f9', 
+                    backgroundColor: selectedCategory === cat ? '#d71921' : isDarkMode ? '#333' : '#f9f9f9',
                     borderColor: selectedCategory === cat ? '#d71921' : isDarkMode ? '#555' : '#ccc',
                   },
                 ]}
