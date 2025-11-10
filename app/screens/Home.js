@@ -9,7 +9,6 @@ import {
   Modal,
   Alert,
   Image,
-  // FIX: Removed StatusBar from 'react-native'
   FlatList,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -710,9 +709,8 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
   },
   categoryButtonText: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "500",
-    fontFamily: "interm",
   },
   notescontain: {
     flexGrow: 1,
