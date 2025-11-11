@@ -7,6 +7,7 @@ import { FontProvider } from './app/FontContext.js'; // FONT da switch bnon lyi
 import { ThemeProvider, default as ThemeContext } from './app/ThemeContext.js' 
 import { LanguageProvider } from './app/screens/LanguageContext.js';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'; // Import SafeAreaProvider
+import { SettingsProvider } from './app/SettingsContext.js';
 
 const Stack = createStackNavigator();
 
@@ -53,6 +54,7 @@ const AppContent = () => {
              }, 
           ]}
     >
+    <SettingsProvider>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ 
         headerShown: false, 
@@ -61,6 +63,7 @@ const AppContent = () => {
         <Stack.Screen name="Settings" component={Settings} options={customTransition} />
       </Stack.Navigator>
     </NavigationContainer>
+    </SettingsProvider>
     </SafeAreaView>
   );
 }

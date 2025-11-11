@@ -785,11 +785,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   categoryButton: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 20,
     marginRight: 8,
-    minWidth: 80,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,

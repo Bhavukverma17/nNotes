@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLOR_PAIRS } from '../constants/notes';
+import SettingsContext from '../SettingsContext';
 
 const COLOR_NAME_TO_HEX = {
   'red': '#ff0000',
@@ -81,6 +82,7 @@ const NoteCard = ({
     : "#f9f9f9";
 
   const textColor = isColorDark(backgroundColor) ? '#fff' : '#000';
+  const { showCategoryChip } = useContext(SettingsContext);
 
   return (
     <TouchableOpacity
@@ -112,13 +114,15 @@ const NoteCard = ({
         {note.title}
       </Text>
 
-        <View style={styles.noteCategoryContainer}>
-          <Text
-            style={styles.noteCategory}
-          >
-            {note.category || "All"}
-          </Text>
-        </View>
+        {showCategoryChip && (
+          <View style={styles.noteCategoryContainer}>
+            <Text
+              style={styles.noteCategory}
+            >
+              {note.category || "All"}
+            </Text>
+          </View>
+        )}
       
       <Text
         style={[

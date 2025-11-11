@@ -114,6 +114,8 @@ const NoteModal = ({
   const inputTextColor =
   (isDarkMode && !noteColor) ? '#fff' :
   isColorDark(noteColor) ? '#fff' : '#000';
+  
+  const defaultNoteColor = isDarkMode ? "#222" : "#ffffff";
 
   useEffect(() => {
     loadCategories();
@@ -268,6 +270,7 @@ const NoteModal = ({
               },
             ]}
           >
+            {/* === PRESERVED TOP ROW === */}
             <View style={styles.modalTopRow}>
               <TouchableOpacity
                 style={[styles.notesBackButton, { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" }]}
@@ -325,129 +328,16 @@ const NoteModal = ({
               </TouchableOpacity>
               </View>
             </View>
+            {/* === END PRESERVED TOP ROW === */}
 
+
+            {/* === REDESIGNED BODY === */}
             <ScrollView 
               style={styles.scrollView}
               showsVerticalScrollIndicator={false}
               keyboardShouldPersistTaps="handled"
             >
-              <View style={styles.section}>
-                <Text style={[styles.sectionTitle, { color: isDarkMode ? "white" : "black" }]}>
-                  Category
-                </Text>
-                <View style={styles.categoryContainer}>
-                  {categories.map((cat) => (
-                    <TouchableOpacity
-                      key={cat}
-                      style={[
-                        styles.categoryButton,
-                        selectedCategory === cat && styles.selectedCategoryButton,
-                        {
-                          backgroundColor: selectedCategory === cat
-                            ? "#d71921"
-                            : isDarkMode
-                            ? "#1a1a1a"
-                            : "#f5f5f5",
-                          borderColor: selectedCategory === cat
-                            ? "#d71921"
-                            : isDarkMode
-                            ? "#555"
-                            : "#ccc",
-                        },
-                      ]}
-                      onPress={() => setSelectedCategory(cat)}
-                    >
-                      <Text
-                        style={[
-                          styles.categoryButtonText,
-                          {
-                            color: selectedCategory === cat
-                              ? "#ffffff"
-                              : isDarkMode
-                              ? "#ffffff"
-                              : "#000000",
-                          },
-                        ]}
-                      >
-                        {cat}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                  {!showCategoryInput ? (
-                    <TouchableOpacity
-                      style={[
-                        styles.addCategoryButton,
-                        {
-                          backgroundColor: isDarkMode ? "#1a1a1a" : "#f5f5f5",
-                          borderWidth: 1,
-                          borderColor: isDarkMode ? "#555" : "#ccc",
-                        },
-                      ]}
-                      onPress={() => setShowCategoryInput(true)}
-                    >
-                      <MaterialIcons
-                        name="add"
-                        size={24}
-                        color={isDarkMode ? "white" : "black"}
-                      />
-                    </TouchableOpacity>
-                  ) : (
-                    <View style={styles.categoryInputContainer}>
-                      <TextInput
-                        style={[
-                          styles.categoryInput,
-                          {
-                            backgroundColor: isDarkMode ? "#333" : "#f9f9f9",
-                            color: isDarkMode ? "white" : "black",
-                          },
-                        ]}
-                        placeholder="New category"
-                        placeholderTextColor={isDarkMode ? "#888" : "#666"}
-                        value={newCategory}
-                        onChangeText={setNewCategory}
-                        onSubmitEditing={handleAddCategory}
-                      />
-                      <TouchableOpacity
-                        style={styles.addCategoryConfirmButton}
-                        onPress={handleAddCategory}
-                      >
-                        <MaterialIcons name="check" size={24} color="#d71921" />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.addCategoryCancelButton}
-                        onPress={() => {
-                          setShowCategoryInput(false);
-                          setNewCategory('');
-                        }}
-                      >
-                        <MaterialIcons name="close" size={24} color={isDarkMode ? "white" : "black"} />
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                </View>
-              </View>
-
-              <View style={styles.colorInputContainer}>
-                <Text style={{ color: isDarkMode ? '#fff' : '#000', marginBottom: 6 }}>Note Color</Text>
-                <TextInput
-                  style={[
-                    styles.colorInputBox,
-                    {
-                      backgroundColor: isDarkMode ? '#222' : '#f9f9f9',
-                      color: isDarkMode ? '#fff' : '#000',
-                      borderColor: noteColor,
-                      fontFamily: 'interm',
-                    },
-                  ]}
-                  placeholder="Enter color hex code (e.g. red, #ff0000)"
-                  placeholderTextColor={isDarkMode ? '#888' : '#666'}
-                  value={noteColor}
-                  onChangeText={setNoteColor}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
-              </View>
-
+              {/* 1. Title */}
               <TextInput
                 style={[
                   styles.inputTitle,
@@ -464,11 +354,12 @@ const NoteModal = ({
                 accessibilityLabel="Note title"
               />
 
+              {/* 2. Content */}
               <TextInput
                 style={[
                   styles.input,
                   {
-                    backgroundColor: noteColor || (isDarkMode ? "#222" : "#ffffff"),
+                    backgroundColor: noteColor || defaultNoteColor,
                     color: inputTextColor ,
                     fontFamily: "azeret",
                   },
@@ -482,6 +373,18 @@ const NoteModal = ({
                 accessibilityLabel="Note content"
               />
 
+              {/* 3. Stats (Moved) */}
+              <View style={styles.statsContainer}>
+                <Text style={[
+                  styles.statsText,
+                  { color: isDarkMode ? "#888" : "#666" }
+                ]}>
+                  Words: {newContent.split(/\s+/).filter((word) => word.length > 0).length} | 
+                  Characters: {newContent.length}
+                </Text>
+              </View>
+              
+              {/* 4. Image Preview */}
               {selectedImage && (
                 <View style={styles.imagePreviewContainer}>
                   <TouchableOpacity onPress={handleImagePress}>
@@ -506,16 +409,160 @@ const NoteModal = ({
                   </TouchableOpacity>
                 </View>
               )}
+              
+              {/* 5. Metadata Group */}
+              <View style={styles.metadataContainer}>
+                {/* 5a. Category Section */}
+                <View style={styles.section}>
+                  <Text style={[styles.sectionTitle, { color: isDarkMode ? "white" : "black" }]}>
+                    Category
+                  </Text>
+                  <View style={styles.categoryContainer}>
+                    {categories.map((cat) => (
+                      <TouchableOpacity
+                        key={cat}
+                        style={[
+                          styles.categoryButton,
+                          selectedCategory === cat && styles.selectedCategoryButton,
+                          {
+                            backgroundColor: selectedCategory === cat
+                              ? "#d71921"
+                              : isDarkMode
+                              ? "#1a1a1a"
+                              : "#f5f5f5",
+                            borderColor: selectedCategory === cat
+                              ? "#d71921"
+                              : isDarkMode
+                              ? "#555"
+                              : "#ccc",
+                          },
+                        ]}
+                        onPress={() => setSelectedCategory(cat)}
+                      >
+                        <Text
+                          style={[
+                            styles.categoryButtonText,
+                            {
+                              color: selectedCategory === cat
+                                ? "#ffffff"
+                                : isDarkMode
+                                ? "#ffffff"
+                                : "#000000",
+                            },
+                          ]}
+                        >
+                          {cat}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                    {!showCategoryInput ? (
+                      <TouchableOpacity
+                        style={[
+                          styles.addCategoryButton,
+                          {
+                            backgroundColor: isDarkMode ? "#1a1a1a" : "#f5f5f5",
+                            borderWidth: 1,
+                            borderColor: isDarkMode ? "#555" : "#ccc",
+                          },
+                        ]}
+                        onPress={() => setShowCategoryInput(true)}
+                      >
+                        <MaterialIcons
+                          name="add"
+                          size={24}
+                          color={isDarkMode ? "white" : "black"}
+                        />
+                      </TouchableOpacity>
+                    ) : (
+                      <View style={styles.categoryInputContainer}>
+                        <TextInput
+                          style={[
+                            styles.categoryInput,
+                            {
+                              backgroundColor: isDarkMode ? "#333" : "#f9f9f9",
+                              color: isDarkMode ? "white" : "black",
+                            },
+                          ]}
+                          placeholder="New category"
+                          placeholderTextColor={isDarkMode ? "#888" : "#666"}
+                          value={newCategory}
+                          onChangeText={setNewCategory}
+                          onSubmitEditing={handleAddCategory}
+                        />
+                        <TouchableOpacity
+                          style={styles.addCategoryConfirmButton}
+                          onPress={handleAddCategory}
+                        >
+                          <MaterialIcons name="check" size={24} color="#d71921" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.addCategoryCancelButton}
+                          onPress={() => {
+                            setShowCategoryInput(false);
+                            setNewCategory('');
+                          }}
+                        >
+                          <MaterialIcons name="close" size={24} color={isDarkMode ? "white" : "black"} />
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                </View>
 
-              <View style={styles.statsContainer}>
-                <Text style={[
-                  styles.statsText,
-                  { color: isDarkMode ? "#888" : "#666" }
-                ]}>
-                  Words: {newContent.split(/\s+/).filter((word) => word.length > 0).length} | 
-                  Characters: {newContent.length}
-                </Text>
-              </View>
+                {/* 5b. Color Picker (Redesigned) */}
+                <View style={styles.section}>
+                  <Text style={[styles.sectionTitle, { color: isDarkMode ? "white" : "black" }]}>
+                    Note Color
+                  </Text>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.colorPickerContainer}>
+                    {/* "No color" / Default swatch */}
+                    <TouchableOpacity
+                      style={[
+                        styles.colorSwatch,
+                        { 
+                          backgroundColor: defaultNoteColor, 
+                          borderWidth: 1, 
+                          borderColor: isDarkMode ? '#555' : '#ddd' 
+                        },
+                        (!noteColor || noteColor === defaultNoteColor) && styles.selectedColorSwatch
+                      ]}
+                      onPress={() => setNoteColor(defaultNoteColor)}
+                    >
+                      {(!noteColor || noteColor === defaultNoteColor) && (
+                        <MaterialIcons 
+                          name="check" 
+                          size={18} 
+                          color={inputTextColor} 
+                        />
+                      )}
+                    </TouchableOpacity>
+                    
+                    {/* Color swatches map */}
+                    {currentColors.map((color) => (
+                      <TouchableOpacity
+                        key={color}
+                        style={[
+                          styles.colorSwatch,
+                          { backgroundColor: color },
+                          noteColor === color && styles.selectedColorSwatch
+                        ]}
+                        onPress={() => setNoteColor(color)}
+                      >
+                        {noteColor === color && (
+                          <MaterialIcons 
+                            name="check" 
+                            size={18} 
+                            color={isColorDark(color) ? '#fff' : '#000'} 
+                          />
+                        )}
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                </View>
+
+              </View> 
+              {/* End Metadata Group */}
+
             </ScrollView>
           </Animated.View>
         </KeyboardAvoidingView>
@@ -590,8 +637,8 @@ const styles = StyleSheet.create({
   inputTitle: {
     fontSize: 22,
     fontWeight: "600",
-    marginVertical: 10,
     paddingHorizontal: 5,
+    marginBottom: 15,
   },
   input: {
     fontSize: 15,
@@ -599,27 +646,66 @@ const styles = StyleSheet.create({
     padding: 15,
     minHeight: 200,
     textAlignVertical: "top",
+  },
+
+  statsContainer: {
+    marginTop: 10, 
     marginBottom: 15,
+    alignItems: 'center',
+  },
+  statsText: {
+    fontSize: 12,
+    fontWeight: '500',
+    fontFamily: 'azeret',
+  },
+  imagePreviewContainer: {
+    marginVertical: 15,
+    borderRadius: 15,
+    overflow: 'hidden',
+    alignSelf: 'center',
+    width: '100%',
+    aspectRatio: 16/9,
+  },
+  imagePreview: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 15,
+  },
+  removeImageButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    height: 30,
+    width: 30,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  metadataContainer: {
+    marginTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd', 
+    paddingTop: 15,
+    marginBottom: 30, 
   },
   section: {
-    marginBottom: 15,
+    marginBottom: 20, 
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   categoryContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
-    marginTop: 8,
   },
   categoryButton: {
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 20,
-    marginRight: 8,
     borderWidth: 1,
   },
   selectedCategoryButton: {
@@ -663,48 +749,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  colorInputContainer: {
-    marginBottom: 15,
+  colorPickerContainer: {
+    flexDirection: 'row',
   },
-  colorInputBox: {
-    borderWidth: 1.5,
-    borderRadius: 18,
-    padding: 10,
-    fontSize: 15,
-  },
-  statsContainer: {
-    marginVertical: 10,
+  colorSwatch: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    marginRight: 12,
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  statsText: {
-    fontSize: 12,
-    fontWeight: '500',
-    fontFamily: 'azeret',
-  },
-  imagePreviewContainer: {
-    marginVertical: 15,
-    borderRadius: 15,
-    overflow: 'hidden',
-    alignSelf: 'center',
-    width: '100%',
-    aspectRatio: 16/9,
-  },
-  imagePreview: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 15,
-  },
-  removeImageButton: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
-    height: 30,
-    width: 30,
-    borderRadius: 15,
-    alignItems: "center",
-    justifyContent: "center",
+  selectedColorSwatch: {
+    borderWidth: 2,
+    borderColor: '#d71921', 
   },
 });
 
-export default NoteModal; 
+export default NoteModal;

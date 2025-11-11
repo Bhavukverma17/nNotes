@@ -9,6 +9,7 @@ import {
   ScrollView,
   Modal,
   Alert,
+  Switch
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { FontContext } from "../FontContext";
@@ -24,6 +25,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { StatusBar } from "expo-status-bar"; // FIX: Added import for expo-status-bar
 import * as NavigationBar from "expo-navigation-bar"; // FIX: Added import for expo-navigation-bar
 import { CloudUpload, Download, Trash } from "lucide-react-native";
+import SettingsContext from "../SettingsContext";
 
 
 export default function Settings() {
@@ -32,6 +34,7 @@ export default function Settings() {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
   const { changeLanguage, translations, language } = useLanguage();
+  const { showCategoryChip, toggleShowCategoryChip } = useContext(SettingsContext);
   const [modalLangVisible, setModalLangVisible] = useState(false);
   const [clearModalVisible, setClearModalVisible] = useState(false);
   const [contributorsModalVisible, setContributorsModalVisible] = useState(false);
@@ -40,7 +43,9 @@ export default function Settings() {
   useEffect(() => {
     NavigationBar.setButtonStyleAsync(isDarkMode ? "light" : "dark");
   }, [isDarkMode]);
-
+  const openTwitter = () => {
+    Linking.openURL("https://x.com/bhavukverma17");
+  };
   const openGitHub = () => {
     Linking.openURL("https://github.com/Bhavukverma17/nNotes");
   };
@@ -48,6 +53,7 @@ export default function Settings() {
     Linking.openURL(
       "https://play.google.com/store/apps/details?id=com.bhavukverma.nNotes"
     );
+    
   };
 
   // ... (rest of your functions: loadNotes, saveNotes, handleExportNotes, etc.) ...
@@ -315,7 +321,7 @@ export default function Settings() {
           <TouchableOpacity
             onPress={toggleTheme}
             style={[
-              styles.itemWrapperEnd,
+              styles.itemWrapperMid,
               { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" },
             ]}
           >
@@ -347,6 +353,41 @@ export default function Settings() {
               />
             </View>
           </TouchableOpacity>
+          <TouchableOpacity
+              onPress={toggleShowCategoryChip}
+              style={[
+                styles.itemWrapperEnd, // This is the new end of the group
+                { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" },
+              ]}
+            >
+              <View style={styles.itemCont}>
+                <Text
+                  style={[
+                    styles.itemHeadText,
+                    { color: isDarkMode ? "white" : "black" },
+                  ]}
+                >
+                  Show Category Chip
+                </Text>
+                <Text
+                  style={[
+                    styles.itemContentText,
+                    { color: isDarkMode ? "#ADADAD" : "#616161" },
+                  ]}
+                >
+                  Display category tag on note cards
+                </Text>
+              </View>
+              <View style={styles.itemIcon}>
+                <Switch
+                  trackColor={{ false: "#767577", true: "#d71921" }}
+                  thumbColor={showCategoryChip ? "#f4f3f4" : "#f4f3f4"}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleShowCategoryChip}
+                  value={showCategoryChip}
+                />
+              </View>
+            </TouchableOpacity>
 
           {/* ITEM 1 Style 3.0 - END */}
 
@@ -729,6 +770,40 @@ export default function Settings() {
               >
                 {">"}
               </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={openTwitter}
+            style={[
+              styles.itemWrapperMid,
+              { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" },
+            ]}
+          >
+            <View style={styles.itemCont}>
+              <Text
+                style={[
+                  styles.itemHeadText,
+                  { color: isDarkMode ? "white" : "black" },
+                ]}
+              >
+                Report Bugs
+              </Text>
+              <Text
+                style={[
+                  styles.itemContentText,
+                  { color: isDarkMode ? "#ADADAD" : "#616161" },
+                ]}
+              >
+                Report bugs or suggest features on X
+              </Text>
+            </View>
+            <View style={styles.itemIcon}>
+              <AntDesign
+                name="x"
+                size={24}
+                color={isDarkMode ? "white" : "black"}
+              />
             </View>
           </TouchableOpacity>
 
