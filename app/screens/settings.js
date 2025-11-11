@@ -13,7 +13,6 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { FontContext } from "../FontContext";
 import ThemeContext from "../ThemeContext";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { useLanguage } from "./LanguageContext";
 import Feather from '@expo/vector-icons/Feather';
@@ -157,13 +156,7 @@ export default function Settings() {
 
 
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        { backgroundColor: isDarkMode ? "black" : "#eeeeee" },
-      ]}
-    >
-      {/* FIX: Added StatusBar component to control style */}
+      <>
       <StatusBar style={isDarkMode ? "light" : "dark"} />
       <View
         style={[
@@ -767,7 +760,7 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
-                V1.8.0 Stable
+                V2.0.1 Stable
               </Text>
             </View>
             <View style={styles.itemIcon}>
@@ -863,7 +856,7 @@ export default function Settings() {
           </Modal>
         </ScrollView>
       </View>
-    </SafeAreaView>
+      </>
   );
 }
 

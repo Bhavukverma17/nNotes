@@ -24,7 +24,6 @@ import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { FontContext } from "../FontContext";
 import ThemeContext from "../ThemeContext";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import * as NavigationBar from "expo-navigation-bar";
@@ -423,13 +422,7 @@ function Home() {
   );
 
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        { backgroundColor: isDarkMode ? "black" : "#EEEEEE" },
-      ]}
-    >
-      {/* FIX: Added StatusBar component to control style */}
+      <>
       <StatusBar style={isDarkMode ? "light" : "dark"} />
       <View
         style={[
@@ -691,7 +684,7 @@ function Home() {
           translations={translations}
         />
       </View>
-    </SafeAreaView>
+      </>
   );
 }
 

@@ -6,7 +6,8 @@ import Settings from './app/screens/settings.js';
 import { FontProvider } from './app/FontContext.js'; // FONT da switch bnon lyi
 import { ThemeProvider } from './app/ThemeContext.js'
 import { LanguageProvider } from './app/screens/LanguageContext.js';
-import { SafeAreaProvider } from 'react-native-safe-area-context'; // Import SafeAreaProvider
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'; // Import SafeAreaProvider
+import {isDarkMode} from './app/screens/settings.js';
 
 const Stack = createStackNavigator();
 
@@ -43,8 +44,14 @@ const customTransition = {
 
 export default function App() {
   return (
-    // Wrap your entire app with SafeAreaProvider
     <SafeAreaProvider>
+      <SafeAreaView
+            style={[            
+              { backgroundColor: isDarkMode ? "black" : "#EEEEEE",
+                flex: 1
+               }, 
+            ]}
+      >
       <LanguageProvider>
       <ThemeProvider>
       <FontProvider>
@@ -60,6 +67,7 @@ export default function App() {
       </FontProvider>
       </ThemeProvider>
       </LanguageProvider>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
