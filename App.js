@@ -1,13 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react'; // Import useContext
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './app/screens/Home.js'; // Ehe hegi Main file, jithe code aa
 import Settings from './app/screens/settings.js'; 
 import { FontProvider } from './app/FontContext.js'; // FONT da switch bnon lyi
-import { ThemeProvider } from './app/ThemeContext.js'
+import { ThemeProvider, default as ThemeContext } from './app/ThemeContext.js' 
 import { LanguageProvider } from './app/screens/LanguageContext.js';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'; // Import SafeAreaProvider
-import {isDarkMode} from './app/screens/settings.js';
 
 const Stack = createStackNavigator();
 
@@ -42,32 +41,40 @@ const customTransition = {
   }),
 };
 
+
+const AppContent = () => {
+  const { isDarkMode } = useContext(ThemeContext); 
+
+  return (
+    <SafeAreaView
+          style={[            
+            { backgroundColor: isDarkMode ? "black" : "#EEEEEE",
+              flex: 1
+             }, 
+          ]}
+    >
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ 
+        headerShown: false, 
+        }}>
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Settings" component={Settings} options={customTransition} />
+      </Stack.Navigator>
+    </NavigationContainer>
+    </SafeAreaView>
+  );
+}
+
 export default function App() {
   return (
     <SafeAreaProvider>
-      <SafeAreaView
-            style={[            
-              { backgroundColor: isDarkMode ? "black" : "#EEEEEE",
-                flex: 1
-               }, 
-            ]}
-      >
       <LanguageProvider>
       <ThemeProvider>
       <FontProvider>
-      <NavigationContainer>
-        {/* FIX: Removed navigationBarColor: "white" */}
-        <Stack.Navigator screenOptions={{ 
-          headerShown: false, 
-          }}>
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Settings" component={Settings} options={customTransition} />
-        </Stack.Navigator>
-      </NavigationContainer>
+        <AppContent />
       </FontProvider>
       </ThemeProvider>
       </LanguageProvider>
-      </SafeAreaView>
     </SafeAreaProvider>
   );
 }

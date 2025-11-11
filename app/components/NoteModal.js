@@ -12,13 +12,14 @@ import {
   Platform,
   Animated,
 } from 'react-native';
-import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Share } from 'react-native';
 import { Alert } from 'react-native';
 import { COLOR_PAIRS, CATEGORIES, DEFAULT_CATEGORY, DEFAULT_COLOR } from '../constants/notes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CategoryManager from './CategoryManager';
 import Entypo from '@expo/vector-icons/Entypo';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 const COLOR_NAME_TO_HEX = {
   'red': '#ff0000',
@@ -281,8 +282,9 @@ const NoteModal = ({
                   color={isDarkMode ? "white" : "black"}
                 />
               </TouchableOpacity>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
               <View 
-              style={[styles.RightOptions, {backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9"}]}
+              style={[styles.RightOptionsOne, {backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9"}]}
               >
               <View style={styles.ImgShr}>
                 <TouchableOpacity
@@ -311,6 +313,19 @@ const NoteModal = ({
                   />
                 </TouchableOpacity>
                 </View>
+              </View>
+              <TouchableOpacity
+                style={[styles.notesBackButton, { backgroundColor: isDarkMode ? "#c09600ff" : "#ffe224ff" }]}
+                onPress={handleClose}
+                accessible={true}
+                accessibilityLabel="Close modal"
+              >
+                <MaterialIcons
+                  name="check"
+                  size={28}
+                  color={isDarkMode ? "#ffe524ff" : "#b77d00ff"}
+                />
+              </TouchableOpacity>
               </View>
             </View>
 
@@ -540,7 +555,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginBottom: 15,
   },
-  RightOptions: {
+  RightOptionsOne: {
     flexDirection: "row",
     alignItems: "center",
     borderRadius: 30,
