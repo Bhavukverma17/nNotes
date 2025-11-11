@@ -12,14 +12,13 @@ import {
   Platform,
   Animated,
 } from 'react-native';
-import { AntDesign, FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { Share } from 'react-native';
 import { Alert } from 'react-native';
 import { COLOR_PAIRS, CATEGORIES, DEFAULT_CATEGORY, DEFAULT_COLOR } from '../constants/notes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CategoryManager from './CategoryManager';
-import Entypo from '@expo/vector-icons/Entypo';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { Paperclip } from 'lucide-react-native';
 
 const COLOR_NAME_TO_HEX = {
   'red': '#ff0000',
@@ -293,9 +292,7 @@ const NoteModal = ({
                   accessible={true}
                   accessibilityLabel="Add image"
                 >
-                  <Entypo 
-                    name="attachment"
-                    size={24}
+                  <Paperclip 
                     color={isDarkMode ? "white" : "black"}
                   />
                 </TouchableOpacity>

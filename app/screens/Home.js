@@ -43,7 +43,8 @@ import useDebounce from "../hooks/useDebounce";
 import CategoryManager from "../components/CategoryManager";
 import { StatusBar } from "expo-status-bar"; // FIX: Added import for expo-status-bar
 import SortModal from "../components/SortModal";
-import * as Haptics from 'expo-haptics';
+import * as Haptics from "expo-haptics";
+import { Trash, Settings, CircleOff } from "lucide-react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -364,10 +365,10 @@ function Home() {
 
   const handleDeleteSelected = useCallback(() => {
     if (selectedNotes.length > 0) {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning); // Warning vibration
-        setDeleteModalVisible(true);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning); // Warning vibration
+      setDeleteModalVisible(true);
     }
-    }, [selectedNotes]);
+  }, [selectedNotes]);
 
   const confirmDeleteSelected = useCallback(() => {
     const updatedNotes = notes.filter(
@@ -422,7 +423,7 @@ function Home() {
   );
 
   return (
-      <>
+    <>
       <StatusBar style={isDarkMode ? "light" : "dark"} />
       <View
         style={[
@@ -459,7 +460,12 @@ function Home() {
             >
               {translations.Notes}
             </Text>
-            <View style={styles.twoContainer}>
+            <View
+              style={[
+                styles.twoContainer,
+                { backgroundColor: isDarkMode ? "#1c1c1c" : "#ffffff" },
+              ]}
+            >
               {isSelecting && (
                 <TouchableOpacity
                   style={styles.deleteButton}
@@ -467,11 +473,7 @@ function Home() {
                   accessible={true}
                   accessibilityLabel="Delete selected notes"
                 >
-                  <MaterialIcons
-                    name="delete-outline"
-                    size={24}
-                    color={isDarkMode ? "white" : "black"}
-                  />
+                  <Trash color={isDarkMode ? "white" : "black"} />
                 </TouchableOpacity>
               )}
               <TouchableOpacity
@@ -488,11 +490,11 @@ function Home() {
                   isSelecting ? "Cancel selection" : "Open settings"
                 }
               >
-                <Ionicons
-                  name={isSelecting ? "close-circle" : "settings-outline"}
-                  size={24}
-                  color={isDarkMode ? "white" : "black"}
-                />
+                {isSelecting ? (
+                  <CircleOff size={24} color={isDarkMode ? "white" : "black"} />
+                ) : (
+                  <Settings size={24} color={isDarkMode ? "white" : "black"} />
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -684,7 +686,7 @@ function Home() {
           translations={translations}
         />
       </View>
-      </>
+    </>
   );
 }
 
@@ -773,6 +775,7 @@ const styles = StyleSheet.create({
   },
   twoContainer: {
     flexDirection: "row",
+    borderRadius: 50,
   },
   filterContainer: {
     marginBottom: 15,

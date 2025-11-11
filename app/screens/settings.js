@@ -15,7 +15,6 @@ import { FontContext } from "../FontContext";
 import ThemeContext from "../ThemeContext";
 import { useNavigation } from "@react-navigation/native";
 import { useLanguage } from "./LanguageContext";
-import Feather from '@expo/vector-icons/Feather';
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -24,6 +23,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StatusBar } from "expo-status-bar"; // FIX: Added import for expo-status-bar
 import * as NavigationBar from "expo-navigation-bar"; // FIX: Added import for expo-navigation-bar
+import { CloudUpload, Download, Trash } from "lucide-react-native";
 
 
 export default function Settings() {
@@ -290,7 +290,7 @@ export default function Settings() {
                         {displayName}{" "}
                         {selectedFont === key && (
                           <AntDesign
-                            name="checkcircle"
+                            name="check-circle"
                             size={14}
                             color="#D71921"
                           />
@@ -492,9 +492,7 @@ export default function Settings() {
               </Text>
             </View>
             <View style={styles.itemIcon}>
-              <AntDesign 
-                name="export" 
-                size={24} 
+              <CloudUpload
                 color={isDarkMode ? "white" : "black"} 
                 />
             </View>
@@ -526,9 +524,7 @@ export default function Settings() {
               </Text>
             </View>
             <View style={styles.itemIcon}>
-              <AntDesign 
-                name="download" 
-                size={24} 
+              <Download
                 color={isDarkMode ? "white" : "black"} 
               />
             </View>
@@ -560,9 +556,7 @@ export default function Settings() {
               </Text>
             </View>
             <View style={styles.itemIcon}>
-              <MaterialIcons 
-                name="delete-outline" 
-                size={24} 
+              <Trash
                 color={isDarkMode ? "white" : "black"} 
               />
             </View>
