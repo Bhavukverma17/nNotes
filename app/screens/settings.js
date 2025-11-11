@@ -169,8 +169,8 @@ export default function Settings() {
             style={[styles.backButton, { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" }]}
             onPress={() => navigation.goBack()}
           >
-            <Feather
-              name="arrow-left"
+            <MaterialIcons
+              name="arrow-back-ios-new"
               size={22}
               color= {isDarkMode ? "white" : "black"}
             />
@@ -997,12 +997,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   backButton: {
-    height: 36,
-    width: 36,
+    height: 43,
+    width: 43,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 50,
     marginLeft  : 5,
+    paddingRight: 2,
   },
   option: {
     paddingVertical: 10,

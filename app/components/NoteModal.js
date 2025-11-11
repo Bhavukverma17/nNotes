@@ -18,6 +18,7 @@ import { Alert } from 'react-native';
 import { COLOR_PAIRS, CATEGORIES, DEFAULT_CATEGORY, DEFAULT_COLOR } from '../constants/notes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CategoryManager from './CategoryManager';
+import Entypo from '@expo/vector-icons/Entypo';
 
 const COLOR_NAME_TO_HEX = {
   'red': '#ff0000',
@@ -269,56 +270,47 @@ const NoteModal = ({
           >
             <View style={styles.modalTopRow}>
               <TouchableOpacity
-                style={styles.notesActnBtn}
+                style={[styles.notesBackButton, { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" }]}
                 onPress={handleClose}
                 accessible={true}
                 accessibilityLabel="Close modal"
               >
-                <AntDesign
-                  name="arrow-left"
+                <MaterialIcons
+                  name="arrow-back-ios-new"
                   size={24}
                   color={isDarkMode ? "white" : "black"}
                 />
               </TouchableOpacity>
-              <View style={styles.addNoteView}>
-                <Text
-                  style={[
-                    styles.addNoteTxt,
-                    {
-                      color: isDarkMode ? "white" : "black",
-                      fontFamily: selectedFont === "Ntype" ? undefined : selectedFont,
-                    },
-                  ]}
-                >
-                  {currentNote ? "Edit Note" : "Add Note"}
-                </Text>
-              </View>
+              <View 
+              style={[styles.RightOptions, {backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9"}]}
+              >
               <View style={styles.ImgShr}>
                 <TouchableOpacity
                   onPress={onImagePick}
-                  style={styles.notesActnBtn}
+                  style={[styles.notesActnBtn, { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" }]}
                   accessible={true}
                   accessibilityLabel="Add image"
                 >
-                  <MaterialIcons
-                    name="add-photo-alternate"
+                  <Entypo 
+                    name="attachment"
                     size={24}
                     color={isDarkMode ? "white" : "black"}
                   />
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={styles.notesActnBtn}
+                  style={[styles.notesActnBtn, { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" }]}
                   onPress={handleShare}
                   accessible={true}
                   accessibilityLabel="Share note"
                 >
                   <MaterialIcons
-                    name="share"
+                    name="ios-share"
                     size={24}
                     color={isDarkMode ? "white" : "black"}
                   />
                 </TouchableOpacity>
+                </View>
               </View>
             </View>
 
@@ -548,9 +540,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginBottom: 15,
   },
-  addNoteView: {
-    flex: 1,
-    alignItems: 'center',
+  RightOptions: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 30,
+    paddingHorizontal: 3,
+    paddingVertical: 3,
   },
   addNoteTxt: {
     fontSize: 24,
@@ -563,6 +558,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 20,
     marginHorizontal: 5,
+  },
+  notesBackButton: {
+    height: 43,
+    width: 43,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 50,
+    marginLeft  : 5,
+    paddingRight: 2,
   },
   ImgShr: {
     flexDirection: "row",
