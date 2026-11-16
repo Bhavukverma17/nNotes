@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { useLanguage } from "../screens/LanguageContext";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLOR_PAIRS } from '../constants/notes';
 import SettingsContext from '../SettingsContext';
@@ -75,6 +76,7 @@ const NoteCard = ({
   isSelected,
   selectedFont,
 }) => {
+  const { t } = useLanguage();
   const backgroundColor = note.color
     ? note.color
     : isDarkMode
@@ -105,25 +107,29 @@ const NoteCard = ({
           accessibilityLabel="Note image"
         />
       )}
-      <Text
-        style={[
-          styles.noteTitle,
-          { color: textColor }
-        ]}
-      >
-        {note.title}
-      </Text>
+      <View style={styles.headerRow}>
+        <Text
+          style={[
+            styles.noteTitle,
+            styles.noteTitleFlex,
+            { color: textColor }
+          ]}
+        >
+          {note.title}
+        </Text>
 
         {showCategoryChip && (
           <View style={styles.noteCategoryContainer}>
             <Text
               style={styles.noteCategory}
+              numberOfLines={1}
             >
-              {note.category || "All"}
+              {t(note.category || "All")}
             </Text>
           </View>
         )}
-      
+      </View>
+
       <Text
         style={[
           styles.noteContent,
@@ -188,10 +194,17 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     // SUGGESTION: Use red accent color
     borderColor: "#d71921", // Was #7370ff
-    position: "absolute",
-    top: 10,
-    right: 10,
-
+    flexShrink: 0,
+    maxWidth: "40%",
+    marginLeft: 8,
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+  },
+  noteTitleFlex: {
+    flex: 1,
   },
   noteCategory: {
     fontSize: 13,

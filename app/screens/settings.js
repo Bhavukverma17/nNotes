@@ -29,6 +29,7 @@ import SettingsContext from "../SettingsContext";
 
 
 export default function Settings() {
+  const { t } = useLanguage();
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const { fonts, selectedFont, selectFont } = useContext(FontContext);
   const [modalVisible, setModalVisible] = useState(false);
@@ -64,7 +65,7 @@ export default function Settings() {
       const savedNotes = await AsyncStorage.getItem("notes");
       return savedNotes ? JSON.parse(savedNotes) : [];
     } catch (error) {
-      Alert.alert("Error", "Failed to load notes");
+      Alert.alert(t("Error"), t("Failed to load notes"));
       return [];
     }
   };
@@ -74,7 +75,7 @@ export default function Settings() {
     try {
       await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
     } catch (error) {
-      Alert.alert("Error", "Failed to save notes");
+      Alert.alert(t("Error"), t("Failed to save notes"));
     }
   };
 
@@ -83,7 +84,7 @@ export default function Settings() {
     try {
       const notes = await loadNotes();
       if (notes.length === 0) {
-        Alert.alert("Info", "No notes available to export.");
+        Alert.alert(t("Info"), t("No notes available to export."));
         return;
       }
 
@@ -91,11 +92,11 @@ export default function Settings() {
       await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(notes, null, 2));
       await Sharing.shareAsync(fileUri, {
         mimeType: "application/json",
-        dialogTitle: "Export Notes",
+        dialogTitle: t("Export Notes"),
         UTI: "public.json",
       });
     } catch (error) {
-      Alert.alert("Error", "Failed to export notes: " + error.message);
+      Alert.alert(t("Error"), t("Failed to export notes: ") + error.message);
     }
   };
 
@@ -118,7 +119,7 @@ export default function Settings() {
 
       // Validate that we have a valid URI
       if (!fileUri) {
-        Alert.alert("Error", "Failed to retrieve file URI. Please try again.");
+        Alert.alert(t("Error"), t("Failed to retrieve file URI. Please try again."));
         return;
       }
 
@@ -128,7 +129,7 @@ export default function Settings() {
 
       // Validate that the imported data is an array
       if (!Array.isArray(importedNotes)) {
-        Alert.alert("Error", "Invalid notes format in the file. Please select a valid JSON file.");
+        Alert.alert(t("Error"), t("Invalid notes format in the file. Please select a valid JSON file."));
         return;
       }
 
@@ -143,9 +144,9 @@ export default function Settings() {
 
       // Save the merged notes
       await saveNotes(mergedNotes);
-      Alert.alert("Success", "Notes imported successfully!");
+      Alert.alert(t("Success"), t("Notes imported successfully!"));
     } catch (error) {
-      Alert.alert("Error", "Failed to import notes: " + error.message);
+      Alert.alert(t("Error"), "Failed to import notes: " + error.message);
     }
   };
 
@@ -154,9 +155,9 @@ export default function Settings() {
     try {
       await AsyncStorage.removeItem("notes");
       setClearModalVisible(false);
-      Alert.alert("Success", "All notes have been cleared!");
+      Alert.alert(t("Success"), t("All notes have been cleared!"));
     } catch (error) {
-      Alert.alert("Error", "Failed to clear notes: " + error.message);
+      Alert.alert(t("Error"), t("Failed to clear notes: ") + error.message);
     }
   };
 
@@ -224,7 +225,7 @@ export default function Settings() {
                   { color: isDarkMode ? "white" : "black" },
                 ]}
               >
-                {translations.Header} Font
+                {translations.Header} {t("Font")}
               </Text>
               <Text
                 style={[
@@ -277,7 +278,7 @@ export default function Settings() {
                     { color: isDarkMode ? "white" : "black" },
                   ]}
                 >
-                  Fonts
+                  {t("Fonts")}
                 </Text>
                 <View>
                   {Object.entries(fonts).map(([key, displayName]) => (
@@ -311,7 +312,7 @@ export default function Settings() {
                   style={styles.closeButton}
                 >
                   <Text style={[styles.buttonText, { color: "white" }]}>
-                    Save Selection
+                    {t("Save Selection")}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -367,7 +368,7 @@ export default function Settings() {
                     { color: isDarkMode ? "white" : "black" },
                   ]}
                 >
-                  Show Category Chip
+                  {t("Show Category Chip")}
                 </Text>
                 <Text
                   style={[
@@ -375,7 +376,7 @@ export default function Settings() {
                     { color: isDarkMode ? "#ADADAD" : "#616161" },
                   ]}
                 >
-                  Display category tag on note cards
+                  {t("Display category tag on note cards")}
                 </Text>
               </View>
               <View style={styles.itemIcon}>
@@ -420,8 +421,31 @@ export default function Settings() {
                     { color: isDarkMode ? "white" : "black" },
                   ]}
                 >
-                  Language
+                  {t("Language")}
                 </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    changeLanguage("es");
+                    setModalLangVisible(false);
+                  }}
+                  style={styles.option}
+                >
+                  <Text
+                    style={[
+                      styles.langOption,
+                      {
+                        color:
+                          language === "es"
+                            ? "#D71921" // Red for active language
+                            : isDarkMode
+                            ? "white"
+                            : "black",
+                      },
+                    ]}
+                  >
+                    0. Español
+                  </Text>
+                </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
                     changeLanguage("en");
@@ -521,7 +545,7 @@ export default function Settings() {
                   { color: isDarkMode ? "white" : "black" },
                 ]}
               >
-                Export Notes
+                {t("Export Notes")}
               </Text>
               <Text
                 style={[
@@ -529,7 +553,7 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
-                Save your notes to a JSON file
+                {t("Save your notes to a JSON file")}
               </Text>
             </View>
             <View style={styles.itemIcon}>
@@ -553,7 +577,7 @@ export default function Settings() {
                   { color: isDarkMode ? "white" : "black" },
                 ]}
               >
-                Import Notes
+                {t("Import Notes")}
               </Text>
               <Text
                 style={[
@@ -561,7 +585,7 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
-                Load notes from a JSON file
+                {t("Load notes from a JSON file")}
               </Text>
             </View>
             <View style={styles.itemIcon}>
@@ -585,7 +609,7 @@ export default function Settings() {
                   { color: isDarkMode ? "white" : "black" },
                 ]}
               >
-                Clear All Notes
+                {t("Clear All Notes")}
               </Text>
               <Text
                 style={[
@@ -593,7 +617,7 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
-                Delete all notes permanently
+                {t("Delete all notes permanently")}
               </Text>
             </View>
             <View style={styles.itemIcon}>
@@ -616,15 +640,14 @@ export default function Settings() {
                   { backgroundColor: isDarkMode ? "#141414" : "white" },
                 ]}
               >
-                <Text style={styles.dmodalTitle}>Clear All Notes</Text>
+                <Text style={styles.dmodalTitle}>{t("Clear All Notes")}</Text>
                 <Text
                   style={[
                     styles.dmodalMessage,
                     { color: isDarkMode ? "#fff" : "black" },
                   ]}
                 >
-                  Are you sure you want to delete all notes? This action cannot
-                  be undone.
+                  {t("Are you sure you want to delete all notes? This action cannot be undone.")}
                 </Text>
 
                 <View style={styles.dmodalButtons}>
@@ -709,7 +732,7 @@ export default function Settings() {
                   { color: isDarkMode ? "white" : "black" },
                 ]}
               >
-                Change Language
+                {t("Change Language")}
               </Text>
               <Text
                 style={[
@@ -717,7 +740,7 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
-                Change the Language of App.
+                {t("Change the Language of App.")}
               </Text>
             </View>
             <View style={styles.ndotarrow}>
@@ -748,7 +771,7 @@ export default function Settings() {
                   { color: isDarkMode ? "white" : "black" },
                 ]}
               >
-                Contributors
+                {t("Contributors")}
               </Text>
               <Text
                 style={[
@@ -756,7 +779,7 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
-                View app contributors
+                {t("View app contributors")}
               </Text>
             </View>
             <View style={styles.ndotarrow}>
@@ -787,7 +810,7 @@ export default function Settings() {
                   { color: isDarkMode ? "white" : "black" },
                 ]}
               >
-                Report Bugs
+                {t("Report Bugs")}
               </Text>
               <Text
                 style={[
@@ -795,7 +818,7 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
-                Report bugs or suggest features on X
+                {t("Report bugs or suggest features on X")}
               </Text>
             </View>
             <View style={styles.itemIcon}>
@@ -829,7 +852,7 @@ export default function Settings() {
                   { color: isDarkMode ? "#ADADAD" : "#616161" },
                 ]}
               >
-                V2.0.1 Stable
+                {t("V2.0.1 Stable")}
               </Text>
             </View>
             <View style={styles.itemIcon}>
@@ -867,7 +890,7 @@ export default function Settings() {
                     { color: isDarkMode ? "white" : "black" },
                   ]}
                 >
-                  Contributors
+                  {t("Contributors")}
                 </Text>
                 <View style={styles.contributorItem}>
                   <Text
@@ -876,7 +899,7 @@ export default function Settings() {
                       { color: isDarkMode ? "white" : "black" },
                     ]}
                   >
-                    App Developer
+                    {t("App Developer")}
                   </Text>
                   <View style={styles.contributorContent}>
                     <Text
@@ -897,7 +920,7 @@ export default function Settings() {
                       { color: isDarkMode ? "white" : "black" },
                     ]}
                   >
-                    App Icon
+                    {t("App Icon")}
                   </Text>
                   <View style={styles.contributorContent}>
                     <Text
@@ -917,7 +940,7 @@ export default function Settings() {
                   style={styles.closeButton}
                 >
                   <Text style={[styles.buttonText, { color: "white" }]}>
-                    Close
+                    {t("Close")}
                   </Text>
                 </TouchableOpacity>
               </View>

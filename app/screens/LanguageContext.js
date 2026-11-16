@@ -26,6 +26,34 @@ const languages = {
     Version: "Version",
     Category: "Category",
   },
+  es: {
+    Error: "Error",
+    Fts : "Error al guardar las notas",
+    SearchHere : "Buscar aquí...",
+    Notes : "Notas",
+    NoNotes : "No hay notas, pulsa el icono + para empezar",
+    DNote : "Eliminar nota",
+    DMess: "¿Seguro que quieres eliminar esta nota?",
+    DMessMulti: "¿Seguro que quieres eliminar {n} notas?",
+    Cancel : "Cancelar",
+    Del : "Eliminar",
+    AddNote : " ",
+    Title : "Título",
+    Note: "Nota",
+    AppSettings: "Ajustes de la app",
+    Theme: "Tema",
+    Header: "Encabezados",
+    itext1: "Cambia la fuente de los encabezados. La fuente por defecto es NType.",
+    Colortheme: "Tema de color",
+    itext2: "Cambia entre tema claro y oscuro.",
+    About: "Acerca de",
+    Github: "Repositorio de Github",
+    GMess: "Ver o contribuir al repositorio de Github.",
+    Version: "Versión",
+    Category: "Categoría",
+    Data: "Datos",
+    SortBy: "Ordenar por",
+  },
   jp: {
     Error: "エラー",
     Fts : "メモの保存に失敗しました",
@@ -78,17 +106,108 @@ const languages = {
   }
 };
 
+const strings = {
+  es: {
+  "Failed to save notes": "Error al guardar las notas",
+  "Failed to load notes": "Error al cargar las notas",
+  "Permission needed": "Permiso necesario",
+  "Please grant permission to access your photos": "Concede permiso para acceder a tus fotos",
+  "Failed to pick image": "Error al elegir la imagen",
+  "Search notes": "Buscar notas",
+  "Delete selected notes": "Eliminar notas seleccionadas",
+  "Cancel selection": "Cancelar selección",
+  "Open settings": "Abrir ajustes",
+  "Change sort order": "Cambiar orden",
+  "Add new note": "Añadir nota nueva",
+  "Exit search": "Salir de la búsqueda",
+  "Info": "Información",
+  "Success": "Éxito",
+  "No notes available to export.": "No hay notas para exportar.",
+  "Export Notes": "Exportar notas",
+  "Failed to export notes: ": "Error al exportar las notas: ",
+  "Failed to retrieve file URI. Please try again.": "No se pudo obtener el archivo. Inténtalo de nuevo.",
+  "Invalid notes format in the file. Please select a valid JSON file.": "Formato de notas no válido. Selecciona un archivo JSON válido.",
+  "Notes imported successfully!": "¡Notas importadas correctamente!",
+  "All notes have been cleared!": "¡Se han borrado todas las notas!",
+  "Failed to clear notes: ": "Error al borrar las notas: ",
+  "Clear All Notes": "Borrar todas las notas",
+  "Are you sure you want to delete all notes? This action cannot be undone.": "¿Seguro que quieres borrar todas las notas? Esta acción no se puede deshacer.",
+  "Category name cannot be empty": "El nombre de la categoría no puede estar vacío",
+  "This category already exists": "Esta categoría ya existe",
+  "Cannot delete default categories": "No se pueden eliminar las categorías predeterminadas",
+  "Delete Category": "Eliminar categoría",
+  "Cancel": "Cancelar",
+  "Delete": "Eliminar",
+  "New category name": "Nombre de la categoría nueva",
+  "Delete Notes": "Eliminar notas",
+  "Cancel deletion": "Cancelar eliminación",
+  "Confirm deletion": "Confirmar eliminación",
+  "Failed to save category": "Error al guardar la categoría",
+  "Failed to share note": "Error al compartir la nota",
+  "Close modal": "Cerrar",
+  "Add image": "Añadir imagen",
+  "Share note": "Compartir nota",
+  "Title": "Título",
+  "Start writing...": "Empieza a escribir...",
+  "Note title": "Título de la nota",
+  "Note content": "Contenido de la nota",
+  "Note image preview": "Vista previa de la imagen",
+  "Remove image": "Quitar imagen",
+  "New category": "Categoría nueva",
+  "Category": "Categoría",
+  "Note Color": "Color de la nota",
+  "Manage Categories": "Gestionar categorías",
+  "Default": "Predeterminada",
+  "Fonts": "Fuentes",
+  "Font": "Fuente",
+  "Save Selection": "Guardar selección",
+  "Show Category Chip": "Mostrar etiqueta de categoría",
+  "Display category tag on note cards": "Muestra la etiqueta de categoría en las notas",
+  "Language": "Idioma",
+  "Save your notes to a JSON file": "Guarda tus notas en un archivo JSON",
+  "Import Notes": "Importar notas",
+  "Load notes from a JSON file": "Carga notas desde un archivo JSON",
+  "Delete all notes permanently": "Elimina todas las notas de forma permanente",
+  "Change Language": "Cambiar idioma",
+  "Change the Language of App.": "Cambia el idioma de la app.",
+  "Contributors": "Colaboradores",
+  "View app contributors": "Ver colaboradores de la app",
+  "Report Bugs": "Informar de errores",
+  "Report bugs or suggest features on X": "Informa de errores o sugiere funciones en X",
+  "V2.0.1 Stable": "V2.0.1 Estable",
+  "App Developer": "Desarrollador de la app",
+  "App Icon": "Icono de la app",
+  "Close": "Cerrar",
+  "Date (Newest first)": "Fecha (más recientes primero)",
+  "Date (Oldest first)": "Fecha (más antiguas primero)",
+  "Title (A-Z)": "Título (A-Z)",
+  "Title (Z-A)": "Título (Z-A)",
+  "Sort by": "Ordenar por",
+  "All": "Todas",
+    "DeleteCategoryMsg": "¿Seguro que quieres eliminar \"{cat}\"? Las notas de esta categoría pasarán a Todas.",
+  "notes": "notas",
+  "Data": "Datos",
+  "Are you sure you want to delete": "¿Seguro que quieres eliminar"
+}
+};
+
 const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState("es");
 
   const changeLanguage = (lang) => {
     setLanguage(lang);
   };
 
+  const t = (text) =>
+    (strings[language] && strings[language][text]) ||
+    (text === "DeleteCategoryMsg"
+      ? 'Are you sure you want to delete "{cat}"? Notes in this category will be moved to All.'
+      : text);
+
   return (
-    <LanguageContext.Provider value={{ language, changeLanguage, translations: languages[language] }}>
+    <LanguageContext.Provider value={{ language, changeLanguage, translations: languages[language], t }}>
       {children}
     </LanguageContext.Provider>
   );

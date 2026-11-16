@@ -1,4 +1,5 @@
 // app/components/SortModal.js
+import { useLanguage } from "../screens/LanguageContext";
 import React from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -6,13 +7,14 @@ import { SORT_OPTIONS } from '../constants/notes';
 
 // A helper object to provide user-friendly labels
 const SORT_LABELS = {
-  [SORT_OPTIONS.DATE_DESC]: "Date (Newest first)",
-  [SORT_OPTIONS.DATE_ASC]: "Date (Oldest first)",
-  [SORT_OPTIONS.TITLE_ASC]: "Title (A-Z)",
-  [SORT_OPTIONS.TITLE_DESC]: "Title (Z-A)",
+  [SORT_OPTIONS.DATE_DESC]: t("Date (Newest first)"),
+  [SORT_OPTIONS.DATE_ASC]: t("Date (Oldest first)"),
+  [SORT_OPTIONS.TITLE_ASC]: t("Title (A-Z)"),
+  [SORT_OPTIONS.TITLE_DESC]: t("Title (Z-A)"),
 };
 
 const SortModal = ({ visible, onClose, currentSortOption, onSelectSortOption, isDarkMode, translations }) => {
+  const { t } = useLanguage();
   const styles = getStyles(isDarkMode);
 
   return (
@@ -26,7 +28,7 @@ const SortModal = ({ visible, onClose, currentSortOption, onSelectSortOption, is
         <View style={styles.modalOverlay}>
           <TouchableWithoutFeedback>
             <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>{translations.SortBy || 'Sort by'}</Text>
+              <Text style={styles.modalTitle}>{translations.SortBy || t("Sort by")}</Text>
               {Object.values(SORT_OPTIONS).map((option) => (
                 <TouchableOpacity
                   key={option}

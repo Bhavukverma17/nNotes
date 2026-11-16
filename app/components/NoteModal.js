@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useLanguage } from "../screens/LanguageContext";
 import {
   View,
   Text,
@@ -104,6 +105,7 @@ const NoteModal = ({
   onImagePick,
   onCategoriesUpdate,
 }) => {
+  const { t } = useLanguage();
   const slideAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [showCategoryInput, setShowCategoryInput] = useState(false);
@@ -164,12 +166,12 @@ const NoteModal = ({
 
   const handleAddCategory = async () => {
     if (!newCategory.trim()) {
-      Alert.alert('Error', 'Category name cannot be empty');
+      Alert.alert(t("Error"), t("Category name cannot be empty"));
       return;
     }
 
     if (categories.includes(newCategory.trim())) {
-      Alert.alert('Error', 'This category already exists');
+      Alert.alert(t("Error"), t("This category already exists"));
       return;
     }
 
@@ -186,7 +188,7 @@ const NoteModal = ({
       }
     } catch (error) {
       console.error('Error saving category:', error);
-      Alert.alert('Error', 'Failed to save category');
+      Alert.alert(t("Error"), t("Failed to save category"));
     }
   };
 
@@ -225,7 +227,7 @@ const NoteModal = ({
         title: newTitle,
       });
     } catch (error) {
-      Alert.alert("Error", "Failed to share note");
+      Alert.alert(t("Error"), t("Failed to share note"));
     }
   };
 
@@ -276,7 +278,7 @@ const NoteModal = ({
                 style={[styles.notesBackButton, { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" }]}
                 onPress={handleClose}
                 accessible={true}
-                accessibilityLabel="Close modal"
+                accessibilityLabel={t("Close modal")}
               >
                 <MaterialIcons
                   name="arrow-back-ios-new"
@@ -293,7 +295,7 @@ const NoteModal = ({
                   onPress={onImagePick}
                   style={[styles.notesActnBtn, { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" }]}
                   accessible={true}
-                  accessibilityLabel="Add image"
+                  accessibilityLabel={t("Add image")}
                 >
                   <Paperclip 
                     color={isDarkMode ? "white" : "black"}
@@ -304,7 +306,7 @@ const NoteModal = ({
                   style={[styles.notesActnBtn, { backgroundColor: isDarkMode ? "#1c1c1c" : "#f9f9f9" }]}
                   onPress={handleShare}
                   accessible={true}
-                  accessibilityLabel="Share note"
+                  accessibilityLabel={t("Share note")}
                 >
                   <MaterialIcons
                     name="ios-share"
@@ -318,7 +320,7 @@ const NoteModal = ({
                 style={[styles.notesBackButton, { backgroundColor: isDarkMode ? "#c09600ff" : "#ffe224ff" }]}
                 onPress={handleClose}
                 accessible={true}
-                accessibilityLabel="Close modal"
+                accessibilityLabel={t("Close modal")}
               >
                 <MaterialIcons
                   name="check"
@@ -348,10 +350,10 @@ const NoteModal = ({
                 ]}
                 value={newTitle}
                 onChangeText={setNewTitle}
-                placeholder="Title"
+                placeholder={t("Title")}
                 placeholderTextColor={isDarkMode ? "#bbb" : "#888"}
                 accessible={true}
-                accessibilityLabel="Note title"
+                accessibilityLabel={t("Note title")}
               />
 
               {/* 2. Content */}
@@ -367,10 +369,10 @@ const NoteModal = ({
                 multiline
                 value={newContent}
                 onChangeText={setNewContent}
-                placeholder="Start writing..."
+                placeholder={t("Start writing...")}
                 placeholderTextColor={isColorDark(noteColor) ? '#bbb' : '#888'}
                 accessible={true}
-                accessibilityLabel="Note content"
+                accessibilityLabel={t("Note content")}
               />
 
               {/* 3. Stats (Moved) */}
@@ -392,14 +394,14 @@ const NoteModal = ({
                       source={{ uri: selectedImage }}
                       style={styles.imagePreview}
                       accessible={true}
-                      accessibilityLabel="Note image preview"
+                      accessibilityLabel={t("Note image preview")}
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => setSelectedImage(null)}
                     style={styles.removeImageButton}
                     accessible={true}
-                    accessibilityLabel="Remove image"
+                    accessibilityLabel={t("Remove image")}
                   >
                     <AntDesign
                       name="close"
@@ -415,7 +417,7 @@ const NoteModal = ({
                 {/* 5a. Category Section */}
                 <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: isDarkMode ? "white" : "black" }]}>
-                    Category
+                    {t("Category")}
                   </Text>
                   <View style={styles.categoryContainer}>
                     {categories.map((cat) => (
@@ -451,7 +453,7 @@ const NoteModal = ({
                             },
                           ]}
                         >
-                          {cat}
+                          {t(cat)}
                         </Text>
                       </TouchableOpacity>
                     ))}
@@ -483,7 +485,7 @@ const NoteModal = ({
                               color: isDarkMode ? "white" : "black",
                             },
                           ]}
-                          placeholder="New category"
+                          placeholder={t("New category")}
                           placeholderTextColor={isDarkMode ? "#888" : "#666"}
                           value={newCategory}
                           onChangeText={setNewCategory}
@@ -512,7 +514,7 @@ const NoteModal = ({
                 {/* 5b. Color Picker (Redesigned) */}
                 <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: isDarkMode ? "white" : "black" }]}>
-                    Note Color
+                    {t("Note Color")}
                   </Text>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.colorPickerContainer}>
                     {/* "No color" / Default swatch */}

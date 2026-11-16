@@ -49,6 +49,7 @@ import { Trash, Settings, CircleOff } from "lucide-react-native";
 SplashScreen.preventAutoHideAsync();
 
 function Home() {
+  const { t } = useLanguage();
   let [fontsLoaded] = useFonts({
     ntype: require("../../assets/fonts/NType82-Regular.otf"),
     ndot: require("../../assets/fonts/ndot.ttf"),
@@ -143,7 +144,7 @@ function Home() {
     try {
       await AsyncStorage.setItem("notes", JSON.stringify(updatedNotes));
     } catch (error) {
-      Alert.alert("Error", "Failed to save notes");
+      Alert.alert(t("Error"), t("Failed to save notes"));
     }
   };
 
@@ -157,7 +158,7 @@ function Home() {
         setNotes([]);
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to load notes");
+      Alert.alert(t("Error"), t("Failed to load notes"));
     } finally {
       setIsLoading(false);
     }
@@ -286,8 +287,8 @@ function Home() {
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== "granted") {
         Alert.alert(
-          "Permission needed",
-          "Please grant permission to access your photos"
+          t("Permission needed"),
+          t("Please grant permission to access your photos")
         );
         return;
       }
@@ -302,7 +303,7 @@ function Home() {
         setSelectedImage(result.assets[0].uri);
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to pick image");
+      Alert.alert(t("Error"), t("Failed to pick image"));
     }
   };
 
@@ -444,7 +445,7 @@ function Home() {
             placeholder={translations.SearchHere}
             placeholderTextColor={isDarkMode ? "#aaa" : "#555"}
             accessible={true}
-            accessibilityLabel="Search notes"
+            accessibilityLabel={t("Search notes")}
           />
         ) : (
           <View style={styles.headerContent}>
@@ -471,7 +472,7 @@ function Home() {
                   style={styles.deleteButton}
                   onPress={handleDeleteSelected}
                   accessible={true}
-                  accessibilityLabel="Delete selected notes"
+                  accessibilityLabel={t("Delete selected notes")}
                 >
                   <Trash color={isDarkMode ? "white" : "black"} />
                 </TouchableOpacity>
@@ -487,7 +488,7 @@ function Home() {
                 }}
                 accessible={true}
                 accessibilityLabel={
-                  isSelecting ? "Cancel selection" : "Open settings"
+                  isSelecting ? t("Cancel selection") : t("Open settings")
                 }
               >
                 {isSelecting ? (
@@ -541,7 +542,7 @@ function Home() {
                     },
                   ]}
                 >
-                  {cat}
+                  {t(cat)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -589,7 +590,7 @@ function Home() {
             style={styles.navButton}
             onPress={() => setSortModalVisible(true)} // <-- NEW ONPRESS
             accessible={true}
-            accessibilityLabel="Change sort order"
+            accessibilityLabel={t("Change sort order")}
           >
             <MaterialIcons
               name="sort" // <-- NEW ICON
@@ -602,7 +603,7 @@ function Home() {
             style={styles.navButton}
             onPress={handleAddNote}
             accessible={true}
-            accessibilityLabel="Add new note"
+            accessibilityLabel={t("Add new note")}
           >
             <AntDesign
               name="plus"
@@ -617,7 +618,7 @@ function Home() {
               setSearchInput("");
             }}
             accessible={true}
-            accessibilityLabel={isSearching ? "Exit search" : "Search notes"}
+            accessibilityLabel={isSearching ? t("Exit search") : t("Search notes")}
           >
             <Ionicons
               name="search"
