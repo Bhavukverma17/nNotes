@@ -425,29 +425,6 @@ export default function Settings() {
                 </Text>
                 <TouchableOpacity
                   onPress={() => {
-                    changeLanguage("es");
-                    setModalLangVisible(false);
-                  }}
-                  style={styles.option}
-                >
-                  <Text
-                    style={[
-                      styles.langOption,
-                      {
-                        color:
-                          language === "es"
-                            ? "#D71921" // Red for active language
-                            : isDarkMode
-                            ? "white"
-                            : "black",
-                      },
-                    ]}
-                  >
-                    0. Español
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
                     changeLanguage("en");
                     setModalLangVisible(false);
                   }}
@@ -513,6 +490,29 @@ export default function Settings() {
                     ]}
                   >
                     3. Deutsch (German)
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    changeLanguage("es");
+                    setModalLangVisible(false);
+                  }}
+                  style={styles.option}
+                >
+                  <Text
+                    style={[
+                      styles.langOption,
+                      {
+                        color:
+                          language === "es"
+                            ? "#D71921" // Red for active language
+                            : isDarkMode
+                            ? "white"
+                            : "black",
+                      },
+                    ]}
+                  >
+                    4. Español (Spanish)
                   </Text>
                 </TouchableOpacity>
               </View>
