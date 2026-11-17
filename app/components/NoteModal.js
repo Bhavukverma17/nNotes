@@ -381,8 +381,8 @@ const NoteModal = ({
                   styles.statsText,
                   { color: isDarkMode ? "#888" : "#666" }
                 ]}>
-                  Words: {newContent.split(/\s+/).filter((word) => word.length > 0).length} | 
-                  Characters: {newContent.length}
+                  {t("Words")}: {newContent.split(/\s+/).filter((word) => word.length > 0).length} | 
+                  {t("Characters")}: {newContent.length}
                 </Text>
               </View>
               

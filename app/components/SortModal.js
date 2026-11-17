@@ -7,10 +7,10 @@ import { SORT_OPTIONS } from '../constants/notes';
 
 // A helper object to provide user-friendly labels
 const SORT_LABELS = {
-  [SORT_OPTIONS.DATE_DESC]: t("Date (Newest first)"),
-  [SORT_OPTIONS.DATE_ASC]: t("Date (Oldest first)"),
-  [SORT_OPTIONS.TITLE_ASC]: t("Title (A-Z)"),
-  [SORT_OPTIONS.TITLE_DESC]: t("Title (Z-A)"),
+  [SORT_OPTIONS.DATE_DESC]: "Date (Newest first)",
+  [SORT_OPTIONS.DATE_ASC]: "Date (Oldest first)",
+  [SORT_OPTIONS.TITLE_ASC]: "Title (A-Z)",
+  [SORT_OPTIONS.TITLE_DESC]: "Title (Z-A)",
 };
 
 const SortModal = ({ visible, onClose, currentSortOption, onSelectSortOption, isDarkMode, translations }) => {
@@ -40,7 +40,7 @@ const SortModal = ({ visible, onClose, currentSortOption, onSelectSortOption, is
                     size={22}
                     color={currentSortOption === option ? '#d71921' : (isDarkMode ? '#fff' : '#000')}
                   />
-                  <Text style={styles.optionText}>{SORT_LABELS[option] || option}</Text>
+                  <Text style={styles.optionText}>{t(SORT_LABELS[option] || option)}</Text>
                 </TouchableOpacity>
               ))}
             </View>

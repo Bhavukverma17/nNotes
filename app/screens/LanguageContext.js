@@ -184,6 +184,8 @@ const strings = {
   "Title (Z-A)": "Título (Z-A)",
   "Sort by": "Ordenar por",
   "All": "Todas",
+    "Words": "Palabras",
+    "Characters": "Caracteres",
     "DeleteCategoryMsg": "¿Seguro que quieres eliminar \"{cat}\"? Las notas de esta categoría pasarán a Todas.",
   "notes": "notas",
   "Data": "Datos",

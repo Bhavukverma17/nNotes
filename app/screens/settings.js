@@ -844,7 +844,7 @@ export default function Settings() {
                   { color: isDarkMode ? "white" : "black" },
                 ]}
               >
-                App {translations.Version}
+                {language === "es" ? "Versión de la app" : `App ${translations.Version}`}
               </Text>
               <Text
                 style={[
