@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from "../screens/LanguageContext";
 import {
   View,
   Text,
@@ -13,6 +14,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CategoryManager = ({ visible, onClose, isDarkMode, onCategoriesUpdate }) => {
+  const { t } = useLanguage();
   const [categories, setCategories] = useState(['All']);
   const [newCategory, setNewCategory] = useState('');
 
@@ -50,12 +52,12 @@ const CategoryManager = ({ visible, onClose, isDarkMode, onCategoriesUpdate }) =
 
   const handleAddCategory = () => {
     if (!newCategory.trim()) {
-      Alert.alert('Error', 'Category name cannot be empty');
+      Alert.alert(t("Error"), t("Category name cannot be empty"));
       return;
     }
 
     if (categories.includes(newCategory.trim())) {
-      Alert.alert('Error', 'This category already exists');
+      Alert.alert(t("Error"), t("This category already exists"));
       return;
     }
 
@@ -66,20 +68,20 @@ const CategoryManager = ({ visible, onClose, isDarkMode, onCategoriesUpdate }) =
 
   const handleDeleteCategory = (categoryToDelete) => {
     if (categoryToDelete === 'All') {
-      Alert.alert('Error', 'Cannot delete default categories');
+      Alert.alert(t("Error"), t("Cannot delete default categories"));
       return;
     }
 
     Alert.alert(
-      'Delete Category',
-      `Are you sure you want to delete "${categoryToDelete}"? Notes in this category will be moved to All.`,
+      t("Delete Category"),
+      t("DeleteCategoryMsg").replace("{cat}", categoryToDelete),
       [
         {
-          text: 'Cancel',
+          text: t("Cancel"),
           style: 'cancel',
         },
         {
-          text: 'Delete',
+          text: t("Delete"),
           style: 'destructive',
           onPress: () => {
             const updatedCategories = categories.filter(cat => cat !== categoryToDelete);
@@ -105,7 +107,7 @@ const CategoryManager = ({ visible, onClose, isDarkMode, onCategoriesUpdate }) =
         <View style={[styles.modalContent, { backgroundColor: isDarkMode ? '#1c1c1c' : '#fff' }]}>
           <View style={styles.header}>
             <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>
-              Manage Categories
+              {t("Manage Categories")}
             </Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
               <MaterialIcons
@@ -125,7 +127,7 @@ const CategoryManager = ({ visible, onClose, isDarkMode, onCategoriesUpdate }) =
                   color: isDarkMode ? '#fff' : '#000',
                 },
               ]}
-              placeholder="New category name"
+              placeholder={t("New category name")}
               placeholderTextColor={isDarkMode ? '#888' : '#666'}
               value={newCategory}
               onChangeText={setNewCategory}
@@ -150,11 +152,11 @@ const CategoryManager = ({ visible, onClose, isDarkMode, onCategoriesUpdate }) =
               >
                 <View style={styles.categoryTextContainer}>
                   <Text style={[styles.categoryText, { color: isDarkMode ? '#fff' : '#000' }]}>
-                    {category}
+                    {t(category)}
                   </Text>
                   {isDefaultCategory(category) && (
                     <Text style={[styles.defaultBadge, { color: isDarkMode ? '#888' : '#666' }]}>
-                      Default
+                      {t("Default")}
                     </Text>
                   )}
                 </View>

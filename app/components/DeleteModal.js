@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from "../screens/LanguageContext";
 import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
 
 const DeleteModal = ({
@@ -9,6 +10,7 @@ const DeleteModal = ({
   isDarkMode,
   translations,
 }) => {
+  const { t } = useLanguage();
   return (
     <Modal
       visible={visible}
@@ -23,7 +25,7 @@ const DeleteModal = ({
             { backgroundColor: isDarkMode ? "#141414" : "white" },
           ]}
         >
-          <Text style={styles.modalTitle}>Delete Notes</Text>
+          <Text style={styles.modalTitle}>{t("Delete Notes")}</Text>
           <Text
             style={[
               styles.modalMessage,
@@ -31,7 +33,9 @@ const DeleteModal = ({
             ]}
           >
             {selectedCount > 1
-              ? `${translations.DMess} ${selectedCount} notes?`
+              ? translations.DMessMulti
+                ? translations.DMessMulti.replace("{n}", selectedCount)
+                : `${translations.DMess} ${selectedCount} notes?`
               : translations.DMess}
           </Text>
 
@@ -40,7 +44,7 @@ const DeleteModal = ({
               style={[styles.button, styles.cancelButton]}
               onPress={onClose}
               accessible={true}
-              accessibilityLabel="Cancel deletion"
+              accessibilityLabel={t("Cancel deletion")}
             >
               <Text style={styles.buttonText}>{translations.Cancel}</Text>
             </TouchableOpacity>
@@ -49,7 +53,7 @@ const DeleteModal = ({
               style={[styles.button, styles.deleteButton]}
               onPress={onConfirm}
               accessible={true}
-              accessibilityLabel="Confirm deletion"
+              accessibilityLabel={t("Confirm deletion")}
             >
               <Text style={styles.buttonText}>{translations.Del}</Text>
             </TouchableOpacity>

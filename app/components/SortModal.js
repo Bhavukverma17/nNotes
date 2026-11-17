@@ -1,4 +1,5 @@
 // app/components/SortModal.js
+import { useLanguage } from "../screens/LanguageContext";
 import React from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -13,6 +14,7 @@ const SORT_LABELS = {
 };
 
 const SortModal = ({ visible, onClose, currentSortOption, onSelectSortOption, isDarkMode, translations }) => {
+  const { t } = useLanguage();
   const styles = getStyles(isDarkMode);
 
   return (
@@ -26,7 +28,7 @@ const SortModal = ({ visible, onClose, currentSortOption, onSelectSortOption, is
         <View style={styles.modalOverlay}>
           <TouchableWithoutFeedback>
             <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>{translations.SortBy || 'Sort by'}</Text>
+              <Text style={styles.modalTitle}>{translations.SortBy || t("Sort by")}</Text>
               {Object.values(SORT_OPTIONS).map((option) => (
                 <TouchableOpacity
                   key={option}
@@ -38,7 +40,7 @@ const SortModal = ({ visible, onClose, currentSortOption, onSelectSortOption, is
                     size={22}
                     color={currentSortOption === option ? '#d71921' : (isDarkMode ? '#fff' : '#000')}
                   />
-                  <Text style={styles.optionText}>{SORT_LABELS[option] || option}</Text>
+                  <Text style={styles.optionText}>{t(SORT_LABELS[option] || option)}</Text>
                 </TouchableOpacity>
               ))}
             </View>
